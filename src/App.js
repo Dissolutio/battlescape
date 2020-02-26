@@ -10,8 +10,8 @@ const BattlescapeClient = Client({
   board: Board,
   multiplayer: Local(),
   numPlayers: 2,
-  debug: false,
-  // debug: true,
+  // debug: false,
+  debug: true,
   enhancer: window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 });
 
