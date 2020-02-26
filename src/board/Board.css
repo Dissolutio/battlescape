@@ -1,0 +1,21 @@
+body {
+    background: #e4e7ec;
+    color: #263959;
+  }
+  g {
+    fill: #6d819c;
+  }
+  .selectedMapHex > g {
+    fill: #BaDa55;
+  }
+  svg g polygon {
+    stroke: #263959;
+    stroke-width: 0.2;
+  }
+  svg g polygon text {
+    font-size: 0.1rem;
+  }
+svg g:hover {
+    fill: #7be3f6;
+    fill-opacity: 0.7;
+  }
