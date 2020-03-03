@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import {
     HexGrid, Layout,
-    Hexagon, Text, HexUtils
+    Hexagon, HexUtils
 } from 'react-hexgrid';
-import { unitIcons } from '../game/unitIcons'
-import { playerColors } from '../game/playerColors'
+
+import { unitIcons } from '../game/constants/unitIcons'
+import { playerColors } from '../game/constants/playerColors'
 import './Board.css'
 
 export default function Board(props) {
@@ -12,7 +13,7 @@ export default function Board(props) {
     const hexagons = Object.values(boardHexes)
     const units = Object.values(startingUnits)
 
-    const [activeHex, setActiveHex] = useState({ q: 0, r: 0, s: 0, id: 'q0r0s0' })
+    const [activeHex, setActiveHex] = useState({})
 
 
     function onClickBoardHex(event, source) {
@@ -35,7 +36,7 @@ export default function Board(props) {
 const MainMap = ({ hexagons, activeHex, units, onClickBoardHex }) => {
     return hexagons.map((hex, i) => {
         const unitForHex = units.find(unit => HexUtils.equals(hex, unit.coords[0]))
-        console.log("TCL: MainMap -> unitForHex", unitForHex)
+        console.log("TCL: MainMap -> hex", hex)
         return (
             <Hexagon
                 key={i}
@@ -61,13 +62,15 @@ const UnitIcon = ({ unitForHex }) => {
 }
 
 const DataReadout = ({ activeHex, units, armyCardsInGame }) => {
-    const unitOnHex = units.find(unit => HexUtils.equals(activeHex, unit.coords[0]))
-    const unitInfo = unitOnHex && armyCardsInGame[unitOnHex.hsCardId]
-    return (
-        <div>
-            <div>ActiveHex: {`${activeHex.id}`}</div>
-            <p>"{`${activeHex.id}`}"</p>
-            {unitOnHex ? (<p>Unit on Hex: {unitInfo.name} Player{unitInfo.playerId}</p>) : null}
-        </div>
-    )
+    if (activeHex.hasOwnProperty('id')) {
+        const unitOnHex = units.find(unit => HexUtils.equals(activeHex, unit.coords[0]))
+        const unitInfo = unitOnHex && armyCardsInGame[unitOnHex.hsCardId]
+        return (
+            <div>
+                <div>ActiveHex: {`${activeHex?.id}`}</div>
+                {unitOnHex ? (<p>Unit on Hex: {unitInfo.name} Player{unitInfo.playerId}</p>) : <p>NO UNIT</p>}
+            </div>
+        )
+    }
+    return null
 }
