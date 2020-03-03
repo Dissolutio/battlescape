@@ -1,14 +1,21 @@
-import { TurnOrder } from 'boardgame.io/core';
-// import { hexagonMap } from './constants/mapGen'
-// import { armyCardsInGame, startingUnits } from './constants/startingUnits'
-// FOR DEV PURPOSES
-import simpleState from './constants/simpleState'
+import { TurnOrder, PlayerView } from 'boardgame.io/core';
+
+import { hexagonMap } from './constants/mapGen'
+import { startingUnits, armyCardsInGame } from './constants/startingUnits'
+import { players } from './constants/playersState'
+import { placeArmies } from './phases/placeArmies'
 
 export const Battlescape = {
     name: 'Battlescape',
     setup: () => (
         {
-            ...simpleState
+            startingUnits,
+            armyCardsInGame,
+            boardHexes: hexagonMap,
+            players,
+            secret: {
+                key: 'secretzzz'
+            }
         }
     ),
     moves: {
@@ -24,13 +31,21 @@ export const Battlescape = {
     seed: 'random-string',
     phases: {
         startGame: {
-            start: true,
             turn: {
                 order: TurnOrder.DEFAULT,
                 // order: TurnOrder.CUSTOM_FROM('initiative'),
                 // initiative: [1, 0],
             },
+        },
+        placeArmies: {
+            start: true,
+            ...placeArmies
         }
     },
-    endIf: (G, ctx) => (1 === -1)
+    endIf: (G, ctx) => (1 === -1),
+    events: {
+        // Don't let clients call this?
+        endGame: false,
+    },
+    playerView: PlayerView.STRIP_SECRETS
 }
