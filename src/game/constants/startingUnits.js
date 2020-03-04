@@ -49,7 +49,6 @@ export const armyCardsInGame =
 }
 let unitUUID = 0
 export const startingUnits = convertCardsToStartingUnits(armyCardsInGame)
-
 // ID FACTORY
 function unitGameId(playerId) {
   return `player${playerId}-unit${unitUUID++}`
@@ -71,15 +70,11 @@ export function convertCardsToStartingUnits(armyCardsInGame, hexMap = hexagonMap
       // FIGURES TO GAME UNITS
       const unitsFromCurrentCard = figuresArr.reduce((unitsResult, figure, i, arr) => {
         const gameId = unitGameId(currentCard.playerId)
-        const numberOfHexesArr = Array.apply(null, Array(currentCard.hexes))
-        const coords = numberOfHexesArr.map(hex => possibleStartingPositions.pop())
         return {
           ...unitsResult,
           [`${gameId}`]: {
             gameId,
             hsCardId: currentCard.id,
-            // unit COORDS should live on the map
-            coords: coords,
             playerId: `${currentCard.playerId}`,
           }
         }

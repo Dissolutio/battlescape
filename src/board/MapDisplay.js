@@ -5,10 +5,10 @@ import { playerColors } from '../game/constants/playerColors'
 
 
 export function MapDisplay({ mapProps }) {
-  const { activeHex, hexagons, units, onClickBoardHex } = mapProps
+  const { activeHex, hexagons, units, onClickBoardHex, zoomLevel } = mapProps
   return (
     <HexGrid width={400} height={450}>
-      <Layout size={{ x: 12, y: 12 }}>
+      <Layout size={{ x: 8, y: 8 }}>
         <MainMap activeHex={activeHex} hexagons={hexagons} units={units} onClickBoardHex={onClickBoardHex} />
       </Layout>
     </HexGrid>
@@ -16,7 +16,6 @@ export function MapDisplay({ mapProps }) {
 }
 const MainMap = ({ hexagons, activeHex, units, onClickBoardHex }) => {
   return hexagons.map((hex, i) => {
-    const unitForHex = units.find(unit => HexUtils.equals(hex, unit.coords[0]))
     return (
       <Hexagon
         key={i}
@@ -24,11 +23,12 @@ const MainMap = ({ hexagons, activeHex, units, onClickBoardHex }) => {
         onClick={(e, h) => onClickBoardHex(e, h)}
         className={HexUtils.equals(hex, activeHex) ? 'selectedMapHex' : ''}
       >
-        <UnitIcon unitForHex={unitForHex} />
       </Hexagon>
     )
   })
 }
+
+// <UnitIcon unitForHex={unitForHex} />
 const UnitIcon = ({ unitForHex }) => {
   if (!unitForHex) { return null }
   const id = unitForHex && unitForHex.hsCardId
