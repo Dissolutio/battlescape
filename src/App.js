@@ -20,7 +20,7 @@ const App = () => (
     style={{ maxWidth: "600px", padding: "2rem" }}
   >
     <h1>Player 0 View:</h1>
-    <BattlescapeClient playerID="2" />
+    <BattlescapeClient playerID="zero" />
     <br />
     <h1>Player 1 View:</h1>
     <BattlescapeClient playerID="1" />

@@ -1,21 +1,14 @@
 import { TurnOrder } from 'boardgame.io/core';
 
 export const placeArmies = {
-  moves: { selectUnit, deselectUnit, placeUnit, finalize },
+  moves: { finalize },
   turn: { order: TurnOrder.DEFAULT },
+  setActivePlayers: {
+    all: 'armyPlacement'
+  }
 }
 
-function selectUnit(G, ctx, gameUnitID) {
-  return { ...G }
-}
-function deselectUnit(G, ctx, hex) {
-  return { ...G }
-}
-function placeUnit(G, ctx, hex) {
-  return { ...G }
-}
-function finalize(G, ctx, hex) {
+function finalize(G, ctx) {
   ctx.events.endTurn()
-  return { ...G }
 }
 
