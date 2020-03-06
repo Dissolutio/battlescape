@@ -1,12 +1,18 @@
 body {
     background: #e4e7ec;
-    color: #263959;
+    color: #6d819c;
   }
   g {
-    fill: #6d819c;
+    fill: #7be3f6;
   }
   .selectedMapHex > g {
     fill: #BaDa55;
+  }
+  .startZoneHex > g {
+    fill: green;
+    stroke: black;
+    stroke-width: 10;
+    stroke-linejoin: round;
   }
   svg g polygon {
     stroke: #263959;
