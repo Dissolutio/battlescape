@@ -4,55 +4,63 @@ import './Board.css'
 
 export default function PlacementBoard(props) {
   const { boardHexes, startingUnits, armyCardsInGame, startZones } = props.G
-  const hexagons = Object.values(boardHexes)
-  const units = Object.values(startingUnits)
-  const [activeHex, setActiveHex] = useState({})
-  const [selectedUnit, setSelectedUnit] = useState('')
+  const allUnits = Object.values(startingUnits)
+  const myId = Object.keys(props.G.players)[0]
 
-  const currentPlayer = props.ctx.currentPlayer;
-  function onClickBoardHex(event, source) {
-    const { q, r, s, id } = source.props
-    setActiveHex({ q, r, s, id })
+  const placeUnit = props.moves.placeUnit
+
+  const [activeHex, setActiveHex] = useState({})
+  const [selectedUnitGameId, setSelectedUnitGameId] = useState('')
+  const [availableUnits, setAvailableUnits] = useState(() => (initialAvailableUnits()))
+
+  function initialAvailableUnits() {
+    return allUnits
+      .filter(unit => unit.playerId === myId)
+      .map(gameUnit => ({
+        ...gameUnit,
+        name: armyCardsInGame[gameUnit.hsCardId].name,
+      }))
   }
-  const myId = Object.keys(props.G.players)
-  console.log("PlacementBoard -> myId", myId)
+  console.log("PlacementBoard -> availableUnits", availableUnits)
+
+  function onClickBoardHex(event, source) {
+    if (selectedUnitGameId) {
+      placeUnit(source.props.id, selectedUnitGameId)
+      setAvailableUnits(availableUnits.filter(unit => unit.gameId !== selectedUnitGameId))
+      setSelectedUnitGameId('')
+    } else {
+      const { q, r, s, id } = source.props
+      setActiveHex({ q, r, s, id })
+    }
+
+  }
 
   const toggleSelected = (gameId) => {
-    if (gameId === selectedUnit) {
-      setSelectedUnit('')
+    if (gameId === selectedUnitGameId) {
+      setSelectedUnitGameId('')
     } else {
-      setSelectedUnit(gameId)
+      setSelectedUnitGameId(gameId)
     }
   }
-  const startZone = startZones[currentPlayer]
-  console.log("PlacementBoard -> startZone", startZone)
-  const availableUnits = units
-    .filter(unit => unit.playerId === currentPlayer)
-    .map(gameUnit => ({
-      ...gameUnit,
-      name: armyCardsInGame[gameUnit.hsCardId].name,
-    })
-    )
-
+  const startZone = startZones[myId]
   const dataReadoutProps = {
     activeHex,
   }
   const mapProps = {
     onClickBoardHex,
-    hexagons,
-    units,
+    boardHexes,
     activeHex,
   }
 
   return (
     <div>
-      <h1>Current player: {currentPlayer}</h1>
+      <p>Selected Unit: {selectedUnitGameId}</p>
       <AvailableUnitsToPlace
         availableUnits={availableUnits}
-        selectedUnit={selectedUnit}
+        selectedUnit={selectedUnitGameId}
         toggleSelected={toggleSelected}
       />
-      {selectedUnit ? (<p>Place on a hex inside of your start zone:</p>) : null}
+      {selectedUnitGameId ? (<p>Place on a hex inside of your start zone:</p>) : null}
       <DataReadout dataReadoutProps={dataReadoutProps} />
       <MapDisplay mapProps={mapProps} />
     </div>

@@ -1,14 +1,22 @@
 import { TurnOrder } from 'boardgame.io/core';
+import { Stage } from 'boardgame.io/core';
 
 export const placeArmies = {
-  moves: { finalize },
-  turn: { order: TurnOrder.DEFAULT },
+  moves: { placeUnit },
+  turn: {
+    order: TurnOrder.DEFAULT,
+    activePlayer: { all: Stage.NULL },
+    // stages: {
+    //   placingArmy: {
+    //     moves: { placeUnit },
+    //   },
+    // },
+  },
   setActivePlayers: {
     all: 'armyPlacement'
   }
 }
-
-function finalize(G, ctx) {
-  ctx.events.endTurn()
+function placeUnit(G, ctx, hexId, unitGameId) {
+  G.boardHexes[hexId].unitGameId = unitGameId
 }
 

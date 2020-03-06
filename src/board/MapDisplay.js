@@ -5,16 +5,17 @@ import { playerColors } from '../game/constants/playerColors'
 
 
 export function MapDisplay({ mapProps }) {
-  const { activeHex, hexagons, units, onClickBoardHex, zoomLevel } = mapProps
+  const { activeHex, boardHexes, onClickBoardHex } = mapProps
+  const hexagons = Object.values(boardHexes)
   return (
     <HexGrid width={400} height={450}>
       <Layout size={{ x: 8, y: 8 }}>
-        <MainMap activeHex={activeHex} hexagons={hexagons} units={units} onClickBoardHex={onClickBoardHex} />
+        <MainMap activeHex={activeHex} hexagons={hexagons} onClickBoardHex={onClickBoardHex} />
       </Layout>
     </HexGrid>
   )
 }
-const MainMap = ({ hexagons, activeHex, units, onClickBoardHex }) => {
+const MainMap = ({ hexagons, activeHex, onClickBoardHex }) => {
   return hexagons.map((hex, i) => {
     return (
       <Hexagon
