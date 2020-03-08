@@ -10,9 +10,6 @@ body {
   }
   .startZoneHex > g {
     fill: green;
-    stroke: black;
-    stroke-width: 10;
-    stroke-linejoin: round;
   }
   svg g polygon {
     stroke: #263959;
@@ -22,6 +19,6 @@ body {
     font-size: 0.1rem;
   }
 svg g:hover {
-    fill: #7be3f6;
+    fill: #BaDa55;
     fill-opacity: 0.7;
   }

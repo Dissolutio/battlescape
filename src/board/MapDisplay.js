@@ -6,7 +6,7 @@ import { playerColors } from '../game/constants/playerColors'
 
 export function MapDisplay({ mapProps }) {
   const { activeHex, boardHexes, onClickBoardHex,
-    selectedUnitGameId, startZone,
+    selectedUnitGameId, startZoneIdsArr,
     startingUnits, armyCardsInGame } = mapProps
 
   const hexagons = Object.values(boardHexes)
@@ -17,7 +17,7 @@ export function MapDisplay({ mapProps }) {
           activeHex={activeHex}
           hexagons={hexagons}
           onClickBoardHex={onClickBoardHex}
-          startZone={startZone}
+          startZoneIdsArr={startZoneIdsArr}
           selectedUnitGameId={selectedUnitGameId}
           startingUnits={startingUnits}
           armyCardsInGame={armyCardsInGame}
@@ -28,10 +28,9 @@ export function MapDisplay({ mapProps }) {
 }
 const MainMap = (props) => {
   const { hexagons, activeHex,
-    onClickBoardHex, startZone,
+    onClickBoardHex, startZoneIdsArr,
     selectedUnitGameId, startingUnits,
     armyCardsInGame } = props
-  const startZoneIdsArr = Object.keys(startZone)
   const hexIsStartZoneHex = (hex) => {
     return startZoneIdsArr.includes(hex.id)
   }

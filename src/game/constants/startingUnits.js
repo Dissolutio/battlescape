@@ -2,48 +2,36 @@ import {
   marroWarriors,
   neGokSa,
   kravMagaAgents,
-  agentCarr
+  agentCarr,
+  mimring
 } from './hsSelectors'
 import { hexagonMap } from './mapGen'
 
-// BIG STARTER
-// export const armyCardsInGame =
-// {
-//   'hs1000': {
-//     ...marroWarriors,
-//     cardQuantity: 1,
-//     playerId: '0',
-//   },
-//   'hs1014': {
-//     ...neGokSa,
-//     cardQuantity: 1,
-//     playerId: '0',
-//   },
-//   'hs1007': {
-//     ...agentCarr,
-//     cardQuantity: 1,
-//     playerId: '1',
-//   },
-//   'hs1005': {
-//     ...kravMagaAgents,
-//     cardQuantity: 1,
-//     playerId: '1',
-//   },
-// }
-// // export const startingUnits = convertCardsToStartingUnits(armyCardsInGame)
-
-// SIMPLE STARTER
-const cardQuantity = 2
 export const armyCardsInGame =
 {
   [neGokSa.id]: {
     ...neGokSa,
-    cardQuantity,
+    cardQuantity: 1,
+    playerId: '0',
+  },
+  [mimring.id]: {
+    ...mimring,
+    cardQuantity: 1,
+    playerId: '0',
+  },
+  [marroWarriors.id]: {
+    ...marroWarriors,
+    cardQuantity: 1,
     playerId: '0',
   },
   [agentCarr.id]: {
     ...agentCarr,
-    cardQuantity,
+    cardQuantity: 1,
+    playerId: '1',
+  },
+  [kravMagaAgents.id]: {
+    ...kravMagaAgents,
+    cardQuantity: 1,
     playerId: '1',
   },
 }
