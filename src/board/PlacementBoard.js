@@ -9,10 +9,15 @@ export default function PlacementBoard(props) {
   const myId = Object.keys(props.G.players)[0]
   const placeUnit = props.moves.placeUnit
   const playerColor = playerColors[myId]
+  const startZone = startZones[myId]
+  const startZoneIdsArr = Object.keys(startZone)
 
   const [activeHex, setActiveHex] = useState({})
   const [selectedUnitGameId, setSelectedUnitGameId] = useState('')
+  const selectedUnit = startingUnits[selectedUnitGameId]
   const [availableUnits, setAvailableUnits] = useState(() => (initialAvailableUnits()))
+  const [errorMsg, setErrorMsg] = useState('')
+
 
   function initialAvailableUnits() {
     return allUnits
@@ -24,15 +29,27 @@ export default function PlacementBoard(props) {
   }
 
   function onClickBoardHex(event, source) {
-    console.log("onClickBoardHex -> source", source)
-    // 1. if we have a unit selected, place them, if theres a unit there, switch them out
-    // 2. Otherwise, just view the hex info
-    if (selectedUnitGameId) {
-      placeUnit(source.props.id, selectedUnitGameId)
+    const hexId = source.props.id
+    const isInStartZone = startZoneIdsArr.includes(hexId)
+    // Unit selected, clicked start zone, place them 
+    // TODO if theres a unit there, switch them out
+    if (selectedUnitGameId && isInStartZone) {
+      placeUnit(source.props.id, selectedUnit)
       setAvailableUnits(availableUnits.filter(unit => unit.gameId !== selectedUnitGameId))
       setSelectedUnitGameId('')
-    } else {
+      setErrorMsg('')
+      return
+    }
+    // Unit selected, clicked outside start zone
+    if (selectedUnitGameId && !isInStartZone) {
+      setErrorMsg("You must place units inside your start zone. Invalid hex selected.")
+      return
+    }
+    // 2. Otherwise, just view the hex info
+    else {
       setActiveHex({ ...source.props })
+      setErrorMsg('')
+      return
     }
 
   }
@@ -46,7 +63,6 @@ export default function PlacementBoard(props) {
       setActiveHex({})
     }
   }
-  const startZone = startZones[myId]
 
   const dataReadoutProps = {
     activeHex,
@@ -56,7 +72,7 @@ export default function PlacementBoard(props) {
     onClickBoardHex,
     boardHexes,
     activeHex,
-    startZone,
+    startZoneIdsArr,
     startingUnits,
     armyCardsInGame
   }
@@ -66,9 +82,10 @@ export default function PlacementBoard(props) {
       <p>Selected Unit: {selectedUnitGameId}</p>
       <AvailableUnitsToPlace
         availableUnits={availableUnits}
-        selectedUnit={selectedUnitGameId}
+        selectedUnitGameId={selectedUnitGameId}
         toggleSelected={toggleSelected}
       />
+      <p style={{ color: "red" }}>{errorMsg}</p>
       {selectedUnitGameId ? (<p>Place on a hex inside of your start zone:</p>) : null}
       <DataReadout dataReadoutProps={dataReadoutProps} />
       <MapDisplay mapProps={mapProps} />
@@ -76,9 +93,9 @@ export default function PlacementBoard(props) {
   )
 }
 
-const AvailableUnitsToPlace = ({ availableUnits, toggleSelected, selectedUnit }) => {
+const AvailableUnitsToPlace = ({ availableUnits, toggleSelected, selectedUnitGameId }) => {
   const buttonStyle = (gameId) => {
-    if (selectedUnit === gameId) {
+    if (selectedUnitGameId === gameId) {
       return {
         boxShadow: `0 0 5px rgba(81, 203, 238, 1)`,
         padding: `3px 0px 3px 3px`,

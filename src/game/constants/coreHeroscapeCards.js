@@ -400,6 +400,7 @@ export const coreHeroscapeCards = [
 		points: '150',
 		figures: '1',
 		hexes: '2',
+		setWave: 'Master Set: Rise of the Valkyrie',
 		abilities: [
 			{
 				name: 'Fire Line Special Attack',

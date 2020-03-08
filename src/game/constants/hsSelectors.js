@@ -7,6 +7,7 @@ export const MS1Abilities = MS1Cards.reduce(getAbilities, [])
 
 export const neGokSa = MS1Cards.find(unit => unit.name === "Ne-gok-sa")
 export const marroWarriors = MS1Cards.find(unit => unit.name === "Marro Warriors")
+export const mimring = MS1Cards.find(unit => unit.name === "Mimring")
 
 export const agentCarr = MS1Cards.find(unit => unit.name === "Agent Carr")
 export const kravMagaAgents = MS1Cards.find(unit => unit.name === "Krav Maga Agents")

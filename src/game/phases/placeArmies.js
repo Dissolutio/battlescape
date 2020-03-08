@@ -6,17 +6,12 @@ export const placeArmies = {
   turn: {
     order: TurnOrder.DEFAULT,
     activePlayer: { all: Stage.NULL },
-    // stages: {
-    //   placingArmy: {
-    //     moves: { placeUnit },
-    //   },
-    // },
   },
   setActivePlayers: {
     all: 'armyPlacement'
   }
 }
-function placeUnit(G, ctx, hexId, unitGameId) {
-  G.boardHexes[hexId].unitGameId = unitGameId
+function placeUnit(G, ctx, hexId, unit) {
+  G.boardHexes[hexId].unitGameId = unit.gameId
 }
 
