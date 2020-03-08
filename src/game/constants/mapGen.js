@@ -4,23 +4,21 @@ export const hexagonMap = GridGenerator.hexagon(2).reduce(fillHexInfo, {})
 
 function fillHexInfo(prev, curr, i, arr) {
   const fullHex = {
-    // unchanging as a reference
-    q: curr.q,
-    r: curr.r,
-    s: curr.s,
-    // for use as a shortcut
-    coords: {
-      q: curr.q,
-      r: curr.r,
-      s: curr.s,
-    },
+    ...curr,
     id: curr.toString(),
-    // mab building
-    surfaceTerrain: 'grass',
-    altitude: 1,
+    unitGameId: ''
   }
   return {
     ...prev,
     [fullHex.id]: fullHex
   }
 }
+export const startZones = Object.values(hexagonMap).reduce((prev, curr, i, arr) => {
+  if (curr.r <= -2) {
+    prev['0'][curr.id] = true
+  }
+  if (curr.r >= 2) {
+    prev['1'][curr.id] = true
+  }
+  return prev
+}, { 0: {}, 1: {} })
