@@ -8,13 +8,15 @@
     "@testing-library/react": "^9.4.0",
     "@testing-library/user-event": "^7.2.1",
     "boardgame.io": "^0.37.2",
+    "cloudinary-react": "^1.3.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-hexgrid": "file:../../hexgrid/react-hexgrid",
     "react-icons": "^3.9.0",
     "react-redux": "^7.1.3",
     "react-scripts": "3.4.0",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "styled-components": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
