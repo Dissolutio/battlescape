@@ -9,7 +9,7 @@ body {
     fill: #BaDa55;
   }
   .startZoneHex > g {
-    fill: green;
+    fill: #BaDa55;
   }
   svg g polygon {
     stroke: #263959;

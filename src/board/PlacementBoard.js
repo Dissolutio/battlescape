@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
+import { Image } from "cloudinary-react"
 import { MapDisplay } from './MapDisplay'
 import './Board.css'
 import { playerColors } from '../game/constants/playerColors'
+import styled from 'styled-components';
 
 export default function PlacementBoard(props) {
   const { boardHexes, startingUnits, armyCardsInGame, startZones } = props.G
@@ -25,6 +27,7 @@ export default function PlacementBoard(props) {
       .map(gameUnit => ({
         ...gameUnit,
         name: armyCardsInGame[gameUnit.hsCardId].name,
+        image: armyCardsInGame[gameUnit.hsCardId].image,
       }))
   }
 
@@ -109,27 +112,44 @@ const AvailableUnitsToPlace = ({ availableUnits, toggleSelected, selectedUnitGam
   return (
     <>
       <h2>Units available to place on map:</h2>
-      <ul>
+      <AvailableWrapper>
         {availableUnits && availableUnits.map(unit => (
           <li
-            style={{
-              listStyleType: `none`,
-              display: 'inline-block'
-            }}
             key={unit.gameId}
           >
             <button
               style={buttonStyle(unit.gameId)}
               onClick={() => toggleSelected(unit.gameId)}
             >
-              {unit.name}
+              <Image cloudName="mystery-maintenance" publicId={`${unit.image}`} alt={unit.name} />
+              <h3>{unit.name}</h3>
             </button>
           </li>
         ))}
-      </ul>
+      </AvailableWrapper>
     </>
   )
 }
+const AvailableWrapper = styled.li`
+  display: flex;
+  flex-flow: row wrap;
+  list-style-type: none;
+  justify-content: space-between;
+  align-items: center;
+  width: 5rem;
+  background-color: $black;
+  font-size: 1rem;
+  border-radius: 15%;
+  img {
+    margin: 0.5rem 0 0 0;
+    border-radius: 35%;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  h3 {
+    font-size: 0.7rem;
+  }
+`
 const DataReadout = ({ dataReadoutProps }) => {
   const { activeHex } = dataReadoutProps
   if (activeHex.hasOwnProperty('id')) {

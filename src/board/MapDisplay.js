@@ -12,7 +12,7 @@ export function MapDisplay({ mapProps }) {
   const hexagons = Object.values(boardHexes)
   return (
     <HexGrid width={400} height={450}>
-      <Layout size={{ x: 8, y: 8 }}>
+      <Layout size={{ x: 6, y: 6 }}>
         <MainMap
           activeHex={activeHex}
           hexagons={hexagons}
