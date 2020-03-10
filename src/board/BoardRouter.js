@@ -3,9 +3,6 @@ import PlacementBoard from './PlacementBoard'
 import Board from './Board'
 
 export default function BoardRouter({ G, ctx, moves, events }) {
-  React.useEffect(() => {
-    events.setActivePlayers([0, 1])
-  }, [])
   if (ctx.phase === 'placeArmies') {
     return <PlacementBoard G={G} ctx={ctx} moves={moves} />
   }
