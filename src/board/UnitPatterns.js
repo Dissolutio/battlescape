@@ -9,7 +9,9 @@ import mimring from '../portraits/mimring.jpg'
 export const UnitPatterns = () => {
   return (
     <>
-      <Pattern id="marrowarriors-portrait" x="3" y="3" link={marrowarriors} />
+      <Pattern id="marrowarriors-portrait"
+        size={{ x: 9, y: 9 }}
+        link={marrowarriors} />
       <Pattern id="syvarris-portrait" link={syvarris} />
       <Pattern id="kravmagaagents-portrait" link={kravmagaagents} />
       <Pattern id="agentcarr-portrait" link={agentcarr} />
@@ -18,3 +20,22 @@ export const UnitPatterns = () => {
     </>
   )
 }
+
+// const Pattern = (props) => {
+//   const { id, link, x, y, height, width } = props
+//   // static propTypes = {
+//   //   id: PropTypes.string.isRequired,
+//   //   link: PropTypes.string.isRequired,
+//   //   size: PropTypes.object
+//   // };
+//   // static defaultProps = {
+//   //   size: new Point(10, 10)
+//   // };
+//   return (
+//     <defs>
+//       <pattern id={id} patternUnits="objectBoundingBox" x={x} y={y} width={width} height={height}>
+//         <image xlinkHref={link} x={0} y={0} width={parseInt(width) * 2} height={parseInt(height) * 2} />
+//       </pattern>
+//     </defs>
+//   );
+// }

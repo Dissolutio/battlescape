@@ -11,7 +11,7 @@ const BattlescapeClient = Client({
   multiplayer: Local(),
   // multiplayer: SocketIO({server: 'localhost:8000'}),
   numPlayers: 2,
-  debug: true,
+  debug: false,
   enhancer: window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 });
 
