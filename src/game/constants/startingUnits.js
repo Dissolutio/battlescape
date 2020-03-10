@@ -3,7 +3,9 @@ import {
   neGokSa,
   kravMagaAgents,
   agentCarr,
-  mimring
+  mimring,
+  syvarris,
+  deathwalker9000,
 } from './hsSelectors'
 import { hexagonMap } from './mapGen'
 
@@ -14,8 +16,8 @@ export const armyCardsInGame =
     cardQuantity: 1,
     playerId: '0',
   },
-  [mimring.id]: {
-    ...mimring,
+  [syvarris.id]: {
+    ...syvarris,
     cardQuantity: 1,
     playerId: '0',
   },
@@ -31,6 +33,11 @@ export const armyCardsInGame =
   },
   [kravMagaAgents.id]: {
     ...kravMagaAgents,
+    cardQuantity: 1,
+    playerId: '1',
+  },
+  [deathwalker9000.id]: {
+    ...deathwalker9000,
     cardQuantity: 1,
     playerId: '1',
   },
