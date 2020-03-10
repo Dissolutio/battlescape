@@ -1,7 +1,7 @@
 import React from 'react'
 import { Client } from 'boardgame.io/react';
 import { Local } from 'boardgame.io/multiplayer';
-
+// import { SocketIO } from "boardgame.io/multiplayer";
 import BoardRouter from './board/BoardRouter'
 import { Battlescape } from './game/battlescape'
 
@@ -9,6 +9,7 @@ const BattlescapeClient = Client({
   game: Battlescape,
   board: BoardRouter,
   multiplayer: Local(),
+  // multiplayer: SocketIO({server: 'localhost:8000'}),
   numPlayers: 2,
   debug: true,
   enhancer: window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
