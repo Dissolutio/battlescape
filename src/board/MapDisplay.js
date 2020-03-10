@@ -1,8 +1,8 @@
 import React from 'react'
-import { HexGrid, Layout, Hexagon, HexUtils } from 'react-hexgrid';
+import { HexGrid, Layout, Hexagon, HexUtils, Pattern, Text } from 'react-hexgrid';
 import { unitIcons } from '../game/constants/unitIcons'
 import { playerColors } from '../game/constants/playerColors'
-
+import { UnitPatterns } from './UnitPatterns'
 
 export function MapDisplay({ mapProps }) {
   const { activeHex, boardHexes, onClickBoardHex,
@@ -12,7 +12,7 @@ export function MapDisplay({ mapProps }) {
   const hexagons = Object.values(boardHexes)
   return (
     <HexGrid width={400} height={450}>
-      <Layout size={{ x: 8, y: 8 }}>
+      <Layout size={{ x: 9, y: 9 }}>
         <MainMap
           activeHex={activeHex}
           hexagons={hexagons}
@@ -22,6 +22,7 @@ export function MapDisplay({ mapProps }) {
           startingUnits={startingUnits}
           armyCardsInGame={armyCardsInGame}
         />
+        <UnitPatterns />
       </Layout>
     </HexGrid>
   )
@@ -39,24 +40,28 @@ const MainMap = (props) => {
   const unitForHex = (hex) => {
     if (!hex?.unitGameId) { return '' }
     const unit = startingUnits[hex.unitGameId]
+    console.log("unitForHex -> armyCardsInGame[unit.hsCardId]", armyCardsInGame[unit.hsCardId].portraitPattern)
     return {
       ...unit,
       ...armyCardsInGame[unit.hsCardId]
     }
   }
   return hexagons.map((hex, i) => {
+    const unitPortrait = unitForHex(hex) ? unitForHex(hex).portraitPattern : ''
+    console.log("MainMap -> unitPortrait", unitPortrait)
     return (
       <Hexagon
         key={i}
         {...hex}
         onClick={(e, h) => onClickBoardHex(e, h)}
+        fill={unitPortrait || ''}
         className={
           unitIsSelected ?
             `${hexIsStartZoneHex(hex) ? 'startZoneHex' : ''}`
             :
             `${hexIsActiveHex(hex) ? 'selectedMapHex' : ''}`}
       >
-        <UnitIcon unitForHex={unitForHex(hex)} />
+
       </Hexagon >
     )
   })
