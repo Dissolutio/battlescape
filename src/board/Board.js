@@ -1,48 +1,110 @@
 import React, { useState } from 'react'
-import { HexUtils } from 'react-hexgrid';
 
 import { MapDisplay } from './MapDisplay'
-import './Board.css'
+import { ArmyForPlacing } from './ArmyForPlacing'
+import './layout.css'
 
 export default function Board(props) {
-    const { boardHexes, startingUnits } = props.G
-    const hexagons = Object.values(boardHexes)
-    const units = Object.values(startingUnits)
-    const [activeHex, setActiveHex] = useState({})
-    const currentPlayer = props.ctx.currentPlayer;
+    console.log("Board -> props", props)
+    const { boardHexes, startingUnits, armyCardsInGame, startZones } = props.G
 
+    const allUnits = Object.values(startingUnits)
+    const playerID = props.playerID
+    const placeUnit = props.moves.placeUnit
+    const startZone = startZones[playerID]
+    const startZoneIDsArr = Object.keys(startZone)
 
+    const [activeHexID, setActiveHexID] = useState({})
+    const [selectedUnitGameID, setSelectedUnitGameID] = useState('')
+    const selectedUnit = startingUnits[selectedUnitGameID]
+    const [availableUnits, setAvailableUnits] = useState(() => (initialAvailableUnits()))
+    const [errorMsg, setErrorMsg] = useState('')
+
+    function initialAvailableUnits() {
+        return allUnits
+            .filter(unit => unit.playerID === playerID)
+            .map(gameUnit => ({
+                ...gameUnit,
+                name: armyCardsInGame[gameUnit.hsCardID].name,
+                image: armyCardsInGame[gameUnit.hsCardID].image,
+            }))
+    }
 
     function onClickBoardHex(event, source) {
-        const { q, r, s, id } = source.props
-        setActiveHex({ q, r, s, id })
+        event.preventDefault()
+        const hexID = source.props.id
+        const isInStartZone = startZoneIDsArr.includes(hexID)
+        //  Select hex
+        if (!selectedUnitGameID) {
+            setActiveHexID({ ...source.props })
+            setErrorMsg('')
+            return
+        }
+        // Place unit
+        if (selectedUnitGameID && isInStartZone) {
+            placeUnit(source.props.id, selectedUnit)
+            setAvailableUnits(availableUnits.filter(unit => unit.gameID !== selectedUnitGameID))
+            setSelectedUnitGameID('')
+            setErrorMsg('')
+            return
+        }
+        // Error, start zone
+        if (selectedUnitGameID && !isInStartZone) {
+            setErrorMsg("You must place units inside your start zone. Invalid hex selected.")
+            return
+        }
+    }
+
+    const onClickPlacementUnit = (gameID) => {
+        // either deselect unit, or select unit and deselect active hex
+        if (gameID === selectedUnitGameID) {
+            setSelectedUnitGameID('')
+        } else {
+            setSelectedUnitGameID(gameID)
+            setActiveHexID({})
+        }
     }
 
     const dataReadoutProps = {
-        activeHex,
+        activeHexID,
     }
     const mapProps = {
+        selectedUnitGameID,
         onClickBoardHex,
-        hexagons,
-        units,
-        activeHex,
+        boardHexes,
+        activeHexID,
+        startZoneIDsArr,
+        startingUnits,
+        armyCardsInGame
     }
 
     return (
-        <div>
-            <h1>Current player: {currentPlayer}</h1>
-            <MapDisplay mapProps={mapProps} />
-            <DataReadout dataReadoutProps={dataReadoutProps} />
+        <div id='wrapper'>
+            <div id="top-bar">
+                <ArmyForPlacing
+                    availableUnits={availableUnits}
+                    selectedUnitGameID={selectedUnitGameID}
+                    onClickUnit={onClickPlacementUnit}
+                />
+                <p style={{ color: "red" }}>{errorMsg}</p>
+            </div>
+            <div id="main">
+                <MapDisplay mapProps={mapProps} />
+            </div>
+            <div id="bottom-bar">
+                <DataReadout dataReadoutProps={dataReadoutProps} />
+            </div>
         </div>
     )
 }
 
 const DataReadout = ({ dataReadoutProps }) => {
-    const { activeHex } = dataReadoutProps
-    if (activeHex.hasOwnProperty('id')) {
+    const { activeHexID } = dataReadoutProps
+    if (activeHexID.hasOwnProperty('id')) {
         return (
             <div>
-                <div>ActiveHex: {`${activeHex.id}`}</div>
+                <div>ActiveHex: {`${activeHexID.id}`}</div>
+                <div>Unit on Hex: {`${activeHexID.unitGameID || 'none'}`}</div>
             </div>
         )
     }

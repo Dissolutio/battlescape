@@ -5827,7 +5827,7 @@ export const coreHeroscapeCards = [
 			{
 				name: 'Enslave 17',
 				desc:
-					"When revealing an order marker on this Mind Flayer Mastermind, after taking this Mind Flayer Mastermind's turn, you may choose any Unique Hero figure within 4 clear sight spaces of this Mind Flayer Mastermind. Roll the 20-sided die. If you roll a 17 or higher, take temporary control of the chosen Hero and immediately take a turn with that Hero. At the end of that turn, control of the chosen Hero returns to its previous playerId. All order markers that were on the figure's Army Card will stay on the Army Card. Enslave does not affect Mindflayers.",
+					"When revealing an order marker on this Mind Flayer Mastermind, after taking this Mind Flayer Mastermind's turn, you may choose any Unique Hero figure within 4 clear sight spaces of this Mind Flayer Mastermind. Roll the 20-sided die. If you roll a 17 or higher, take temporary control of the chosen Hero and immediately take a turn with that Hero. At the end of that turn, control of the chosen Hero returns to its previous playerID. All order markers that were on the figure's Army Card will stay on the Army Card. Enslave does not affect Mindflayers.",
 			},
 		],
 	},
@@ -5860,7 +5860,7 @@ export const coreHeroscapeCards = [
 			{
 				name: 'Moon Frenzy',
 				desc:
-					"After revealing an Order Marker on this Werewolf Lord, before taking this Werewolf Lord's turn, roll the 20-sided die. If you roll an 11 or higher, you may first take a turn with any Hybrid Hero in play. If you take a turn with an oppenent's Hybrid Hero, you control that Hero for the duration of its turn. At the end of its turn, control of the Hybrid Hero returns to its previous playerId. All Order Markers that were on the figure's Army Card will stay on the Army Card.",
+					"After revealing an Order Marker on this Werewolf Lord, before taking this Werewolf Lord's turn, roll the 20-sided die. If you roll an 11 or higher, you may first take a turn with any Hybrid Hero in play. If you take a turn with an oppenent's Hybrid Hero, you control that Hero for the duration of its turn. At the end of its turn, control of the Hybrid Hero returns to its previous playerID. All Order Markers that were on the figure's Army Card will stay on the Army Card.",
 			},
 		],
 	},
