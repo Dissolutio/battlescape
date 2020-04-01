@@ -3,8 +3,7 @@ import styled from 'styled-components';
 import { HexGrid, Layout, Hexagon, HexUtils } from 'react-hexgrid';
 
 import { unitIcons } from '../game/constants/unitIcons'
-import { playerColors } from '../game/battlescape'
-
+import { playerColors } from '../game/constants/mapGen'
 
 export function MapDisplay({ mapProps }) {
   const { activeHexID, boardHexes, onClickBoardHex,

@@ -12,7 +12,6 @@ export default function Board(props) {
     const playerID = props.playerID
     const placeUnit = props.moves.placeUnit
     const startZone = startZones[playerID]
-    const startZoneIDsArr = Object.keys(startZone)
 
     const [activeHexID, setActiveHexID] = useState({})
     const [selectedUnitGameID, setSelectedUnitGameID] = useState('')
@@ -66,7 +65,7 @@ export default function Board(props) {
     }
 
     const dataReadoutProps = {
-        activeHexID,
+        activeHexID
     }
     const mapProps = {
         selectedUnitGameID,

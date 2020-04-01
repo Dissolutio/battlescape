@@ -11,15 +11,12 @@ export interface FullHex extends BasicHex {
   unitGameId: string
   altitude: number
 }
-export type BoardHexes = {
+
+export interface BoardHexes {
   [fullHexId: string]: FullHex;
 }
-export type StartZones = {
+export interface StartZones {
   [playerId: string]: FullHex[];
-}
-export interface BattlescapeMap {
-  boardHexes: BoardHexes
-  startZones: StartZones
 }
 
 const basicHexes: BasicHex[] = GridGenerator.hexagon(3)
@@ -33,7 +30,10 @@ export const startZones = {
   '0': P0StartZone,
   '1': P1StartZone
 }
-
+export const playerColors = {
+  0: 'rgb(1,162,82)',
+  1: 'rgb(219,45,32)',
+}
 function fillHexInfo(prev: BoardHexes, curr: BasicHex) {
   const fullHex = {
     ...curr,

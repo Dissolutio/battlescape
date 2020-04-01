@@ -9,9 +9,7 @@ import * as serviceWorker from './serviceWorker';
 
 
 ReactDOM.render(
-  <CloudinaryContext cloudName="mystery-maintenance">
-    <App />
-  </CloudinaryContext>,
+  <App />,
   document.getElementById('root'));
 
 serviceWorker.unregister();
