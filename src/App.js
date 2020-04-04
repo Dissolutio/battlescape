@@ -1,30 +1,46 @@
 import React from 'react'
-import { Client } from 'boardgame.io/react';
+import { Client, Lobby } from 'boardgame.io/react';
 import { Local } from 'boardgame.io/multiplayer';
+// import { SocketIO } from "boardgame.io/multiplayer";
 
-import BoardRouter from './board/BoardRouter'
+import Board from './board/Board'
 import { Battlescape } from './game/battlescape'
+
+const App = () => {
+  // return (
+  //   <MainLobby />
+  // )
+
+  return (
+    <>
+      <BattlescapeClient gameID="gameid" playerID="0" />
+      {/* <BattlescapeClient gameID="gameid" playerID="1" /> */}
+    </>
+  );
+}
 
 const BattlescapeClient = Client({
   game: Battlescape,
-  board: BoardRouter,
+  board: Board,
   multiplayer: Local(),
+  // multiplayer: SocketIO({ server: 'http://localhost:8000' }),
+  // multiplayer: SocketIO({ server: 'http://battlescape-server.herokuapp.com' }),
   numPlayers: 2,
-  debug: true,
+  debug: false,
   enhancer: window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 });
 
-const App = () => (
-  <div
-    style={{ maxWidth: "600px", padding: "2rem" }}
-  >
-    <h1>Player 0 View:</h1>
-    <BattlescapeClient playerID="0" />
-    <br />
-    <h1>Player 1 View:</h1>
-    <BattlescapeClient playerID="1" />
-  </div>
-);
+const MainLobby = () => {
+  return (
+    <Lobby
+      gameServer={`http://localhost:8000`}
+      lobbyServer={`http://localhost:8000`}
+      // gameServer={`http://battlescape-server.herokuapp.com`}
+      // lobbyServer={`http://battlescape-server.herokuapp.com`}
+      gameComponents={[{ game: Battlescape, board: Board }]}
+    />
+  )
+}
 
 
 
