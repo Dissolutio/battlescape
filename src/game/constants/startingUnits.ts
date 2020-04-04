@@ -10,95 +10,86 @@ import {
 } from './coreHeroscapeCards'
 
 export interface IArmyCard extends ICoreHeroscapeCard {
-  hsCardID: string
+  cardQuantity: number
+  playerID: string
 }
-export interface IArmyCards {
+export interface IUnit extends ICoreHeroscapeCard {
+  unitID: string
+  hsCardID: string
+  playerID: string
+}
+export interface IStartingArmyCards {
   [hsCardId: string]: IArmyCard;
 }
-export interface IGameUnit extends IArmyCard {
-
+export interface IStartingUnits {
+  [unitID: string]: IUnit;
 }
-export const armyCardsInGame =
+
+// MAKE STARTING ARMY CARDS
+export const armyCardsInGame: IStartingArmyCards =
 {
-  [neGokSa.id]: {
+  [neGokSa.hsCardID]: {
     ...neGokSa,
-    id: null,
-    hsCardID: neGokSa.id,
     cardQuantity: 1,
     playerID: '0',
   },
-  [syvarris.id]: {
+  [syvarris.hsCardID]: {
     ...syvarris,
-    id: null,
-    hsCardID: syvarris.id,
     cardQuantity: 1,
     playerID: '0',
   },
-  [marroWarriors.id]: {
+  [marroWarriors.hsCardID]: {
     ...marroWarriors,
-    id: null,
-    hsCardID: marroWarriors.id,
     cardQuantity: 1,
     playerID: '0',
   },
-  [agentCarr.id]: {
+  [agentCarr.hsCardID]: {
     ...agentCarr,
-    id: null,
-    hsCardID: agentCarr.id,
     cardQuantity: 1,
     playerID: '1',
   },
-  [kravMagaAgents.id]: {
+  [kravMagaAgents.hsCardID]: {
     ...kravMagaAgents,
-    id: null,
-    hsCardID: kravMagaAgents.id,
     cardQuantity: 1,
     playerID: '1',
   },
-  [deathwalker9000.id]: {
+  [deathwalker9000.hsCardID]: {
     ...deathwalker9000,
-    id: null,
-    hsCardID: deathwalker9000.id,
     cardQuantity: 1,
     playerID: '1',
   },
-  [mimring.id]: {
+  [mimring.hsCardID]: {
     ...mimring,
-    id: null,
-    hsCardID: mimring.id,
     cardQuantity: 1,
     playerID: '1',
   },
 }
-const player0Army = {
 
-}
-const player1Army = {
-
-}
-export const startingUnits = convertCardsToStartingUnits(armyCardsInGame)
-
-function convertCardsToStartingUnits(armyCardsInGame: IArmyCards) {
-  // ID FACTORY
-  let unitUUID = 0
-  function unitGameID(playerID) {
-    return `player${playerID}-unit${unitUUID++}`
+//  MAKE STARTING UNITS
+export const startingUnits: IStartingUnits = convertCardsToStartingUnits(armyCardsInGame)
+function convertCardsToStartingUnits(armyCardsInGame: IStartingArmyCards) {
+  // id factory
+  let unitID = 0
+  function makeUnitID(playerID) {
+    return `1${unitID++}-p${playerID}`
   }
-  // CARDS
+  // cards...
   const startingUnits = Object.values(armyCardsInGame)
-    // CARDS TO FIGURES
-    .reduce((result, currentCard) => {
+    // ...to figures
+    .reduce((result, currentCard: IArmyCard) => {
       const figuresArr = Array.apply(null, Array(parseInt(currentCard.figures) * currentCard.cardQuantity))
-      // FIGURES TO GAME UNITS
+      // ...to game units
       const unitsFromCurrentCard = figuresArr.reduce((unitsResult, figure, i, arr) => {
-        const gameID = unitGameID(currentCard.playerID)
+        const unitID = makeUnitID(currentCard.playerID)
+        const newGameUnit = {
+          unitID,
+          hsCardID: currentCard.hsCardID,
+          playerID: currentCard.playerID,
+
+        }
         return {
           ...unitsResult,
-          [`${gameID}`]: {
-            gameID,
-            hsCardID: currentCard.id,
-            playerID: `${currentCard.playerID}`,
-          }
+          [unitID]: newGameUnit
         }
       }, {})
       return {
