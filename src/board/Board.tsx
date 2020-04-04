@@ -2,28 +2,35 @@ import React, { useState } from 'react'
 
 import { MapDisplay } from './MapDisplay'
 import { ArmyForPlacing } from './ArmyForPlacing'
+import { IStartZones, FullHex, IUnit } from '../game/constants/mapGen'
 import './layout.css'
 
-export default function Board(props) {
-    console.log("Board -> props", props)
-    const { boardHexes, startingUnits, armyCardsInGame, startZones } = props.G
-
-    const allUnits = Object.values(startingUnits)
-    const playerID = props.playerID
-    const placeUnit = props.moves.placeUnit
-    const startZone = startZones[playerID]
+export default function Board({ G }) {
+    const {
+        boardHexes,
+        armyCardsInGame,
+        startingUnits,
+        coreHeroscapeCards,
+    } = G
+    const playerID = G.playerID
+    const placeUnit = G.moves.placeUnit
+    const startZone: FullHex[] = G.startZones[playerID]
 
     const [activeHexID, setActiveHexID] = useState({})
     const [selectedUnitGameID, setSelectedUnitGameID] = useState('')
-    const selectedUnit = startingUnits[selectedUnitGameID]
+
     const [availableUnits, setAvailableUnits] = useState(() => (initialAvailableUnits()))
+
     const [errorMsg, setErrorMsg] = useState('')
+
+    const allUnits = Object.values(startingUnits)
+    const selectedUnit = startingUnits[selectedUnitGameID]
 
     function initialAvailableUnits() {
         return allUnits
-            .filter(unit => unit.playerID === playerID)
-            .map(gameUnit => ({
-                ...gameUnit,
+            .filter((unit: IUnit) => unit.playerID === playerID)
+            .map((gameUnit: IUnit) => ({
+                unitID: gameUnit.unitID,
                 name: armyCardsInGame[gameUnit.hsCardID].name,
                 image: armyCardsInGame[gameUnit.hsCardID].image,
             }))
@@ -32,7 +39,7 @@ export default function Board(props) {
     function onClickBoardHex(event, source) {
         event.preventDefault()
         const hexID = source.props.id
-        const isInStartZone = startZoneIDsArr.includes(hexID)
+        const isInStartZone = startZone.includes(hexID)
         //  Select hex
         if (!selectedUnitGameID) {
             setActiveHexID({ ...source.props })
@@ -54,7 +61,7 @@ export default function Board(props) {
         }
     }
 
-    const onClickPlacementUnit = (gameID) => {
+    function onClickPlacementUnit(gameID) {
         // either deselect unit, or select unit and deselect active hex
         if (gameID === selectedUnitGameID) {
             setSelectedUnitGameID('')
@@ -72,7 +79,6 @@ export default function Board(props) {
         onClickBoardHex,
         boardHexes,
         activeHexID,
-        startZoneIDsArr,
         startingUnits,
         armyCardsInGame
     }
