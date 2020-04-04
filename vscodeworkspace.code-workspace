@@ -5,6 +5,11 @@
 		}
 	],
 	"settings": {
-		"workbench.colorTheme": "Red"
+		"workbench.colorTheme": "Neon Monokai",
+		"editor.cursorWidth": 4,
+		"workbench.colorCustomizations": {
+			"editorCursor.foreground": "#ffff00",
+			"terminalCursor.foreground": "#ffff00"
+		}
 	}
 }
