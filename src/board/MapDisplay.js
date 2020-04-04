@@ -1,49 +1,54 @@
 import React from 'react'
-import { HexGrid, Layout, Hexagon, HexUtils, Pattern, Text } from 'react-hexgrid';
+import styled from 'styled-components';
+import { HexGrid, Layout, Hexagon, HexUtils } from 'react-hexgrid';
+
 import { unitIcons } from '../game/constants/unitIcons'
-import { playerColors } from '../game/constants/playerColors'
-import { UnitPatterns } from './UnitPatterns'
+import { playerColors } from '../game/constants/mapGen'
 
 export function MapDisplay({ mapProps }) {
-  const { activeHex, boardHexes, onClickBoardHex,
-    selectedUnitGameId, startZoneIdsArr,
+  const { activeHexID, boardHexes, onClickBoardHex,
+    selectedUnitGameID, startZoneIDsArr,
     startingUnits, armyCardsInGame } = mapProps
 
   const hexagons = Object.values(boardHexes)
   return (
-    <HexGrid width={600} height={700} style={{ overflow: "auto" }}>
-      <Layout size={{ x: 8, y: 8 }}>
-        <MainMap
-          activeHex={activeHex}
-          hexagons={hexagons}
-          onClickBoardHex={onClickBoardHex}
-          startZoneIdsArr={startZoneIdsArr}
-          selectedUnitGameId={selectedUnitGameId}
-          startingUnits={startingUnits}
-          armyCardsInGame={armyCardsInGame}
-        />
-        <UnitPatterns />
-      </Layout>
-    </HexGrid>
+    <MapStyle>
+      <HexGrid width={500} height={500}>
+        <Layout size={{ x: 6, y: 6 }}>
+          <MainMap
+            activeHexID={activeHexID}
+            hexagons={hexagons}
+            onClickBoardHex={onClickBoardHex}
+            startZoneIDsArr={startZoneIDsArr}
+            selectedUnitGameID={selectedUnitGameID}
+            startingUnits={startingUnits}
+            armyCardsInGame={armyCardsInGame}
+          />
+        </Layout>
+      </HexGrid>
+    </MapStyle>
   )
 }
+
 const MainMap = (props) => {
-  const { hexagons, activeHex,
-    onClickBoardHex, startZoneIdsArr,
-    selectedUnitGameId, startingUnits,
+  const { hexagons, activeHexID,
+    onClickBoardHex, startZoneIDsArr,
+    selectedUnitGameID, startingUnits,
     armyCardsInGame } = props
-  const hexIsStartZoneHex = (hex) => {
-    return startZoneIdsArr.includes(hex.id)
+
+  function isStartZoneHex(hex) {
+    return startZoneIDsArr.includes(hex.id)
   }
-  const hexIsActiveHex = (hex) => HexUtils.equals(hex, activeHex)
-  const unitIsSelected = Boolean(selectedUnitGameId)
-  const unitForHex = (hex) => {
-    if (!hex?.unitGameId) { return '' }
-    const unit = startingUnits[hex.unitGameId]
-    console.log("unitForHex -> armyCardsInGame[unit.hsCardId]", armyCardsInGame[unit.hsCardId].portraitPattern)
+  function isActiveHex(hex) {
+    return HexUtils.equals(hex, activeHexID)
+  }
+
+  function getUnitForHex(hex) {
+    if (!hex?.unitGameID) { return '' }
+    const unit = startingUnits[hex.unitGameID]
     return {
       ...unit,
-      ...armyCardsInGame[unit.hsCardId]
+      ...armyCardsInGame[unit.hsCardID]
     }
   }
   return hexagons.map((hex, i) => {
@@ -56,28 +61,54 @@ const MainMap = (props) => {
         onClick={(e, h) => onClickBoardHex(e, h)}
         fill={unitPortrait || ''}
         className={
-          unitIsSelected ?
-            `${hexIsStartZoneHex(hex) ? 'startZoneHex' : ''}`
+          selectedUnitGameID ?
+            `${isStartZoneHex(hex) ? 'startZoneHex' : ''}`
             :
-            `${hexIsActiveHex(hex) ? 'selectedMapHex' : ''}`}
+            `${isActiveHex(hex) ? 'selectedMapHex' : ''}`}
       >
-
+        <UnitIcon unit={getUnitForHex(hex)} />
       </Hexagon >
     )
   })
 }
 
-const UnitIcon = ({ unitForHex }) => {
-  if (!unitForHex) { return null }
-  const id = unitForHex && unitForHex.hsCardId
+const UnitIcon = ({ unit }) => {
+  if (!unit) { return null }
+  const id = unit && unit.hsCardID
   const props = {
     x: "-3",
     y: "-3",
     style: {
-      fill: `${playerColors[unitForHex.playerId]}`,
+      fill: `${playerColors[unit.playerID]}`,
       fontSize: '0.5rem',
       transform: "translate(30, 0)",
     }
   }
   return unitIcons[id](props)
 }
+
+const MapStyle = styled.div`
+    background: #e4e7ec;
+    color: #6d819c;
+    overflow: auto;
+  g {
+    fill: #7be3f6;
+  }
+  .selectedMapHex > g {
+    fill: #BaDa55;
+  }
+  .startZoneHex > g {
+    fill: #BaDa55;
+  }
+  svg g polygon {
+    stroke: #263959;
+    stroke-width: 0.2;
+  }
+  svg g polygon text {
+    font-size: 0.1rem;
+  }
+svg g:hover {
+    fill: #BaDa55;
+    fill-opacity: 0.7;
+  }
+`;

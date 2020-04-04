@@ -1,5 +1,3 @@
-import { coreHeroscapeCards } from './coreHeroscapeCards'
-
 export const MS1Cards = coreHeroscapeCards.filter(filterMasterSetROTV)
 export const MS1Heroes = MS1Cards.filter(filterHero)
 export const MS1Squads = MS1Cards.filter(filterSquad)

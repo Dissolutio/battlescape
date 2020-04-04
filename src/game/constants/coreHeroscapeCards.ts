@@ -1,4 +1,31 @@
-export const coreHeroscapeCards = [
+export interface ICoreHeroscapeCard {
+	name: string
+	id?: string
+	image: string
+	portraitPattern: string
+	general: string
+	race: string
+	type: string
+	cardClass: string
+	personality: string
+	height: string
+	life: string
+	move: string
+	range: string
+	attack: string
+	defense: string
+	points: string
+	figures: string
+	hexes: string
+	setWave: string
+	abilities: Ability[]
+}
+export type Ability = {
+	name: string
+	desc: string
+}
+
+export const coreHeroscapeCards: ICoreHeroscapeCard[] = [
 	{
 		name: 'Marro Warriors',
 		id: 'hs1000',
@@ -5827,7 +5854,7 @@ export const coreHeroscapeCards = [
 			{
 				name: 'Enslave 17',
 				desc:
-					"When revealing an order marker on this Mind Flayer Mastermind, after taking this Mind Flayer Mastermind's turn, you may choose any Unique Hero figure within 4 clear sight spaces of this Mind Flayer Mastermind. Roll the 20-sided die. If you roll a 17 or higher, take temporary control of the chosen Hero and immediately take a turn with that Hero. At the end of that turn, control of the chosen Hero returns to its previous playerId. All order markers that were on the figure's Army Card will stay on the Army Card. Enslave does not affect Mindflayers.",
+					"When revealing an order marker on this Mind Flayer Mastermind, after taking this Mind Flayer Mastermind's turn, you may choose any Unique Hero figure within 4 clear sight spaces of this Mind Flayer Mastermind. Roll the 20-sided die. If you roll a 17 or higher, take temporary control of the chosen Hero and immediately take a turn with that Hero. At the end of that turn, control of the chosen Hero returns to its previous playerID. All order markers that were on the figure's Army Card will stay on the Army Card. Enslave does not affect Mindflayers.",
 			},
 		],
 	},
@@ -5860,7 +5887,7 @@ export const coreHeroscapeCards = [
 			{
 				name: 'Moon Frenzy',
 				desc:
-					"After revealing an Order Marker on this Werewolf Lord, before taking this Werewolf Lord's turn, roll the 20-sided die. If you roll an 11 or higher, you may first take a turn with any Hybrid Hero in play. If you take a turn with an oppenent's Hybrid Hero, you control that Hero for the duration of its turn. At the end of its turn, control of the Hybrid Hero returns to its previous playerId. All Order Markers that were on the figure's Army Card will stay on the Army Card.",
+					"After revealing an Order Marker on this Werewolf Lord, before taking this Werewolf Lord's turn, roll the 20-sided die. If you roll an 11 or higher, you may first take a turn with any Hybrid Hero in play. If you take a turn with an oppenent's Hybrid Hero, you control that Hero for the duration of its turn. At the end of its turn, control of the Hybrid Hero returns to its previous playerID. All Order Markers that were on the figure's Army Card will stay on the Army Card.",
 			},
 		],
 	},
@@ -6851,3 +6878,35 @@ export const coreHeroscapeCards = [
 		],
 	},
 ];
+
+export const MS1Cards: ICoreHeroscapeCard[] = coreHeroscapeCards.filter(filterMasterSetROTV)
+export const MS1Heroes = MS1Cards.filter(filterHero)
+export const MS1Squads = MS1Cards.filter(filterSquad)
+export const MS1Abilities = MS1Cards.reduce(getAbilities, [])
+
+export const neGokSa = MS1Cards.find(unit => unit.name === "Ne-gok-sa")
+export const marroWarriors = MS1Cards.find(unit => unit.name === "Marro Warriors")
+export const mimring = MS1Cards.find(unit => unit.name === "Mimring")
+export const syvarris = MS1Cards.find(unit => unit.name === "Syvarris")
+export const deathwalker9000 = MS1Cards.find(unit => unit.name === "Deathwalker 9000")
+
+export const agentCarr = MS1Cards.find(unit => unit.name === "Agent Carr")
+export const kravMagaAgents = MS1Cards.find(unit => unit.name === "Krav Maga Agents")
+
+function filterMasterSetROTV(card) {
+	if (card.setWave !== 'Master Set: Rise of the Valkyrie') return false
+	return true
+}
+function filterHero(card) {
+	if (card.type.includes('hero')) return true
+	return false
+}
+function filterSquad(card) {
+	if (card.type.includes('squad')) return true
+	return false
+}
+function getAbilities(previous, current, index, array) {
+	const abilities = [...current.abilities]
+	return previous.concat(abilities)
+}
+
