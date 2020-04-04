@@ -2,6 +2,7 @@ import { TurnOrder, PlayerView, Stage } from 'boardgame.io/core';
 
 import { boardHexes, startZones } from './constants/mapGen'
 import { startingUnits, armyCardsInGame } from './constants/startingUnits'
+import { coreHeroscapeCards } from './constants/coreHeroscapeCards'
 
 const placeArmies = {
     start: true,
@@ -26,9 +27,11 @@ export const Battlescape = {
         {
             boardHexes,
             startZones,
-            startingUnits,
             armyCardsInGame,
+            startingUnits,
             initiative: {},
+            // FOR PLAYING WITH
+            coreHeroscapeCards,
         }
     ),
     seed: 'random_string',
