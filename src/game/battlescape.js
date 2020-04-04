@@ -4,22 +4,10 @@ import { boardHexes, startZones } from './constants/mapGen'
 import { startingUnits, armyCardsInGame } from './constants/startingUnits'
 import { coreHeroscapeCards } from './constants/coreHeroscapeCards'
 
-const placeArmies = {
-    start: true,
-    moves: {
-        placeUnit: (G, ctx, hexId, unit) => {
-            G.boardHexes[hexId].unitGameId = unit.gameId
-        }
-    },
-    turn: {
-        order: TurnOrder.DEFAULT,
-        // order: TurnOrder.CUSTOM_FROM('initiative'),
-        activePlayer: { all: Stage.NULL },
-    },
-    setActivePlayers: {
-        all: 'armyPlacement'
-    }
-}
+console.log("coreHeroscapeCards", coreHeroscapeCards)
+console.log("startingUnits, armyCardsInGame", startingUnits, armyCardsInGame)
+console.log("boardHexes, startZones", boardHexes, startZones)
+
 
 export const Battlescape = {
     name: 'Battlescape',
@@ -30,13 +18,28 @@ export const Battlescape = {
             armyCardsInGame,
             startingUnits,
             initiative: {},
-            // FOR PLAYING WITH
             coreHeroscapeCards,
         }
     ),
     seed: 'random_string',
     phases: {
-        placeArmies,
+        'placeArmies': {
+            start: true,
+            moves: {
+                // placeUnit: (G, ctx, hexId, unit) => {
+                //     G.boardHexes[hexId].unitGameId = unit.unitId
+                // }
+                placeUnit: () => { }
+            },
+            turn: {
+                order: TurnOrder.DEFAULT,
+                // order: TurnOrder.CUSTOM_FROM('initiative'),
+                activePlayer: { all: Stage.NULL },
+            },
+            setActivePlayers: {
+                all: 'armyPlacement'
+            }
+        }
     },
     endIf: (G, ctx) => (() => false),
     events: {

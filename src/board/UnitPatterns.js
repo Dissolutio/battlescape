@@ -1,17 +1,19 @@
 import React from 'react'
+// SEE BELOW for <Pattern /> DETAILS
 import { Pattern } from 'react-hexgrid'
+
 import kravmagaagents from '../portraits/kravmagaagents.jpg'
 import agentcarr from '../portraits/agentcarr.jpg'
 import negoksa from '../portraits/negoksa.jpg'
 import syvarris from '../portraits/syvarris.jpg'
 import marrowarriors from '../portraits/marrowarriors.jpg'
+import deathwalker9000 from '../portraits/deathwalker9000.jpg'
 import mimring from '../portraits/mimring.jpg'
 export const UnitPatterns = () => {
   return (
     <>
-      <Pattern id="marrowarriors-portrait"
-        size={{ x: 9, y: 9 }}
-        link={marrowarriors} />
+      <Pattern id="marrowarriors-portrait" link={marrowarriors} x={9} y={9} />
+      <Pattern id="deathwalker9000-portrait" link={deathwalker9000} />
       <Pattern id="syvarris-portrait" link={syvarris} />
       <Pattern id="kravmagaagents-portrait" link={kravmagaagents} />
       <Pattern id="agentcarr-portrait" link={agentcarr} />
@@ -20,17 +22,9 @@ export const UnitPatterns = () => {
     </>
   )
 }
-
+// THIS IS WHAT PATTERN FROM REACT-HEXGRID LOOKS LIKE
 // const Pattern = (props) => {
 //   const { id, link, x, y, height, width } = props
-//   // static propTypes = {
-//   //   id: PropTypes.string.isRequired,
-//   //   link: PropTypes.string.isRequired,
-//   //   size: PropTypes.object
-//   // };
-//   // static defaultProps = {
-//   //   size: new Point(10, 10)
-//   // };
 //   return (
 //     <defs>
 //       <pattern id={id} patternUnits="objectBoundingBox" x={x} y={y} width={width} height={height}>

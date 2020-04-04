@@ -1,11 +1,11 @@
 import React from 'react'
 import styled from 'styled-components';
-import { Image } from "cloudinary-react"
+// import { Image } from "cloudinary-react"
 
-export const ArmyForPlacing = ({ availableUnits, onClickUnit, selectedUnitGameID }) => {
+export const ArmyForPlacing = ({ availableUnits, onClickUnit, activeUnitID, errorMsg }) => {
 
   const selectedStyle = (gameID) => {
-    if (selectedUnitGameID === gameID) {
+    if (activeUnitID === gameID) {
       return {
         boxShadow: `0 0 5px rgba(81, 203, 238, 1)`,
         padding: `3px 0px 3px 3px`,
@@ -20,7 +20,7 @@ export const ArmyForPlacing = ({ availableUnits, onClickUnit, selectedUnitGameID
   return (
     <>
       <h2>Units available to place on map:</h2>
-      <Wrapper>
+      <ArmyListStyle>
         {availableUnits && availableUnits.map(unit => (
           <li
             key={unit.gameID}
@@ -29,16 +29,17 @@ export const ArmyForPlacing = ({ availableUnits, onClickUnit, selectedUnitGameID
               style={selectedStyle(unit.gameID)}
               onClick={() => onClickUnit(unit.gameID)}
             >
-              <Image cloudName="mystery-maintenance" publicId={`${unit.image}`} alt={unit.name} />
+              {/* <Image cloudName="mystery-maintenance" publicId={`${unit.image}`} alt={unit.name} /> */}
               <span>{unit.name}</span>
             </button>
           </li>
         ))}
-      </Wrapper>
+      </ArmyListStyle>
+      <p style={{ color: "red" }}>{errorMsg}</p>
     </>
   )
 }
-const Wrapper = styled.ul`
+const ArmyListStyle = styled.ul`
 display: flex;
 flex-flow: row wrap;
 list-style-type: none;

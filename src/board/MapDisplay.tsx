@@ -1,45 +1,66 @@
 import React from 'react'
 import styled from 'styled-components';
 import { HexGrid, Layout, Hexagon, HexUtils } from 'react-hexgrid';
-
+import { IBoardHex } from '../game/constants/mapGen'
+import { UnitPatterns } from './UnitPatterns'
 import { unitIcons } from '../game/constants/unitIcons'
 import { playerColors } from '../game/constants/mapGen'
 
 export function MapDisplay({ mapProps }) {
-  const { activeHexID, boardHexes, onClickBoardHex,
-    selectedUnitGameID, startZoneIDsArr,
-    startingUnits, armyCardsInGame } = mapProps
+  const {
+    playerID,
+    boardHexes,
+    startZones,
+    armyCardsInGame,
+    startingUnits,
+    activeHexID,
+    activeUnitID,
+    onClickBoardHex,
+  } = mapProps
 
-  const hexagons = Object.values(boardHexes)
+  const boardHexesArr = Object.values(boardHexes)
   return (
-    <MapStyle>
+    <HexSVGStyle>
       <HexGrid width={500} height={500}>
         <Layout size={{ x: 6, y: 6 }}>
-          <MainMap
-            activeHexID={activeHexID}
-            hexagons={hexagons}
-            onClickBoardHex={onClickBoardHex}
-            startZoneIDsArr={startZoneIDsArr}
-            selectedUnitGameID={selectedUnitGameID}
+          <Hexes
+            // Game state
+            playerID={playerID}
+            boardHexesArr={boardHexesArr}
+            startZones={startZones}
             startingUnits={startingUnits}
             armyCardsInGame={armyCardsInGame}
+            // active hex
+            activeHexID={activeHexID}
+            onClickBoardHex={onClickBoardHex}
+            // active unit
+            activeUnitID={activeUnitID}
           />
+          <UnitPatterns />
         </Layout>
       </HexGrid>
-    </MapStyle>
+    </HexSVGStyle>
   )
 }
 
-const MainMap = (props) => {
-  const { hexagons, activeHexID,
-    onClickBoardHex, startZoneIDsArr,
-    selectedUnitGameID, startingUnits,
-    armyCardsInGame } = props
+const Hexes = (props) => {
+  const {
+    playerID,
+    boardHexesArr,
+    startingUnits,
+    armyCardsInGame,
+    activeHexID,
+    activeUnitID,
+    onClickBoardHex,
+    startZones,
+  } = props
 
-  function isStartZoneHex(hex) {
-    return startZoneIDsArr.includes(hex.id)
+  const startZone: IBoardHex[] = startZones[playerID]
+
+  function isStartZoneHex(hex: IBoardHex) {
+    return startZone.includes(hex)
   }
-  function isActiveHex(hex) {
+  function isActiveHex(hex: IBoardHex) {
     return HexUtils.equals(hex, activeHexID)
   }
 
@@ -51,20 +72,20 @@ const MainMap = (props) => {
       ...armyCardsInGame[unit.hsCardID]
     }
   }
-  return hexagons.map((hex, i) => {
-    const unitPortrait = unitForHex(hex) ? unitForHex(hex).portraitPattern : ''
-    console.log("MainMap -> unitPortrait", unitPortrait)
+  function calcClassNames(hex: IBoardHex) {
+    return activeUnitID ?
+      `${isStartZoneHex(hex) ? 'startZoneHex' : ''}`
+      :
+      `${isActiveHex(hex) ? 'selectedMapHex' : ''}`
+  }
+  return boardHexesArr.map((hex: IBoardHex, i: number) => {
+    // const unitSVGPatternID = getUnitForHex(hex) ? getUnitForHex(hex).portraitPattern : ''
     return (
       <Hexagon
         key={i}
         {...hex}
-        onClick={(e, h) => onClickBoardHex(e, h)}
-        fill={unitPortrait || ''}
-        className={
-          selectedUnitGameID ?
-            `${isStartZoneHex(hex) ? 'startZoneHex' : ''}`
-            :
-            `${isActiveHex(hex) ? 'selectedMapHex' : ''}`}
+        onClick={(e: Event, source: { props: any; }) => onClickBoardHex(e, source.props)}
+        className={calcClassNames(hex)}
       >
         <UnitIcon unit={getUnitForHex(hex)} />
       </Hexagon >
@@ -87,7 +108,7 @@ const UnitIcon = ({ unit }) => {
   return unitIcons[id](props)
 }
 
-const MapStyle = styled.div`
+const HexSVGStyle = styled.div`
     background: #e4e7ec;
     color: #6d819c;
     overflow: auto;
