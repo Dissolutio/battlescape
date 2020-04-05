@@ -8,7 +8,7 @@ export type BasicHex = {
 }
 export interface IBoardHex extends BasicHex {
   id: string
-  unitGameID: string
+  occupyingUnitID: string
   altitude: number
 }
 
@@ -42,7 +42,7 @@ function fillHexInfo(prev: IBoardHexes, curr: BasicHex) {
   const fullHex = {
     ...curr,
     id: curr.toString(),
-    unitGameID: '',
+    occupyingUnitID: '',
     altitude: 1,
   }
   return {

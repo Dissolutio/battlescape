@@ -5,7 +5,7 @@ export const DataReadout = ({ activeHex }) => {
   return (
     <div>
       <div>ActiveHex: {`${(activeHex && activeHex.id) || 'none'}`}</div>
-      <div>Unit on Hex: {`${(activeHex && activeHex.unitGameID) || 'none'}`}</div>
+      <div>Unit on Hex: {`${(activeHex && activeHex.occupyingUnitID) || 'none'}`}</div>
     </div>
   )
 }

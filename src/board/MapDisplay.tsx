@@ -68,8 +68,8 @@ const Hexes = (props) => {
   }
 
   function getUnitForHex(hex) {
-    if (!hex.unitGameID) { return '' }
-    return startingUnits[hex.unitGameID]
+    if (!hex.occupyingUnitID) { return '' }
+    return startingUnits[hex.occupyingUnitID]
   }
   function calcClassNames(hex: IBoardHex) {
     return activeUnitID ?
