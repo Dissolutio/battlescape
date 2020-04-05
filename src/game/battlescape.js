@@ -1,21 +1,22 @@
 import { TurnOrder, PlayerView, Stage } from 'boardgame.io/core';
 
-import { boardHexes, startZones } from './constants/mapGen'
+import { boardHexes, startZones, boardHexesWithPrePlacedUnits } from './constants/mapGen'
 import { startingUnits, armyCardsInGame } from './constants/startingUnits'
 import { coreHeroscapeCards } from './constants/coreHeroscapeCards'
 
 export const Battlescape = {
     name: 'Battlescape',
-    setup: () => (
-        {
-            boardHexes,
+    setup: () => {
+        return {
+            boardHexes: boardHexesWithPrePlacedUnits(),
+            // boardHexes,
             startZones,
             armyCardsInGame,
             startingUnits,
             initiative: {},
             coreHeroscapeCards,
         }
-    ),
+    },
     moves: {
         placeUnit,
     },
@@ -39,5 +40,5 @@ export const Battlescape = {
 }
 
 function placeUnit(G, ctx, hexId, unit) {
-    G.boardHexes[hexId].unitGameID = unit.unitID
+    G.boardHexes[hexId].occupyingUnitID = unit.unitID
 }
