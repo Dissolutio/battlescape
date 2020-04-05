@@ -8,7 +8,7 @@ export type BasicHex = {
 }
 export interface IBoardHex extends BasicHex {
   id: string
-  unitGameId: string
+  unitGameID: string
   altitude: number
 }
 
@@ -19,10 +19,10 @@ export interface IStartZones {
   [playerId: string]: string[];
 }
 // CONTROLS -- MAP
-const mapDiameter = 3
 const startZoneDistanceFromCenter = 2
+
 // HEXES MADE BY REACT-HEXGRID => Battlescape Map Hexes :)
-const basicHexes: BasicHex[] = GridGenerator.hexagon(mapDiameter)
+const basicHexes: BasicHex[] = GridGenerator.hexagon(4)
 export const boardHexes: IBoardHexes = basicHexes.reduce(fillHexInfo, {})
 
 // MAKE SOME STARTZONES FOR 2 PLAYERS ON A SIMPLE MAP
@@ -35,15 +35,15 @@ export const startZones: IStartZones = {
 }
 
 export const playerColors = {
-  0: 'rgb(200, 200, 198)', // blue #C8C8C6
+  0: 'rgb(3, 64, 120)', // blue #034078
   1: 'rgb(219,45,32)', // red #db2d20
 }
 function fillHexInfo(prev: IBoardHexes, curr: BasicHex) {
   const fullHex = {
     ...curr,
     id: curr.toString(),
-    unitGameId: '',
-    altitude: 1
+    unitGameID: '',
+    altitude: 1,
   }
   return {
     ...prev,

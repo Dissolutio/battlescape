@@ -1,11 +1,11 @@
 import React from 'react'
 import styled from 'styled-components';
-// import { Image } from "cloudinary-react"
+import { Image } from "cloudinary-react"
 
 export const ArmyForPlacing = ({ availableUnits, onClickUnit, activeUnitID, errorMsg }) => {
 
-  const selectedStyle = (gameID) => {
-    if (activeUnitID === gameID) {
+  const selectedStyle = (unitID) => {
+    if (activeUnitID === unitID) {
       return {
         boxShadow: `0 0 5px rgba(81, 203, 238, 1)`,
         padding: `3px 0px 3px 3px`,
@@ -19,17 +19,16 @@ export const ArmyForPlacing = ({ availableUnits, onClickUnit, activeUnitID, erro
 
   return (
     <>
-      <h2>Units available to place on map:</h2>
       <ArmyListStyle>
         {availableUnits && availableUnits.map(unit => (
           <li
-            key={unit.gameID}
+            key={unit.unitID}
           >
             <button
-              style={selectedStyle(unit.gameID)}
-              onClick={() => onClickUnit(unit.gameID)}
+              style={selectedStyle(unit.unitID)}
+              onClick={() => onClickUnit(unit.unitID)}
             >
-              {/* <Image cloudName="mystery-maintenance" publicId={`${unit.image}`} alt={unit.name} /> */}
+              <Image cloudName="mystery-maintenance" publicId={`${unit.image}`} alt={unit.name} />
               <span>{unit.name}</span>
             </button>
           </li>
@@ -43,11 +42,9 @@ const ArmyListStyle = styled.ul`
 display: flex;
 flex-flow: row wrap;
 list-style-type: none;
+overflow-x: scroll;
 margin: 0;
 padding: 0;
-li {
-  width: 120px;
-}
 button {
   display: flex;
   flex-flow: column nowrap;
@@ -55,12 +52,11 @@ button {
   height: 100%;
 }
 img {
-  margin: 0.5rem 0 0 0;
   border-radius: 35%;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: auto;
+  height: 1.5rem;
 }
 span {
-  font-size: 0.7rem;
+  font-size: 0.3rem;
 }
 `

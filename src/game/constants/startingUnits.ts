@@ -71,7 +71,7 @@ function convertCardsToStartingUnits(armyCardsInGame: IStartingArmyCards) {
   // id factory
   let unitID = 0
   function makeUnitID(playerID) {
-    return `1${unitID++}-p${playerID}`
+    return `u${unitID++}-p${playerID}`
   }
   // cards...
   const startingUnits = Object.values(armyCardsInGame)

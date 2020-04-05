@@ -6,33 +6,31 @@ import { DataReadout } from './DataReadout'
 import { IStartZones, IBoardHex } from '../game/constants/mapGen'
 import { IUnit } from '../game/constants/startingUnits'
 
-import './layout.css'
 
-export default function Board({ G }) {
+export default function Board(props) {
+    // BGio props
+    const { G, ctx, moves, events, reset, redo, undo, step, log, gameID, playerID, gameMetadata } = props
     const {
         boardHexes,
         startZones,
         armyCardsInGame,
         startingUnits,
         coreHeroscapeCards,
-        playerID
     } = G
 
-    console.log("Board -> coreHeroscapeCards", coreHeroscapeCards)
-
-    const { placeUnit } = G.moves
+    const { placeUnit } = moves
     const startZone: string[] = startZones[playerID]
+    const allUnits = Object.values(startingUnits)
 
-    const [activeHexID, setActiveHexID] = useState({})
+    const [activeHexID, setActiveHexID] = useState('')
     const [activeUnitID, setActiveUnitID] = useState('')
-    const [availableUnits, setAvailableUnits] = useState(() => (initialAvailableUnits()))
+    const [availableUnits, setAvailableUnits] = useState(() => (initialAvailableUnits(allUnits)))
 
     const [errorMsg, setErrorMsg] = useState('')
 
-    const allUnits = Object.values(startingUnits)
     const selectedUnit = startingUnits[activeUnitID]
 
-    function initialAvailableUnits() {
+    function initialAvailableUnits(allUnits) {
         return allUnits
             .filter((unit: IUnit) => unit.playerID === playerID)
             .map((gameUnit: IUnit) => ({
@@ -44,11 +42,11 @@ export default function Board({ G }) {
 
     function onClickBoardHex(event: Event, sourceHex: IBoardHex) {
         const hexID = sourceHex.id
-        event.preventDefault()
         const isInStartZone = startZone.includes(hexID)
         // EITHER
         //  Select hex
         if (!activeUnitID) {
+            console.log("SELECT HEX", activeUnitID)
             setActiveHexID(hexID)
             setErrorMsg('')
             return
@@ -63,6 +61,7 @@ export default function Board({ G }) {
         }
         // or Can't place unit, because not in start zone
         if (activeUnitID && !isInStartZone) {
+            console.log("CANNOT PLACE UNIT -- choose hex inside start zone", activeUnitID)
             setErrorMsg("You must place units inside your start zone. Invalid hex selected.")
             return
         }
@@ -78,9 +77,6 @@ export default function Board({ G }) {
         }
     }
 
-    const dataReadoutProps = {
-        activeHexID
-    }
     const mapProps = {
         boardHexes,
         startZones,
@@ -95,50 +91,47 @@ export default function Board({ G }) {
     return (
         <LayoutFlexColumn>
             <TopConsole>
-                {/* <ArmyForPlacing
+                <ArmyForPlacing
                     availableUnits={availableUnits}
                     activeUnitID={activeUnitID}
                     onClickUnit={onClickPlacementUnit}
                     errorMsg={errorMsg}
-                /> */}
+                />
             </TopConsole>
             <MainDisplay>
-                {/* <MapDisplay
+                <MapDisplay
                     mapProps={mapProps}
-                /> */}
+                />
             </MainDisplay>
             <BottomConsole>
-                {/* <DataReadout
-                    dataReadoutProps={dataReadoutProps}
-                /> */}
+                <DataReadout
+                    activeHex={boardHexes[activeHexID]}
+                />
             </BottomConsole>
-        </LayoutFlexColumn>
+        </LayoutFlexColumn >
     )
 }
 const LayoutFlexColumn = styled.div`
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    background-color: black;
     width: 100vw;
     height: 100vh;
     padding: 0;
     margin: 0;
-`;
+    overflow: scroll;
+    `;
 const TopConsole = styled.div`
-    background-color: blue;
     color: white;
     height: 10%;
     width: 100%;
-`;
+    `;
 const MainDisplay = styled.div`
-    background-color: yellow;
-    color: black;
-    flex-grow: 1;
-    width: 100%;
+    height: 75%;
+    overflow: scroll;
   `;
 const BottomConsole = styled.div`
-    background-color: red;
     color: white;
-    height: 20%;
+    height: 15%;
     width: 100%;
   `

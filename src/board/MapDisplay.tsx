@@ -21,19 +21,22 @@ export function MapDisplay({ mapProps }) {
   const boardHexesArr = Object.values(boardHexes)
   return (
     <HexSVGStyle>
-      <HexGrid width={500} height={500}>
-        <Layout size={{ x: 6, y: 6 }}>
+      <HexGrid width={'100%'} height={'100%'}>
+        <Layout
+          size={{ x: 5, y: 5 }}
+          flat={true}
+          className={``}
+          origin={{ x: 0, y: 0 }}
+          spacing={1.01}
+        >
           <Hexes
-            // Game state
             playerID={playerID}
             boardHexesArr={boardHexesArr}
             startZones={startZones}
             startingUnits={startingUnits}
             armyCardsInGame={armyCardsInGame}
-            // active hex
             activeHexID={activeHexID}
             onClickBoardHex={onClickBoardHex}
-            // active unit
             activeUnitID={activeUnitID}
           />
           <UnitPatterns />
@@ -55,22 +58,18 @@ const Hexes = (props) => {
     startZones,
   } = props
 
-  const startZone: IBoardHex[] = startZones[playerID]
+  const startZone: string[] = startZones[playerID]
 
   function isStartZoneHex(hex: IBoardHex) {
-    return startZone.includes(hex)
+    return startZone.includes(hex.id)
   }
   function isActiveHex(hex: IBoardHex) {
-    return HexUtils.equals(hex, activeHexID)
+    return hex.id === activeHexID
   }
 
   function getUnitForHex(hex) {
-    if (!hex?.unitGameID) { return '' }
-    const unit = startingUnits[hex.unitGameID]
-    return {
-      ...unit,
-      ...armyCardsInGame[unit.hsCardID]
-    }
+    if (!hex.unitGameID) { return '' }
+    return startingUnits[hex.unitGameID]
   }
   function calcClassNames(hex: IBoardHex) {
     return activeUnitID ?
@@ -84,7 +83,7 @@ const Hexes = (props) => {
       <Hexagon
         key={i}
         {...hex}
-        onClick={(e: Event, source: { props: any; }) => onClickBoardHex(e, source.props)}
+        onClick={(e, source) => onClickBoardHex(e, source.props)}
         className={calcClassNames(hex)}
       >
         <UnitIcon unit={getUnitForHex(hex)} />
@@ -94,42 +93,50 @@ const Hexes = (props) => {
 }
 
 const UnitIcon = ({ unit }) => {
-  if (!unit) { return null }
-  const id = unit && unit.hsCardID
+  const { hsCardID } = unit
+  if (!unit || !hsCardID) {
+    return null
+  }
+  const unitPlayerID = unit.playerID
+  const playerColor = playerColors[unitPlayerID]
+  console.log("UnitIcon -> playerColor", playerColor)
   const props = {
-    x: "-3",
-    y: "-3",
+    x: "-2.5",
+    y: "-2.5",
     style: {
-      fill: `${playerColors[unit.playerID]}`,
-      fontSize: '0.5rem',
+      fill: `${playerColor}`,
+      fontSize: '0.3rem',
       transform: "translate(30, 0)",
     }
   }
-  return unitIcons[id](props)
+  return unitIcons[hsCardID](props)
 }
 
 const HexSVGStyle = styled.div`
-    background: #e4e7ec;
     color: #6d819c;
-    overflow: auto;
-  g {
-    fill: #7be3f6;
-  }
-  .selectedMapHex > g {
-    fill: #BaDa55;
-  }
-  .startZoneHex > g {
-    fill: #BaDa55;
-  }
-  svg g polygon {
-    stroke: #263959;
+
+    background: #263959;
+    g {
+      fill: #6d819c;
+    }
+    .selectedMapHex > g {
+      fill: #BaDa55;
+    }
+    .startZoneHex > g {
+      fill: #BaDa55;
+    }
+    svg g polygon {
+    stroke: #263959; /* #263959 darkBlue */
     stroke-width: 0.2;
   }
   svg g polygon text {
     font-size: 0.1rem;
   }
-svg g:hover {
-    fill: #BaDa55;
-    fill-opacity: 0.7;
+  @media (hover: hover) {
+    svg g:hover {
+        fill: rgb(224, 150, 40);
+        fill-opacity: 0.6;
+      }
+
   }
 `;

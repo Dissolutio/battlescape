@@ -1,23 +1,24 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { Client, Lobby } from 'boardgame.io/react';
 import { Local } from 'boardgame.io/multiplayer';
 // import { SocketIO } from "boardgame.io/multiplayer";
 
 import Board from './board/Board'
 import { Battlescape } from './game/battlescape'
-console.log("Battlescape", Battlescape)
 
-const App = () => {
+export const App = () => {
 
   // return (
   //   <MainLobby />
   // )
 
   return (
-    <BattlescapeClient gameID="gameid" playerID="0" />
+    <>
+      <BattlescapeClient gameID="gameid" playerID="0" />
+      <BattlescapeClient gameID="gameid" playerID="1" />
+    </>
   );
 }
-// <BattlescapeClient gameID="gameid" playerID="1" />
 
 const BattlescapeClient = Client({
   game: Battlescape,
@@ -41,7 +42,3 @@ const BattlescapeClient = Client({
 //     />
 //   )
 // }
-
-
-
-export default App;
