@@ -5,7 +5,7 @@ import { ArmyForPlacing } from './ArmyForPlacing'
 import { DataReadout } from './DataReadout'
 import { IStartZones, IBoardHex } from '../game/constants/mapGen'
 import { IUnit } from '../game/constants/startingUnits'
-
+import { BoardContextProvider, useBoardContext } from './useBoardContext'
 
 export default function Board(props) {
     // BGio props
@@ -89,26 +89,28 @@ export default function Board(props) {
     }
 
     return (
-        <LayoutFlexColumn>
-            <TopConsole>
-                <ArmyForPlacing
-                    availableUnits={availableUnits}
-                    activeUnitID={activeUnitID}
-                    onClickUnit={onClickPlacementUnit}
-                    errorMsg={errorMsg}
-                />
-            </TopConsole>
-            <MainDisplay>
-                <MapDisplay
-                    mapProps={mapProps}
-                />
-            </MainDisplay>
-            <BottomConsole>
-                <DataReadout
-                    activeHex={boardHexes[activeHexID]}
-                />
-            </BottomConsole>
-        </LayoutFlexColumn >
+        <BoardContextProvider>
+            <LayoutFlexColumn>
+                <TopConsole>
+                    <ArmyForPlacing
+                        availableUnits={availableUnits}
+                        activeUnitID={activeUnitID}
+                        onClickUnit={onClickPlacementUnit}
+                        errorMsg={errorMsg}
+                    />
+                </TopConsole>
+                <MainDisplay>
+                    <MapDisplay
+                        mapProps={mapProps}
+                    />
+                </MainDisplay>
+                <BottomConsole>
+                    <DataReadout
+                        activeHex={boardHexes[activeHexID]}
+                    />
+                </BottomConsole>
+            </LayoutFlexColumn >
+        </BoardContextProvider>
     )
 }
 const LayoutFlexColumn = styled.div`
