@@ -1,6 +1,10 @@
 import { TurnOrder, PlayerView, Stage } from 'boardgame.io/core';
 
-import { boardHexes, startZones, boardHexesWithPrePlacedUnits } from './constants/mapGen'
+import {
+    boardHexesWithPrePlacedUnits,
+    // boardHexes,
+    startZones,
+} from './constants/mapGen'
 import { startingUnits, armyCardsInGame } from './constants/startingUnits'
 import { coreHeroscapeCards } from './constants/coreHeroscapeCards'
 
@@ -33,7 +37,6 @@ export const Battlescape = {
     },
     endIf: (G, ctx) => { },
     events: {
-        // Don't let clients call this?
         endGame: false,
     },
     playerView: PlayerView.STRIP_SECRETS,
