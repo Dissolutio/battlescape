@@ -42,7 +42,6 @@ const ArmyListStyle = styled.ul`
 display: flex;
 flex-flow: row wrap;
 list-style-type: none;
-overflow-x: scroll;
 margin: 0;
 padding: 0;
 button {

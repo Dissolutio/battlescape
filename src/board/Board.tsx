@@ -119,7 +119,6 @@ const LayoutFlexColumn = styled.div`
     height: 100vh;
     padding: 0;
     margin: 0;
-    overflow: scroll;
     `;
 const TopConsole = styled.div`
     color: white;
