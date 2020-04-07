@@ -25,3 +25,9 @@ yarn-debug.log*
 yarn-error.log*
 
 vscodeworkspace.code-workspace
+
+src/game/constants/coreHeroscapeCards.js
+
+src/game/constants/mapGen.js
+
+src/game/constants/startingUnits.js
