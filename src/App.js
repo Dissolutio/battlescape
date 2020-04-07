@@ -14,9 +14,15 @@ export const App = () => {
 
   return (
     <>
-      <BattlescapeClient gameID="gameid" playerID="0" />
-      <BattlescapeClient gameID="gameid" playerID="1" />
-    </>
+      <div className="playerview">
+        <BattlescapeClient
+          gameID="gameid"
+          playerID='0'
+        />
+        <BattlescapeClient
+          gameID="gameid"
+          playerID='1'
+        />
   );
 }
 

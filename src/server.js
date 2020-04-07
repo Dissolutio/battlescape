@@ -1,5 +1,4 @@
 const Battlescape = require('./game/battlescape').Battlescape;
-console.log("Battlescape", Battlescape)
 
 const Server = require('boardgame.io/server').Server;
 

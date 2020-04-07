@@ -130,6 +130,25 @@ const TopConsole = styled.div`
 const MainDisplay = styled.div`
     height: 75%;
     overflow: scroll;
+    ::-webkit-scrollbar {
+  width: 1em;
+}
+/* Track */
+::-webkit-scrollbar-track-piece {
+  box-shadow: inset 0 0 5px red;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: orange;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: blue;
+}
   `;
 const BottomConsole = styled.div`
     color: white;
