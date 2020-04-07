@@ -5,7 +5,6 @@ export type BasicHex = {
   q: number
   r: number
   s: number
-  toString?: () => string,
 }
 export interface IBoardHex extends BasicHex {
   id: string
@@ -21,7 +20,7 @@ export interface IStartZones {
 }
 
 // HEXES MADE BY REACT-HEXGRID => Battlescape Map Hexes :)
-const basicHexes: BasicHex[] = GridGenerator.hexagon(4)
+const basicHexes: BasicHex[] = GridGenerator.hexagon(8)
 export const boardHexes: IBoardHexes = basicHexes.reduce(fillHexInfo, {})
 
 // MAKE SOME STARTZONES FOR 2 PLAYERS ON A SIMPLE MAP
@@ -45,11 +44,19 @@ export const boardHexesWithPrePlacedUnits = () => {
 
   allUnits.forEach((unit: IUnit) => {
     // Pick random-ish hex from valid start zone for unit
+    const { playerID } = unit
+    let randomHex
+
     // But splitting 2 players with pop & shift looks nice and symmetrical on this map :)
-    const startHexID = unit.playerID === '0' ?
-      startZonesCopy[unit.playerID].pop() : startZonesCopy[unit.playerID].shift()
+    if (playerID === '0') {
+      randomHex = startZonesCopy[unit.playerID].pop()
+    }
+    if (playerID === '1') {
+      randomHex = startZonesCopy[unit.playerID].shift()
+    }
+
     // Assign the occupying unit's ID on the boardHex
-    boardHexesCopy[startHexID].occupyingUnitID = unit.unitID
+    boardHexesCopy[randomHex].occupyingUnitID = unit.unitID
   })
   return boardHexesCopy
 }
@@ -59,10 +66,11 @@ export const playerColors = {
   0: 'rgb(3, 64, 120)', // blue #034078
   1: 'rgb(219,45,32)', // red #db2d20
 }
+
 function fillHexInfo(prev: IBoardHexes, curr: BasicHex) {
   const fullHex = {
     ...curr,
-    id: curr.toString(),
+    id: `q${curr.q}r${curr.r}s${curr.s}`,
     occupyingUnitID: '',
     altitude: 1,
   }

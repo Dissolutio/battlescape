@@ -99,7 +99,6 @@ const UnitIcon = ({ unit }) => {
   }
   const unitPlayerID = unit.playerID
   const playerColor = playerColors[unitPlayerID]
-  console.log("UnitIcon -> playerColor", playerColor)
   const props = {
     x: "-2.5",
     y: "-2.5",
