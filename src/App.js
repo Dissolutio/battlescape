@@ -8,19 +8,14 @@ import Board from './board/Board'
 import { Battlescape } from './game/battlescape'
 
 export const App = () => {
-  // const [viewID, setViewID] = useState('1')
   // return (
   //   <MainLobby />
   // )
 
   return (
     <>
-      {/* <ViewSelector viewID={viewID} setViewID={setViewID}>
-        <button onClick={() => setViewID('0')}>0</button>
-        <button onClick={() => setViewID('1')}>1</button>
-      </ViewSelector> */}
-      <BattlescapeClient gameID="gameid" playerID='0' />
-      {/* <BattlescapeClient gameID="gameid" playerID='1' /> */}
+      {/* <BattlescapeClient gameID="gameid" playerID='0' /> */}
+      <BattlescapeClient gameID="gameid" playerID='1' />
     </>
   );
 }
@@ -47,14 +42,3 @@ const BattlescapeClient = Client({
 //     />
 //   )
 // }
-
-const ViewSelector = styled.div`
-  font-size: 0.8rem;
-  position: fixed;
-  top: 0;
-  right: 0;
-  button {
-    width: 1rem;
-    height: 1rem;
-  }
-`;

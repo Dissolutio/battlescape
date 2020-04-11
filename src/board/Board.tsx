@@ -11,16 +11,15 @@ import { ICoreHeroscapeCard } from '../game/constants/coreHeroscapeCards'
 export default function Board(props) {
     // BGio props
     const { G, ctx, moves, events, reset, redo, undo, step, log, gameID, playerID, gameMetadata } = props
-    console.log('%c', 'color: #00a3cc', moves);
-    console.log('%c', 'color: #00e600', ctx);
     const boardHexes: IBoardHexes = G.boardHexes
     const startZones: IStartZones = G.startZones
     const armyCardsInGame: IStartingArmyCards = G.armyCardsInGame
     const startingUnits: IStartingUnits = G.startingUnits
     const coreHeroscapeCards: ICoreHeroscapeCard[] = G.coreHeroscapeCards
+    const mapSize = G.mapSize
 
     const currentPhase: string = ctx.phase
-    const currentPlayer: string = ctx.currentPlayer = ctx.phase
+    const currentPlayer: string = ctx.currentPlayer
     const activePlayers = ctx.activePlayers
     const numPlayers: number = ctx.numPlayers
     const currentTurn: number = ctx.turn
@@ -33,15 +32,20 @@ export default function Board(props) {
     const [activeHexID, setActiveHexID] = useState('')
     const [activeUnitID, setActiveUnitID] = useState('')
     const [availableUnits, setAvailableUnits] = useState(() => (initialAvailableUnits(allUnits)))
-
+    const [zoomLevel, setZoomLevel] = useState(5)
     const [errorMsg, setErrorMsg] = useState('')
 
     const selectedUnit = startingUnits[activeUnitID]
 
     function initialAvailableUnits(allUnits) {
+        const unitsOnBoard: string[] = Object.values(boardHexes).map(hex => hex.occupyingUnitID).filter(id => Boolean(id))
+        console.log('%c⧭', 'color: #917399', unitsOnBoard);
         return allUnits
             .filter((unit: IUnit) => unit.playerID === playerID)
-            .filter((unit: IUnit) => (!Object.keys(startingUnits).includes(unit.unitID)))
+            // remove if unit is on board
+            .filter((unit: IUnit) => {
+                return (!Object.keys(startingUnits).includes(unit.unitID))
+            })
             .map((gameUnit: IUnit) => {
                 return {
                     unitID: gameUnit.unitID,
@@ -82,6 +86,7 @@ export default function Board(props) {
 
     function onClickMapBackground() {
         console.log("MAP BG CLICKED")
+        setActiveHexID('')
     }
 
     function onClickPlacementUnit(unitID) {
@@ -97,6 +102,8 @@ export default function Board(props) {
     const mapProps = {
         boardHexes,
         startZones,
+        mapSize,
+        zoomLevel,
         armyCardsInGame,
         startingUnits,
         playerID,
@@ -105,6 +112,7 @@ export default function Board(props) {
         onClickBoardHex,
         onClickMapBackground,
     }
+
     const dataReadoutProps = {
         currentPhase,
         currentPlayer,
@@ -125,7 +133,7 @@ export default function Board(props) {
                         errorMsg={errorMsg}
                     />
                 </TopConsole>
-                <MainDisplay >
+                <MainDisplay className={`board-${playerID}`} >
                     <MapDisplay
                         mapProps={mapProps}
                     />
@@ -149,38 +157,60 @@ const LayoutFlexColumn = styled.div`
     height: 100vh;
     padding: 0;
     margin: 0;
-    `;
+`;
 const TopConsole = styled.div`
-    position: fixed;
-    top: 0;
+    /* position: fixed;
+    top: 0; */
     color: white;
     height: 10%;
     width: 100%;
-    `;
+`;
 const MainDisplay = styled.div`
     height: 75%;
     overflow: scroll;
     width: 100%;
+    &.board-0 {
+        background: var(--black);
+        background: radial-gradient(ellipse at top, var(--blue), transparent), radial-gradient(ellipse at bottom, var(--black), transparent);
+        /* background: linear-gradient(121deg, var(--blue) 0%, rgba(53,53,54,1) 50%, rgba(53,53,54,1) 100%); */
+        ::-webkit-scrollbar-track-piece {
+            box-shadow: inset 0 0 3px var(--blue);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--blue);
+        }
+    }
+    &.board-1 {
+        background: var(--black);
+        background: radial-gradient(ellipse at top, var(--red), transparent), radial-gradient(ellipse at bottom, var(--black), transparent);
+        /* background: linear-gradient(121deg, var(--red) 0%, rgba(53,53,54,1) 50%, rgba(53,53,54,1) 100%); */
+        ::-webkit-scrollbar-track-piece {
+            box-shadow: inset 0 0 5px var(--red);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--red);
+        }
+    }
     ::-webkit-scrollbar {
         width: 1rem;
     }
-    /* Track */
     ::-webkit-scrollbar-track-piece {
-        box-shadow: inset 0 0 5px red;
         border-radius: 10px;
     }
+    ::-webkit-scrollbar-corner {
+        background: black;
+    }
     ::-webkit-scrollbar-thumb {
-        background: blue;
         border-radius: 10px;
     }
     ::-webkit-scrollbar-thumb:hover {
-        background: orange;
+        background: var(--neon-orange);
     }
 `;
 
 const BottomConsole = styled.div`
-    position: fixed;
-    bottom: 0;
+    /* position: fixed;
+    bottom: 0; */
     height: 15%;
     width: 100%;
     section.data-readout {

@@ -20,7 +20,8 @@ export interface IStartZones {
 }
 
 // HEXES MADE BY REACT-HEXGRID => Battlescape Map Hexes :)
-const basicHexes: BasicHex[] = GridGenerator.hexagon(8)
+export const mapSize: number = 5
+const basicHexes: BasicHex[] = GridGenerator.hexagon(mapSize)
 export const boardHexes: IBoardHexes = basicHexes.reduce(fillHexInfo, {})
 
 // MAKE SOME STARTZONES FOR 2 PLAYERS ON A SIMPLE MAP

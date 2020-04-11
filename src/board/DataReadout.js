@@ -10,9 +10,8 @@ export const DataReadout = ({ activeHex, dataReadoutProps }) => {
     currentRound,
   } = dataReadoutProps
 
-  console.log("DataReadout -> activeHex", activeHex)
   return (
-    <div>
+    <section className="data-readout">
       <div>ActiveHex: {`${(activeHex && activeHex.id) || 'none'}`}</div>
       <div>Unit on Hex: {`${(activeHex && activeHex.occupyingUnitID) || 'none'}`}</div>
       <div>currentPhase: "{currentPhase}"</div>
@@ -20,7 +19,7 @@ export const DataReadout = ({ activeHex, dataReadoutProps }) => {
       <div>numPlayers: {numPlayers}</div>
       <div>currentTurn: {currentTurn}</div>
       <div>currentRound: {currentRound}</div>
-    </div>
+    </section>
   )
 }
 

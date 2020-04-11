@@ -11,6 +11,8 @@ export function MapDisplay({ mapProps }) {
     playerID,
     boardHexes,
     startZones,
+    mapSize,
+    zoomLevel,
     armyCardsInGame,
     startingUnits,
     activeHexID,
@@ -20,18 +22,19 @@ export function MapDisplay({ mapProps }) {
   } = mapProps
 
   const boardHexesArr = Object.values(boardHexes)
+  const originFactor = -10
+  const sizeFactor = 25
   return (
     <HexSVGStyle
-      className={`board-${playerID}`}
       onClick={onClickMapBackground}
     >
       <HexGrid
-        width={'1600'}
-        height={'1800'}
-        viewBox={`-100 -100 200 200`}
+        width={`${mapSize * 200}`}
+        height={`${mapSize * 221}`}
+        viewBox={`${mapSize * originFactor} ${mapSize * originFactor} ${mapSize * sizeFactor} ${mapSize * sizeFactor}`}
       >
         <Layout
-          size={{ x: 5, y: 5 }}
+          size={{ x: `${zoomLevel}`, y: `${zoomLevel}` }}
           flat={true}
           origin={{ x: 0, y: 0 }}
           spacing={1.01}
@@ -119,26 +122,18 @@ const UnitIcon = ({ unit }) => {
 }
 
 const HexSVGStyle = styled.div`
-    color: #6d819c;
-    &.board-0 {
-        background: var(--blue);
-        background: linear-gradient(121deg, var(--blue) 0%, rgba(53,53,54,1) 50%, rgba(53,53,54,1) 100%);
-    }
-    &.board-1 {
-        background: var(--red);
-        background: linear-gradient(121deg, var(--red) 0%, rgba(53,53,54,1) 50%, rgba(53,53,54,1) 100%);
-    }
+    color: var(--light-blue);
     g {
-      fill: #6d819c;
+      fill: var(--light-blue);
     }
     .selectedMapHex > g {
-      fill: #BaDa55;
+      fill: var(--neon-green);
     }
     .startZoneHex > g {
-      fill: #BaDa55;
+      fill: var(--neon-green);
     }
     svg g polygon {
-    stroke: #263959; /* #263959 darkBlue */
+    stroke: var(--dark-blue);
     stroke-width: 0.2;
   }
   svg g polygon text {
@@ -146,7 +141,7 @@ const HexSVGStyle = styled.div`
   }
   @media (hover: hover) {
     svg g:hover {
-        fill: rgb(224, 150, 40);
+        fill: var(--neon-orange);
         fill-opacity: 0.6;
       }
 

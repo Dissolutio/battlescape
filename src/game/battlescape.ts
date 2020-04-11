@@ -1,9 +1,10 @@
 import { TurnOrder, PlayerView, Stage } from 'boardgame.io/core';
 
 import {
-    // boardHexesWithPrePlacedUnits,
+    boardHexesWithPrePlacedUnits,
     boardHexes,
     startZones,
+    mapSize,
     IBoardHexes,
     IStartZones,
 } from './constants/mapGen'
@@ -16,15 +17,17 @@ export interface GameState {
     armyCardsInGame: IStartingArmyCards
     startingUnits: IStartingUnits
     coreHeroscapeCards: ICoreHeroscapeCard[]
+    mapSize: number
     initiative: string[]
 }
 
 const initialGameState: GameState = {
-    // boardHexes: boardHexesWithPrePlacedUnits(),
-    boardHexes,
+    boardHexes: boardHexesWithPrePlacedUnits(),
+    // boardHexes,
     startZones,
     armyCardsInGame,
     startingUnits,
+    mapSize,
     coreHeroscapeCards,
     initiative: ['0', '1'],
 }
@@ -36,13 +39,6 @@ export const Battlescape = {
         placeUnit,
     },
     seed: 'random_string',
-    // turn: {
-    //     stages: {
-    //         observing: {
-
-    //         }
-    //     }
-    // },
     phases: {
         mainGame: {
             start: true,
@@ -50,9 +46,8 @@ export const Battlescape = {
                 order: TurnOrder.CUSTOM_FROM('initiative'),
             },
             onBegin: (G, ctx) => {
-                ctx.events.setActivePlayers({ all: 'placingArmies' })
-                const dice = ctx.random.Die(20, 3);
-                console.log('%c%s', 'color: #733d00', dice);
+                // ctx.events.setActivePlayers({ all: 'placingArmies' })
+                console.log("GAME BEGINS")
             },
         },
     },
