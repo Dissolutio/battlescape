@@ -52,6 +52,8 @@ export default function Board(props) {
     }
 
     function onClickBoardHex(event: Event, sourceHex: IBoardHex) {
+        // Keep from causing onMapClick
+        event.stopPropagation()
         const hexID = sourceHex.id
         const isInStartZone = startZone.includes(hexID)
         // EITHER
@@ -78,6 +80,10 @@ export default function Board(props) {
         }
     }
 
+    function onClickMapBackground() {
+        console.log("MAP BG CLICKED")
+    }
+
     function onClickPlacementUnit(unitID) {
         // either deselect unit, or select unit and deselect active hex
         if (unitID === activeUnitID) {
@@ -97,6 +103,7 @@ export default function Board(props) {
         activeHexID,
         activeUnitID,
         onClickBoardHex,
+        onClickMapBackground,
     }
     const dataReadoutProps = {
         currentPhase,
@@ -118,7 +125,7 @@ export default function Board(props) {
                         errorMsg={errorMsg}
                     />
                 </TopConsole>
-                <MainDisplay className={`board-${playerID}`}>
+                <MainDisplay >
                     <MapDisplay
                         mapProps={mapProps}
                     />
@@ -133,6 +140,7 @@ export default function Board(props) {
         </BoardContextProvider>
     )
 }
+
 const LayoutFlexColumn = styled.div`
     display: flex;
     flex-direction: column;

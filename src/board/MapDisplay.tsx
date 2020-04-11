@@ -16,16 +16,17 @@ export function MapDisplay({ mapProps }) {
     activeHexID,
     activeUnitID,
     onClickBoardHex,
+    onClickMapBackground
   } = mapProps
 
   const boardHexesArr = Object.values(boardHexes)
   return (
-    <HexSVGStyle className={`board-${playerID}`} >
-      <HexGrid width={'100%'} height={'100%'}>
+    <HexSVGStyle
+      className={`board-${playerID}`}
+      onClick={onClickMapBackground}
         <Layout
           size={{ x: 5, y: 5 }}
           flat={true}
-          className={``}
           origin={{ x: 0, y: 0 }}
           spacing={1.01}
         >
