@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components';
 import { Client, Lobby } from 'boardgame.io/react';
-// import { Local } from 'boardgame.io/multiplayer';
-import { SocketIO } from "boardgame.io/multiplayer";
+import { Local } from 'boardgame.io/multiplayer';
+// import { SocketIO } from "boardgame.io/multiplayer";
 
 import Board from './board/Board'
 import { Battlescape } from './game/battlescape'
@@ -28,8 +28,8 @@ export const App = () => {
 const BattlescapeClient = Client({
   game: Battlescape,
   board: Board,
-  // multiplayer: Local(),
-  multiplayer: SocketIO({ server: 'http://localhost:8000' }),
+  multiplayer: Local(),
+  // multiplayer: SocketIO({ server: 'http://localhost:8000' }),
   // multiplayer: SocketIO({ server: 'http://battlescape-server.herokuapp.com' }),
   numPlayers: 2,
   debug: false,

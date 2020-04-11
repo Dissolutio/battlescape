@@ -20,7 +20,7 @@ export function MapDisplay({ mapProps }) {
 
   const boardHexesArr = Object.values(boardHexes)
   return (
-    <HexSVGStyle>
+    <HexSVGStyle className={`board-${playerID}`} >
       <HexGrid width={'100%'} height={'100%'}>
         <Layout
           size={{ x: 5, y: 5 }}
@@ -113,8 +113,14 @@ const UnitIcon = ({ unit }) => {
 
 const HexSVGStyle = styled.div`
     color: #6d819c;
-
-    background: #263959;
+    &.board-0 {
+        background: var(--blue);
+        background: linear-gradient(121deg, var(--blue) 0%, rgba(53,53,54,1) 50%, rgba(53,53,54,1) 100%);
+    }
+    &.board-1 {
+        background: var(--red);
+        background: linear-gradient(121deg, var(--red) 0%, rgba(53,53,54,1) 50%, rgba(53,53,54,1) 100%);
+    }
     g {
       fill: #6d819c;
     }

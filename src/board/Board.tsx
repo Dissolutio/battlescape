@@ -3,20 +3,28 @@ import styled from 'styled-components';
 import { MapDisplay } from './MapDisplay'
 import { ArmyForPlacing } from './ArmyForPlacing'
 import { DataReadout } from './DataReadout'
-import { IStartZones, IBoardHex } from '../game/constants/mapGen'
-import { IUnit } from '../game/constants/startingUnits'
+import { IStartZones, IBoardHex, IBoardHexes } from '../game/constants/mapGen'
+import { IUnit, IStartingArmyCards, IStartingUnits } from '../game/constants/startingUnits'
 import { BoardContextProvider, useBoardContext } from './useBoardContext'
+import { ICoreHeroscapeCard } from '../game/constants/coreHeroscapeCards'
 
 export default function Board(props) {
     // BGio props
     const { G, ctx, moves, events, reset, redo, undo, step, log, gameID, playerID, gameMetadata } = props
-    const {
-        boardHexes,
-        startZones,
-        armyCardsInGame,
-        startingUnits,
-        coreHeroscapeCards,
-    } = G
+    console.log('%c', 'color: #00a3cc', moves);
+    console.log('%c', 'color: #00e600', ctx);
+    const boardHexes: IBoardHexes = G.boardHexes
+    const startZones: IStartZones = G.startZones
+    const armyCardsInGame: IStartingArmyCards = G.armyCardsInGame
+    const startingUnits: IStartingUnits = G.startingUnits
+    const coreHeroscapeCards: ICoreHeroscapeCard[] = G.coreHeroscapeCards
+
+    const currentPhase: string = ctx.phase
+    const currentPlayer: string = ctx.currentPlayer = ctx.phase
+    const activePlayers = ctx.activePlayers
+    const numPlayers: number = ctx.numPlayers
+    const currentTurn: number = ctx.turn
+    const currentRound = Math.floor((currentTurn - 1) / numPlayers)
 
     const { placeUnit } = moves
     const startZone: string[] = startZones[playerID]
@@ -33,11 +41,14 @@ export default function Board(props) {
     function initialAvailableUnits(allUnits) {
         return allUnits
             .filter((unit: IUnit) => unit.playerID === playerID)
-            .map((gameUnit: IUnit) => ({
-                unitID: gameUnit.unitID,
-                name: armyCardsInGame[gameUnit.hsCardID].name,
-                image: armyCardsInGame[gameUnit.hsCardID].image,
-            }))
+            .filter((unit: IUnit) => (!Object.keys(startingUnits).includes(unit.unitID)))
+            .map((gameUnit: IUnit) => {
+                return {
+                    unitID: gameUnit.unitID,
+                    name: armyCardsInGame[gameUnit.hsCardID].name,
+                    image: armyCardsInGame[gameUnit.hsCardID].image,
+                }
+            })
     }
 
     function onClickBoardHex(event: Event, sourceHex: IBoardHex) {
@@ -87,6 +98,14 @@ export default function Board(props) {
         activeUnitID,
         onClickBoardHex,
     }
+    const dataReadoutProps = {
+        currentPhase,
+        currentPlayer,
+        activePlayers,
+        numPlayers,
+        currentTurn,
+        currentRound,
+    }
 
     return (
         <BoardContextProvider>
@@ -99,7 +118,7 @@ export default function Board(props) {
                         errorMsg={errorMsg}
                     />
                 </TopConsole>
-                <MainDisplay>
+                <MainDisplay className={`board-${playerID}`}>
                     <MapDisplay
                         mapProps={mapProps}
                     />
@@ -107,6 +126,7 @@ export default function Board(props) {
                 <BottomConsole>
                     <DataReadout
                         activeHex={boardHexes[activeHexID]}
+                        dataReadoutProps={dataReadoutProps}
                     />
                 </BottomConsole>
             </LayoutFlexColumn >
@@ -131,23 +151,22 @@ const MainDisplay = styled.div`
     height: 75%;
     overflow: scroll;
     ::-webkit-scrollbar {
-  width: 1em;
-}
-/* Track */
-::-webkit-scrollbar-track-piece {
-  box-shadow: inset 0 0 5px red;
-  border-radius: 10px;
-}
-
+        width: 1em;
+    }
+    /* Track */
+    ::-webkit-scrollbar-track-piece {
+        box-shadow: inset 0 0 5px red;
+        border-radius: 10px;
+    }
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: orange;
+  background: blue;
   border-radius: 10px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: blue;
+  background: orange;
 }
   `;
 const BottomConsole = styled.div`

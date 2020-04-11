@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { Image } from "cloudinary-react"
 
 export const ArmyForPlacing = ({ availableUnits, onClickUnit, activeUnitID, errorMsg }) => {
-  console.log("ArmyForPlacing -> availableUnits", availableUnits)
 
   const selectedStyle = (unitID) => {
     if (activeUnitID === unitID) {

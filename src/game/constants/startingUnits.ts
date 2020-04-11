@@ -33,36 +33,36 @@ export const armyCardsInGame: IStartingArmyCards =
     cardQuantity: 1,
     playerID: '0',
   },
-  [syvarris.hsCardID]: {
-    ...syvarris,
-    cardQuantity: 1,
-    playerID: '0',
-  },
-  [marroWarriors.hsCardID]: {
-    ...marroWarriors,
-    cardQuantity: 1,
-    playerID: '0',
-  },
-  [agentCarr.hsCardID]: {
-    ...agentCarr,
-    cardQuantity: 1,
-    playerID: '1',
-  },
+  // [syvarris.hsCardID]: {
+  //   ...syvarris,
+  //   cardQuantity: 1,
+  //   playerID: '0',
+  // },
+  // [marroWarriors.hsCardID]: {
+  //   ...marroWarriors,
+  //   cardQuantity: 1,
+  //   playerID: '0',
+  // },
+  // [agentCarr.hsCardID]: {
+  //   ...agentCarr,
+  //   cardQuantity: 1,
+  //   playerID: '1',
+  // },
   [kravMagaAgents.hsCardID]: {
     ...kravMagaAgents,
     cardQuantity: 1,
     playerID: '1',
   },
-  [deathwalker9000.hsCardID]: {
-    ...deathwalker9000,
-    cardQuantity: 1,
-    playerID: '1',
-  },
-  [mimring.hsCardID]: {
-    ...mimring,
-    cardQuantity: 1,
-    playerID: '1',
-  },
+  // [deathwalker9000.hsCardID]: {
+  //   ...deathwalker9000,
+  //   cardQuantity: 1,
+  //   playerID: '1',
+  // },
+  // [mimring.hsCardID]: {
+  //   ...mimring,
+  //   cardQuantity: 1,
+  //   playerID: '1',
+  // },
 }
 
 //  MAKE STARTING UNITS
