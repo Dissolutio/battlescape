@@ -24,6 +24,12 @@ export function MapDisplay({ mapProps }) {
     <HexSVGStyle
       className={`board-${playerID}`}
       onClick={onClickMapBackground}
+    >
+      <HexGrid
+        width={'1600'}
+        height={'1800'}
+        viewBox={`-100 -100 200 200`}
+      >
         <Layout
           size={{ x: 5, y: 5 }}
           flat={true}

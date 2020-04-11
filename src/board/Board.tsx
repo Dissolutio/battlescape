@@ -151,6 +151,8 @@ const LayoutFlexColumn = styled.div`
     margin: 0;
     `;
 const TopConsole = styled.div`
+    position: fixed;
+    top: 0;
     color: white;
     height: 10%;
     width: 100%;
@@ -158,27 +160,34 @@ const TopConsole = styled.div`
 const MainDisplay = styled.div`
     height: 75%;
     overflow: scroll;
+    width: 100%;
     ::-webkit-scrollbar {
-        width: 1em;
+        width: 1rem;
     }
     /* Track */
     ::-webkit-scrollbar-track-piece {
         box-shadow: inset 0 0 5px red;
         border-radius: 10px;
     }
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: blue;
-  border-radius: 10px;
-}
+    ::-webkit-scrollbar-thumb {
+        background: blue;
+        border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: orange;
+    }
+`;
 
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: orange;
-}
-  `;
 const BottomConsole = styled.div`
-    color: white;
+    position: fixed;
+    bottom: 0;
     height: 15%;
     width: 100%;
-  `
+    section.data-readout {
+        display: flex;
+        flex-flow: column wrap; 
+        height: 100%;
+        color: white;
+        font-size: 0.8rem;
+    }
+`
