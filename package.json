@@ -11,7 +11,7 @@
     "@types/react": "^16.9.27",
     "@types/react-dom": "^16.9.5",
     "@types/styled-components": "^5.0.1",
-    "boardgame.io": "^0.37.2",
+    "boardgame.io": "^0.39.7",
     "cloudinary-react": "^1.3.2",
     "dotenv": "^8.2.0",
     "esm": "^3.2.25",
@@ -29,7 +29,7 @@
   "scripts": {
     "serve": "npx babel-node server.js",
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "tsc ./* & react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
