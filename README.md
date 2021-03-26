@@ -1,3 +1,11 @@
-2/26/2020
-  * boardHexes should hold gameUnitID's, rather than the units having current coords (TODO)
-  * lookup icons and player colors (DONE)
+
+@types/styled-components
+cloudinary-react
+react-icons
+styled-components
+
+import { CloudinaryContext } from 'cloudinary-react'
+
+  <CloudinaryContext cloudName="mystery-maintenance">
+    <App />
+  </CloudinaryContext>
