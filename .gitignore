@@ -24,10 +24,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-vscodeworkspace.code-workspace
-
-src/game/constants/coreHeroscapeCards.js
-
-src/game/constants/mapGen.js
-
-src/game/constants/startingUnits.js
+battlescape.code-workspace
+.history/
+.vscode/
