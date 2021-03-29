@@ -27,3 +27,4 @@ yarn-error.log*
 battlescape.code-workspace
 .history/
 .vscode/
+server/
