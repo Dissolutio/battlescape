@@ -11,7 +11,7 @@ export const GridGenerator = {
   orientedRectangle,
 }
 
-function ring(center: Hex, mapRadius: number) {
+function ring(center: Hex, mapRadius: number): Hex[] {
   let hexas = []
   let hex = HexUtils.add(
     center,
@@ -26,7 +26,7 @@ function ring(center: Hex, mapRadius: number) {
   return hexas
 }
 
-function spiral(center: Hex, mapRadius: number) {
+function spiral(center: Hex, mapRadius: number): Hex[] {
   let hexas = [center]
   for (let k = 1; k <= mapRadius; k++) {
     const temp = GridGenerator.ring(center, k)
@@ -35,29 +35,27 @@ function spiral(center: Hex, mapRadius: number) {
   return hexas
 }
 
-function parallelogram(q1: number, q2: number, r1: number, r2: number) {
+function parallelogram(q1: number, q2: number, r1: number, r2: number): Hex[] {
   let hexas = []
   for (let q = q1; q <= q2; q++) {
     for (let r = r1; r <= r2; r++) {
       hexas.push(new Hex(q, r, -q - r))
     }
   }
-
   return hexas
 }
 
-function triangle(mapSize: number) {
+function triangle(mapSize: number): Hex[] {
   let hexas = []
   for (let q = 0; q <= mapSize; q++) {
     for (let r = 0; r <= mapSize - q; r++) {
       hexas.push(new Hex(q, r, -q - r))
     }
   }
-
   return hexas
 }
 
-function hexagon(mapRadius: number) {
+function hexagon(mapRadius: number): Hex[] {
   let hexas = []
   for (let q = -mapRadius; q <= mapRadius; q++) {
     let r1 = Math.max(-mapRadius, -q - mapRadius)
@@ -66,11 +64,10 @@ function hexagon(mapRadius: number) {
       hexas.push(new Hex(q, r, -q - r))
     }
   }
-
   return hexas
 }
 
-function rectangle(mapWidth: number, mapHeight: number) {
+function rectangle(mapWidth: number, mapHeight: number): Hex[] {
   let hexas = []
   for (let r = 0; r < mapHeight; r++) {
     let offset = Math.floor(r / 2) // or r>>1
@@ -78,11 +75,10 @@ function rectangle(mapWidth: number, mapHeight: number) {
       hexas.push(new Hex(q, r, -q - r))
     }
   }
-
   return hexas
 }
 
-function orientedRectangle(mapWidth: number, mapHeight: number) {
+function orientedRectangle(mapWidth: number, mapHeight: number): Hex[] {
   let hexas = []
   for (let q = 0; q < mapWidth; q++) {
     let offset = Math.floor(q / 2) // or q>>1
@@ -90,8 +86,5 @@ function orientedRectangle(mapWidth: number, mapHeight: number) {
       hexas.push(new Hex(q, r, -q - r))
     }
   }
-
   return hexas
 }
-
-export default GridGenerator

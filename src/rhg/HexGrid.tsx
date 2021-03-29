@@ -27,5 +27,3 @@ export const HexGrid = (props: HexGridProps) => {
     </svg>
   )
 }
-
-export default HexGrid

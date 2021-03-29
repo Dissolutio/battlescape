@@ -10,10 +10,12 @@ export class Hex {
   q: number
   r: number
   s: number
+  id: string
   constructor(q = 0, r = 0, s = 0) {
     this.q = q
     this.r = r
     this.s = s
+    this.id = `${q},${r},${s}`
   }
 }
 export type HexOrientation = {
