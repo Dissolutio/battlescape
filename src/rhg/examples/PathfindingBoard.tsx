@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import styled from "styled-components"
 import {
   GridGenerator,
-  HexGrid,
+  Hexgrid,
   HexUtils,
   HexgridLayout,
   Path,
@@ -56,7 +56,7 @@ export const PathfindingBoard = () => {
         cancel.
       </p>
       <p>Hover around the board to see helper lines drawn.</p>
-      <HexGrid width={1200} height={800}>
+      <Hexgrid width={1200} height={800}>
         <HexgridLayout
           size={{ x: 6, y: 6 }}
           flat={false}
@@ -76,7 +76,7 @@ export const PathfindingBoard = () => {
           ))}
           <Path start={path.start} end={path.end} />
         </HexgridLayout>
-      </HexGrid>
+      </Hexgrid>
     </StyledHexesPathfinding>
   )
 }

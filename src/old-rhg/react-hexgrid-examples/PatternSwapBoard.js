@@ -1,8 +1,8 @@
-import React from "react";
+import React from "react"
 
 import {
   GridGenerator,
-  HexGrid,
+  Hexgrid,
   HexUtils,
   Layout,
   Path,
@@ -10,51 +10,50 @@ import {
   Hexagon,
   Text,
   Hex,
-} from "../old";
-import styled from "styled-components";
+} from "../old"
+import styled from "styled-components"
 
 export class PatternSwapBoard extends React.Component {
   constructor(props) {
-    super(props);
-    const hexagons = GridGenerator.hexagon(2);
+    super(props)
+    const hexagons = GridGenerator.hexagon(2)
 
     // Set additional data for hexagons
     hexagons.forEach((hex) => {
-      hex.pattern = "pattern1";
-    });
+      hex.pattern = "pattern1"
+    })
 
     this.state = {
       hexagons,
-    };
+    }
   }
 
   onClick(event, source) {
     // Get our hexagon data
-    const { hexagons } = this.state;
+    const { hexagons } = this.state
 
     // Go through all of our hexagons and update patterns
     const hexas = hexagons.map((hex) => {
       // Switch pattern only for the hexagon that was clicked
       if (HexUtils.equals(source.state.hex, hex)) {
         // Assign new pattern to _our_ data
-        hex.pattern =
-          source.props.fill === "pattern1" ? "pattern2" : "pattern1";
+        hex.pattern = source.props.fill === "pattern1" ? "pattern2" : "pattern1"
       }
 
-      return hex;
-    });
+      return hex
+    })
 
     // Save our new hexagon data to the state, which will cause a re-render
-    this.setState({ hexagons: hexas });
+    this.setState({ hexagons: hexas })
   }
 
   render() {
-    let { hexagons } = this.state;
+    let { hexagons } = this.state
     return (
       <StyledPatternSwapBoard>
         <h2>Hexagon Pattern Swap</h2>
         <p>Click a tile to swap it's pattern</p>
-        <HexGrid width={1200} height={800}>
+        <Hexgrid width={1200} height={800}>
           <Layout
             size={{ x: 10, y: 10 }}
             flat={false}
@@ -78,9 +77,9 @@ export class PatternSwapBoard extends React.Component {
             <Pattern id="pattern1" link="https://picsum.photos/200?image=80" />
             <Pattern id="pattern2" link="https://picsum.photos/200?image=82" />
           </Layout>
-        </HexGrid>
+        </Hexgrid>
       </StyledPatternSwapBoard>
-    );
+    )
   }
 }
 
@@ -131,4 +130,4 @@ const StyledPatternSwapBoard = styled.div`
     stroke-linecap: round;
     stroke-linejoin: round;
   }
-`;
+`

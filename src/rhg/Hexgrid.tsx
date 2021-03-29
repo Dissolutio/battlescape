@@ -1,13 +1,14 @@
 import React from "react"
 
-type HexGridProps = {
+type HexgridProps = {
   children?: React.ReactNode
+  className?: string
   viewBox?: string
   width?: string | number
   height?: string | number
 }
 
-export const HexGrid = (props: HexGridProps) => {
+export const Hexgrid = (props: HexgridProps) => {
   const {
     children,
     viewBox = "-50 -50 100 100",

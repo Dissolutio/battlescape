@@ -1,8 +1,8 @@
-import React from "react";
-import styled from "styled-components";
+import React from "react"
+import styled from "styled-components"
 import {
   GridGenerator,
-  HexGrid,
+  Hexgrid,
   HexUtils,
   Layout,
   Path,
@@ -10,88 +10,88 @@ import {
   Hexagon,
   Text,
   Hex,
-} from "../old";
+} from "../old"
 
 export const DragNDropBoard = () => {
   return (
     <StyledDragNDrop>
-      <HexGrid width={1600} height={1000} viewBox="-50 -50 100 100">
+      <Hexgrid width={1600} height={1000} viewBox="-50 -50 100 100">
         <GameLayout />
         <TilesLayout />
-      </HexGrid>
+      </Hexgrid>
     </StyledDragNDrop>
-  );
-};
+  )
+}
 
 class GameLayout extends React.Component {
   constructor(props) {
-    super(props);
-    const hexagons = GridGenerator.hexagon(2);
+    super(props)
+    const hexagons = GridGenerator.hexagon(2)
     // Add custom prop to couple of hexagons to indicate them being blocked
-    hexagons[0].blocked = true;
-    hexagons[1].blocked = true;
-    this.state = { hexagons };
+    hexagons[0].blocked = true
+    hexagons[1].blocked = true
+    this.state = { hexagons }
   }
 
   // onDrop you can read information of the hexagon that initiated the drag
   onDrop(event, source, targetProps) {
-    const { hexagons } = this.state;
+    const { hexagons } = this.state
     const hexas = hexagons.map((hex) => {
       // When hexagon is dropped on this hexagon, copy it's image and text
       if (HexUtils.equals(source.state.hex, hex)) {
-        hex.image = targetProps.data.image;
-        hex.text = targetProps.data.text;
+        hex.image = targetProps.data.image
+        hex.text = targetProps.data.text
       }
-      return hex;
-    });
-    this.setState({ hexagons: hexas });
+      return hex
+    })
+    this.setState({ hexagons: hexas })
   }
 
   onDragStart(event, source) {
     // If this tile is empty, let's disallow drag
     if (!source.props.data.text) {
-      event.preventDefault();
+      event.preventDefault()
     }
   }
 
   // Decide here if you want to allow drop to this node
   onDragOver(event, source) {
     // Find blocked hexagons by their 'blocked' attribute
-    const blockedHexas = this.state.hexagons.filter((h) => h.blocked);
+    const blockedHexas = this.state.hexagons.filter((h) => h.blocked)
     // Find if this hexagon is listed in blocked ones
     const blocked = blockedHexas.find((blockedHex) => {
-      return HexUtils.equals(source.state.hex, blockedHex);
-    });
+      return HexUtils.equals(source.state.hex, blockedHex)
+    })
 
-    const { text } = source.props.data;
+    const { text } = source.props.data
     // Allow drop, if not blocked and there's no content already
     if (!blocked && !text) {
       // Call preventDefault if you want to allow drop
-      event.preventDefault();
+      event.preventDefault()
     }
   }
 
   // onDragEnd you can do some logic, e.g. to clean up hexagon if drop was success
   onDragEnd(event, source, success) {
     if (!success) {
-      return;
+      return
     }
     // TODO Drop the whole hex from array, currently somethings wrong with the patterns
 
-    const { hexagons } = this.state;
+    const { hexagons } = this.state
     // When hexagon is successfully dropped, empty it's text and image
     const hexas = hexagons.map((hex) => {
       if (HexUtils.equals(source.state.hex, hex)) {
-        hex.text = null;
-        hex.image = null;
+        hex.text = null
+        hex.image = null
       }
-      return hex;
-    });
-    this.setState({ hexagons: hexas });
+      return hex
+    })
+    this.setState({ hexagons: hexas })
   }
 
   render() {
-    let { hexagons } = this.state;
+    let { hexagons } = this.state
     return (
       <Layout
         className="game"
@@ -119,7 +119,7 @@ class GameLayout extends React.Component {
           </Hexagon>
         ))}
       </Layout>
-    );
+    )
   }
 }
 
@@ -166,22 +166,22 @@ const StyledDragNDrop = styled.div`
       stroke-linejoin: round;
     }
   }
-`;
+`
 
 class TilesLayout extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     // Initialize hexagons with some text and image
-    const imageSrc = `http://placekitten.com/100/100`;
+    const imageSrc = `http://placekitten.com/100/100`
     const hexagons = GridGenerator.parallelogram(-1, 1, -1, 2).map(
       (hexagon, index) => {
         return Object.assign({}, hexagon, {
           text: `Cat #${index}`,
           image: imageSrc,
-        });
+        })
       }
-    );
-    this.state = { hexagons };
+    )
+    this.state = { hexagons }
   }
 
   onDragStart(event, source) {
@@ -191,23 +191,23 @@ class TilesLayout extends React.Component {
   // onDragEnd you can do some logic, e.g. to clean up hexagon if drop was success
   onDragEnd(event, source, success) {
     if (!success) {
-      return;
+      return
     }
-    const { hexagons } = this.state;
+    const { hexagons } = this.state
     // TODO Drop the whole hex from array, currently somethings wrong with the patterns
     // const hexas = hexagons.filter(hex => !HexUtils.equals(targetHex, hex));
     const hexas = hexagons.map((hex) => {
       if (HexUtils.equals(source.state.hex, hex)) {
-        hex.text = null;
-        hex.image = null;
+        hex.text = null
+        hex.image = null
       }
-      return hex;
-    });
-    this.setState({ hexagons: hexas });
+      return hex
+    })
+    this.setState({ hexagons: hexas })
   }
 
   render() {
-    const { hexagons } = this.state;
+    const { hexagons } = this.state
     return (
       <Layout
         className="tiles"
@@ -234,6 +234,6 @@ class TilesLayout extends React.Component {
           </Hexagon>
         ))}
       </Layout>
-    );
+    )
   }
 }

@@ -1,8 +1,8 @@
-import React from "react";
-import styled from "styled-components";
+import React from "react"
+import styled from "styled-components"
 import {
   GridGenerator,
-  HexGrid,
+  Hexgrid,
   HexUtils,
   Layout,
   Path,
@@ -10,14 +10,14 @@ import {
   Hexagon,
   Text,
   Hex,
-} from "../old";
+} from "../old"
 
 export const CustomBoard = () => {
-  const hexagonSize = { x: 10, y: 10 };
-  const moreHexas = GridGenerator.parallelogram(-2, 2, -2, 2);
+  const hexagonSize = { x: 10, y: 10 }
+  const moreHexas = GridGenerator.parallelogram(-2, 2, -2, 2)
   return (
     <StyledHexesCustom>
-      <HexGrid width={1200} height={800} viewBox="-50 -50 100 100">
+      <Hexgrid width={1200} height={800} viewBox="-50 -50 100 100">
         {/* Main grid with bit hexagons, all manual */}
         <Layout
           size={hexagonSize}
@@ -65,10 +65,10 @@ export const CustomBoard = () => {
           <circle cx="50" cy="10" r="8" />
           <circle cx="45" cy="20" r="6" />
         </g>
-      </HexGrid>
+      </Hexgrid>
     </StyledHexesCustom>
-  );
-};
+  )
+}
 
 export const StyledHexesCustom = styled.div`
   svg g {
@@ -102,4 +102,4 @@ export const StyledHexesCustom = styled.div`
     stroke-linecap: round;
     stroke-linejoin: round;
   }
-`;
+`

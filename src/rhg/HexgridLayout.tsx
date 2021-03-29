@@ -23,14 +23,14 @@ export type HexgridLayoutProviderProps = {
   size: Point
   spacing: number
 }
-export type HexGridCtxLayout = {
+export type HexgridCtxLayout = {
   orientation: HexOrientation
   origin: Point
   size: Point
   spacing: number
 }
 export type HexgridLayoutCtxValue = {
-  layout: HexGridCtxLayout
+  layout: HexgridCtxLayout
   points: ""
 }
 export const HexgridLayout = (props: HexgridLayoutProps) => {
@@ -43,33 +43,22 @@ export const HexgridLayout = (props: HexgridLayoutProps) => {
     spacing = 1.0,
   } = props
   return (
-    <HexGridLayoutProvider
+    <HexgridLayoutProvider
       flat={flat}
       origin={origin}
       size={size}
       spacing={spacing}
     >
       <g className={className}>{children}</g>
-    </HexGridLayoutProvider>
+    </HexgridLayoutProvider>
   )
 }
 
 const HexgridLayoutContext = React.createContext<
   HexgridLayoutCtxValue | undefined
->(
-  undefined
-  //   {
-  //   layout: {
-  //     orientation: flatOrientation,
-  //     size: { x: 10, y: 10 },
-  //     spacing: 1.0,
-  //     origin: { x: 0, y: 0 },
-  //   },
-  //   points: "",
-  // }
-)
+>(undefined)
 
-export function HexGridLayoutProvider(props: HexgridLayoutProviderProps) {
+export function HexgridLayoutProvider(props: HexgridLayoutProviderProps) {
   const { children, flat, origin, size, spacing } = props
   const orientation = flat ? flatOrientation : pointyOrientation
   function getPointOffset(

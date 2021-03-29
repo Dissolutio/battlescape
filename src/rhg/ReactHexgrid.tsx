@@ -1,5 +1,5 @@
 import React from "react"
-import { HexGrid } from "./HexGrid"
+import { Hexgrid } from "./Hexgrid"
 import { HexgridLayout } from "./HexgridLayout"
 
 type ReactHexgridProps = {
@@ -22,7 +22,7 @@ export const ReactHexgrid = ({
   const halfViewBox = mapSize * -50
   const fullViewBox = mapSize * 100
   return (
-    <HexGrid
+    <Hexgrid
       width={width}
       height={height}
       viewBox={`${halfViewBox} ${halfViewBox} ${fullViewBox} ${fullViewBox}`}
@@ -38,6 +38,6 @@ export const ReactHexgrid = ({
       >
         {children}
       </HexgridLayout>
-    </HexGrid>
+    </Hexgrid>
   )
 }

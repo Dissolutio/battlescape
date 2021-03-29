@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-class HexGrid extends Component {
+class Hexgrid extends Component {
   static propTypes = {
     width: PropTypes.oneOfType([
       PropTypes.string.isRequired,
@@ -30,4 +30,4 @@ class HexGrid extends Component {
     );
   }
 }
-export default HexGrid;
+export default Hexgrid;

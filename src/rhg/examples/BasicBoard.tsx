@@ -1,34 +1,23 @@
-import React from "react"
 import styled from "styled-components"
 
-import {
-  GridGenerator,
-  HexGrid,
-  HexUtils,
-  HexgridLayout,
-  Path,
-  Pattern,
-  Hexagon,
-  Text,
-  Hex,
-} from ".."
+import { GridGenerator, Hexgrid, HexgridLayout, Hexagon } from ".."
 
 export const BasicBoard = () => {
   const hexagons = GridGenerator.parallelogram(-2, 3, -2, 1)
   return (
     <StyledBasicHexes>
-      <HexGrid width={900} height={600}>
+      <Hexgrid width={900} height={600}>
         <HexgridLayout size={{ x: 7, y: 7 }}>
           {hexagons.map((hex, i) => (
             <Hexagon key={i} hex={hex} />
           ))}
         </HexgridLayout>
-      </HexGrid>
+      </Hexgrid>
     </StyledBasicHexes>
   )
 }
 
-const StyledBasicHexes = styled.div`
+export const StyledBasicHexes = styled.div`
   svg g {
     fill: #3f51b5;
     fill-opacity: 0.6;

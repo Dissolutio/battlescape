@@ -3,7 +3,7 @@ import styled from "styled-components"
 
 import {
   GridGenerator,
-  HexGrid,
+  Hexgrid,
   HexUtils,
   Layout,
   Path,
@@ -49,7 +49,7 @@ export class TemplatesBoard extends React.Component {
           </select>
         </div>
         <hr />
-        <HexGrid width={config.width} height={config.height}>
+        <Hexgrid width={config.width} height={config.height}>
           <Layout
             size={size}
             flat={layout.flat}
@@ -71,7 +71,7 @@ export class TemplatesBoard extends React.Component {
               ))
             }
           </Layout>
-        </HexGrid>
+        </Hexgrid>
       </StyledTemplatesHexes>
     )
   }

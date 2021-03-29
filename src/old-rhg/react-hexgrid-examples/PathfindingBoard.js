@@ -1,8 +1,8 @@
-import React from "react";
-import styled from "styled-components";
+import React from "react"
+import styled from "styled-components"
 import {
   GridGenerator,
-  HexGrid,
+  Hexgrid,
   HexUtils,
   Layout,
   Path,
@@ -10,54 +10,54 @@ import {
   Hexagon,
   Text,
   Hex,
-} from "../old";
+} from "../old"
 
 export class PathfindingBoard extends React.Component {
   constructor(props) {
-    super(props);
-    const hexagons = GridGenerator.hexagon(4);
+    super(props)
+    const hexagons = GridGenerator.hexagon(4)
     this.state = {
       hexagons,
       path: { start: null, end: null },
-    };
+    }
   }
   onClick(event, source) {
-    const { path } = this.state;
+    const { path } = this.state
     if (path.start == null) {
-      path.start = source.state.hex;
+      path.start = source.state.hex
     } else {
-      path.start = null;
-      path.end = null;
+      path.start = null
+      path.end = null
     }
-    this.setState({ path });
+    this.setState({ path })
   }
 
   onMouseEnter(event, source) {
     // Set the path's end on hover
-    const { path, hexagons } = this.state;
-    const targetHex = source.state.hex;
-    path.end = targetHex;
+    const { path, hexagons } = this.state
+    const targetHex = source.state.hex
+    path.end = targetHex
 
     // Color some hexagons
     const coloredHexas = hexagons.map((hex) => {
-      hex.props = hex.props || {};
+      hex.props = hex.props || {}
       // Highlight tiles that are next to the target (1 distance away)
       hex.props.className =
-        HexUtils.distance(targetHex, hex) < 2 ? "active" : "";
+        HexUtils.distance(targetHex, hex) < 2 ? "active" : ""
 
       // If the tile is on same coordinate, add class specific to the coordinate name
-      hex.props.className += targetHex.q === hex.q ? " q " : "";
-      hex.props.className += targetHex.r === hex.r ? " r " : "";
-      hex.props.className += targetHex.s === hex.s ? " s " : "";
+      hex.props.className += targetHex.q === hex.q ? " q " : ""
+      hex.props.className += targetHex.r === hex.r ? " r " : ""
+      hex.props.className += targetHex.s === hex.s ? " s " : ""
 
-      return hex;
-    });
+      return hex
+    })
 
-    this.setState({ path, hexagons: coloredHexas });
+    this.setState({ path, hexagons: coloredHexas })
   }
 
   render() {
-    let { hexagons, path } = this.state;
+    let { hexagons, path } = this.state
     return (
       <StyledHexesPathfinding>
         <h2>Pathfinding & active highlight</h2>
@@ -66,7 +66,7 @@ export class PathfindingBoard extends React.Component {
           cancel.
         </p>
         <p>Hover around the board to see helper lines drawn.</p>
-        <HexGrid width={1200} height={800}>
+        <Hexgrid width={1200} height={800}>
           <Layout
             size={{ x: 6, y: 6 }}
             flat={false}
@@ -88,9 +88,9 @@ export class PathfindingBoard extends React.Component {
             ))}
             <Path start={path.start} end={path.end} />
           </Layout>
-        </HexGrid>
+        </Hexgrid>
       </StyledHexesPathfinding>
-    );
+    )
   }
 }
 const StyledHexesPathfinding = styled.div`
@@ -140,4 +140,4 @@ const StyledHexesPathfinding = styled.div`
     stroke-linecap: round;
     stroke-linejoin: round;
   }
-`;
+`

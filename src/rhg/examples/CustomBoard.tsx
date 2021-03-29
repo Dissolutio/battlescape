@@ -1,9 +1,7 @@
-import React from "react"
 import styled from "styled-components"
 import {
   GridGenerator,
-  HexGrid,
-  HexUtils,
+  Hexgrid,
   HexgridLayout,
   Path,
   Pattern,
@@ -17,7 +15,7 @@ export const CustomBoard = () => {
   const moreHexas = GridGenerator.parallelogram(-2, 2, -2, 2)
   return (
     <StyledHexesCustom>
-      <HexGrid width={1200} height={800} viewBox="-50 -50 100 100">
+      <Hexgrid width={1200} height={800} viewBox="-50 -50 100 100">
         {/* Main grid with bit hexagons, all manual */}
         <HexgridLayout
           size={hexagonSize}
@@ -65,7 +63,7 @@ export const CustomBoard = () => {
           <circle cx="50" cy="10" r="8" />
           <circle cx="45" cy="20" r="6" />
         </g>
-      </HexGrid>
+      </Hexgrid>
     </StyledHexesCustom>
   )
 }
@@ -82,7 +80,6 @@ export const StyledHexesCustom = styled.div`
   svg g:hover text {
     fill-opacity: 1;
   }
-
   svg g polygon {
     stroke: #7be3f6;
     stroke-width: 0.2;

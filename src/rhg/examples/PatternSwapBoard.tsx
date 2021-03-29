@@ -3,7 +3,7 @@ import styled from "styled-components"
 
 import {
   GridGenerator,
-  HexGrid,
+  Hexgrid,
   HexUtils,
   HexgridLayout,
   Path,
@@ -39,7 +39,7 @@ export const PatternSwapBoard = () => {
     <StyledPatternSwapBoard>
       <h2>Hexagon Pattern Swap</h2>
       <p>Click a tile to swap it's pattern</p>
-      <HexGrid width={1200} height={800}>
+      <Hexgrid width={1200} height={800}>
         <HexgridLayout
           size={{ x: 10, y: 10 }}
           flat={false}
@@ -64,7 +64,7 @@ export const PatternSwapBoard = () => {
           <Pattern id="pattern1" link="https://picsum.photos/200?image=80" />
           <Pattern id="pattern2" link="https://picsum.photos/200?image=82" />
         </HexgridLayout>
-      </HexGrid>
+      </Hexgrid>
     </StyledPatternSwapBoard>
   )
 }
