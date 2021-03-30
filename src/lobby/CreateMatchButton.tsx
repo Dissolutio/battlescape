@@ -1,24 +1,24 @@
-import { useBgioLobby } from "bgio-contexts";
+import { useBgioLobby } from "bgio-contexts"
 
 export function CreateMatchButton() {
   const {
     createMatchSuccess,
     createMatchError,
     handleCreateMatchButton,
-  } = useBgioLobby();
+  } = useBgioLobby()
   return (
     <div>
       <button onClick={handleCreateMatchButton}>Create new match</button>
       {createMatchError && (
-        <p style={{ color: "red" }}>
+        <span style={{ color: "red" }}>
           Sorry! Failed to create match: {`${createMatchError}`}
-        </p>
+        </span>
       )}
       {createMatchSuccess && (
-        <p style={{ color: "green" }}>
+        <span style={{ color: "green" }}>
           Last match created: {`${createMatchSuccess}`}
-        </p>
+        </span>
       )}
     </div>
-  );
+  )
 }

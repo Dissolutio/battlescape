@@ -1,21 +1,16 @@
-import {
-  BrowserRouter,
-  Switch,
-  Route,
-  Redirect,
-  NavLink,
-} from "react-router-dom"
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom"
 import { Client } from "boardgame.io/react"
 import { Local, SocketIO } from "boardgame.io/multiplayer"
 import { Debug } from "boardgame.io/debug"
 
-import { BgioLobbyProvider, useBgioLobby } from "bgio-contexts"
+import { BgioLobbyProvider } from "bgio-contexts"
 import { AuthProvider, useAuth } from "hooks/useAuth"
 import { NewLobby } from "lobby/NewLobby"
 import { Login } from "lobby/Login"
 import { myGame } from "./game/game"
 import { Board } from "./Board"
 import { PageRoutes } from "ui/pages/PageRoutes"
+import { MultiplayerNav } from "ui/layout"
 
 // ! Three Options:
 // * Client that connects to its origin server `npm run build`
@@ -57,6 +52,7 @@ const DemoGameClient = Client({
 const MultiplayerGameClient = Client({
   ...bgioClientOptions,
   multiplayer: SocketIO({ server: SERVER }),
+  debug: false,
 })
 
 const PlayPage = () => {
@@ -91,68 +87,29 @@ export const App = () => {
       <AuthProvider>
         <BgioLobbyProvider serverAddress={SERVER}>
           <BrowserRouter>
-            <AppInterior />
+            <MultiplayerNav />
+            <Switch>
+              <Route exact path="/">
+                <NewLobby />
+              </Route>
+              <Route path="/demo">
+                <DemoGameClient matchID="matchID" playerID="0" />
+              </Route>
+              <Route path="/login">
+                <Login />
+              </Route>
+              <PrivateRoute path="/lobby">
+                <NewLobby />
+              </PrivateRoute>
+              <PrivateRoute path="/play">
+                <PlayPage />
+              </PrivateRoute>
+            </Switch>
           </BrowserRouter>
         </BgioLobbyProvider>
       </AuthProvider>
     )
   }
-}
-const Nav = () => {
-  const { joinedMatch } = useBgioLobby()
-  const isJoinedInMatch = Boolean(joinedMatch?.matchID)
-  return (
-    <nav>
-      <ul>
-        <li>
-          <NavLink exact to="/">
-            Home
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/demo">Demo</NavLink>
-        </li>
-        <li>
-          <NavLink to="/lobby">Lobby</NavLink>
-        </li>
-        <li>
-          <NavLink to="/login">Login</NavLink>
-        </li>
-        {isJoinedInMatch ? (
-          <li>
-            <NavLink to="/play">Play</NavLink>
-          </li>
-        ) : null}
-      </ul>
-    </nav>
-  )
-}
-
-const AppInterior = () => {
-  const { joinedMatch } = useBgioLobby()
-  const isJoinedInMatch = Boolean(joinedMatch?.matchID)
-  return (
-    <>
-      <Nav />
-      <Switch>
-        <Route exact path="/">
-          <NewLobby />
-        </Route>
-        <Route path="/demo">
-          <DemoGameClient matchID="matchID" playerID="0" />
-        </Route>
-        <Route path="/login">
-          <Login />
-        </Route>
-        <PrivateRoute path="/lobby">
-          <NewLobby />
-        </PrivateRoute>
-        <PrivateRoute path="/play">
-          <PlayPage />
-        </PrivateRoute>
-      </Switch>
-    </>
-  )
 }
 
 function PrivateRoute({ children, ...rest }) {
