@@ -9,8 +9,8 @@ import {
   BgioCtxProvider,
   BgioChatProvider,
 } from "./bgio-contexts"
-import { ExampleUI } from "./ui/exampleUI/ExampleUI"
 import { theme } from "theme"
+import { Layout } from "ui/layout"
 
 type MyBoardProps = BoardProps & { chatMessages?: ChatMessage[] }
 
@@ -60,7 +60,7 @@ export function Board(props: MyBoardProps) {
                   chatMessages={chatMessages}
                   sendChatMessage={sendChatMessage}
                 >
-                  <ExampleUI />
+                  <Layout />
                 </BgioChatProvider>
               </BgioEventsProvider>
             </BgioMovesProvider>

@@ -11,11 +11,11 @@ import { Debug } from "boardgame.io/debug"
 
 import { BgioLobbyProvider, useBgioLobby } from "bgio-contexts"
 import { AuthProvider, useAuth } from "hooks/useAuth"
-import { ModalCtxProvider } from "hooks/useModalCtx"
 import { NewLobby } from "lobby/NewLobby"
 import { Login } from "lobby/Login"
 import { myGame } from "./game/game"
 import { Board } from "./Board"
+import { PageRoutes } from "ui/pages/PageRoutes"
 
 // ! Three Options:
 // * Client that connects to its origin server `npm run build`
@@ -47,14 +47,14 @@ const bgioClientOptions = {
   numPlayers: 2,
 }
 
-export const DemoGameClient = Client({
+const DemoGameClient = Client({
   ...bgioClientOptions,
   multiplayer: Local(),
   enhancer: reduxDevTools,
   debug: { impl: Debug },
 })
 
-export const MultiplayerGameClient = Client({
+const MultiplayerGameClient = Client({
   ...bgioClientOptions,
   multiplayer: SocketIO({ server: SERVER }),
 })
@@ -70,23 +70,62 @@ const PlayPage = () => {
     />
   )
 }
+const LocalApp = () => {
+  return (
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/">
+          <DemoGameClient matchID="matchID" playerID="0" />
+        </Route>
+        <PageRoutes />
+      </Switch>
+    </BrowserRouter>
+  )
+}
 
 export const App = () => {
   if (isLocalApp) {
-    return <DemoGameClient matchID="matchID" playerID="0" />
+    return <LocalApp />
   } else {
     return (
       <AuthProvider>
         <BgioLobbyProvider serverAddress={SERVER}>
-          <ModalCtxProvider>
-            <BrowserRouter>
-              <AppInterior />
-            </BrowserRouter>
-          </ModalCtxProvider>
+          <BrowserRouter>
+            <AppInterior />
+          </BrowserRouter>
         </BgioLobbyProvider>
       </AuthProvider>
     )
   }
+}
+const Nav = () => {
+  const { joinedMatch } = useBgioLobby()
+  const isJoinedInMatch = Boolean(joinedMatch?.matchID)
+  return (
+    <nav>
+      <ul>
+        <li>
+          <NavLink exact to="/">
+            Home
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/demo">Demo</NavLink>
+        </li>
+        <li>
+          <NavLink to="/lobby">Lobby</NavLink>
+        </li>
+        <li>
+          <NavLink to="/login">Login</NavLink>
+        </li>
+        {isJoinedInMatch ? (
+          <li>
+            <NavLink to="/play">Play</NavLink>
+          </li>
+        ) : null}
+      </ul>
+    </nav>
+  )
 }
 
 const AppInterior = () => {
@@ -94,29 +133,7 @@ const AppInterior = () => {
   const isJoinedInMatch = Boolean(joinedMatch?.matchID)
   return (
     <>
-      <nav>
-        <ul>
-          <li>
-            <NavLink exact to="/">
-              Home
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/demo">Demo</NavLink>
-          </li>
-          <li>
-            <NavLink to="/lobby">Lobby</NavLink>
-          </li>
-          <li>
-            <NavLink to="/login">Login</NavLink>
-          </li>
-          {isJoinedInMatch ? (
-            <li>
-              <NavLink to="/play">Play</NavLink>
-            </li>
-          ) : null}
-        </ul>
-      </nav>
+      <Nav />
       <Switch>
         <Route exact path="/">
           <NewLobby />
