@@ -3,9 +3,13 @@ import { uniqBy } from "lodash"
 import { LobbyAPI } from "boardgame.io"
 
 export function SelectedGameMatchList() {
-  const { selectedGame, lobbyMatches, getLobbyMatches } = useBgioLobby()
+  const {
+    selectedGame,
+    lobbyMatches,
+    updateLobbyMatchesForSelectedGame,
+  } = useBgioLobby()
   async function handleRefreshButton(e) {
-    getLobbyMatches(selectedGame)
+    updateLobbyMatchesForSelectedGame()
   }
   const selectedGameMatches = lobbyMatches?.[selectedGame] ?? []
   // the BGIO server often returns duplicate matches, unsure why
@@ -13,6 +17,7 @@ export function SelectedGameMatchList() {
   const numCurrentMatches = selectedGameMatches?.length ?? 0
   return (
     <>
+      <button onClick={handleRefreshButton}>{`Refresh`}</button>
       <MatchesError />
       <MatchesList matches={matches} />
     </>
@@ -54,7 +59,10 @@ const MatchListItem = (props: { match: LobbyAPI.Match }) => {
   const { match } = props
   const { matchID } = match
   return (
-    <li style={{ cursor: "pointer" }} onClick={() => handleSelectMatch(match)}>
+    <li
+      style={{ cursor: "pointer" }}
+      onClick={() => handleSelectMatch(matchID)}
+    >
       Match ID: {matchID}
     </li>
   )

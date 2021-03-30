@@ -14,9 +14,6 @@ export const Layout = () => {
       id={`player${playerID}`} // for linking to this player view (useful in local dev)
       playerID={playerID}
     >
-      <LayoutTop>
-        <IngameNav />
-      </LayoutTop>
       <LayoutMiddle>
         <MapDisplay />
       </LayoutMiddle>
@@ -32,8 +29,8 @@ type LayoutContainerProps = {
 const LayoutContainer = styled.div<LayoutContainerProps>`
   //🛠 SET CSS VARS
   --player-color: ${(props) => props.theme.playerColor};
-  --navbar-height: 46px;
-  --navbar-logo-height: 32px;
+  /* --navbar-height: 46px; */
+  /* --navbar-logo-height: 32px; */
 
   position: relative;
   display: flex;
@@ -44,11 +41,6 @@ const LayoutContainer = styled.div<LayoutContainerProps>`
   margin: 0;
   color: var(--player-color);
   background-image: url("${(props) => props.theme.bgContourLinesUrl}");
-`
-const LayoutTop = styled.div`
-  width: 100%;
-  height: var(--navbar-height);
-  background: var(--black);
 `
 const LayoutMiddle = styled.div`
   width: 100%;

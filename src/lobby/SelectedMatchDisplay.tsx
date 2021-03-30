@@ -1,11 +1,11 @@
-import { useBgioLobby } from "bgio-contexts";
-import { useAuth } from "hooks";
-import { MatchPlayerMetadata } from "./NewLobby";
+import { useBgioLobby } from "bgio-contexts"
+import { useAuth } from "hooks"
+import { MatchPlayerMetadata } from "./NewLobby"
 
 export const SelectedMatchDisplay = () => {
-  const { selectedMatch } = useBgioLobby();
+  const { selectedMatch } = useBgioLobby()
   if (!selectedMatch) {
-    return null;
+    return null
   }
   const {
     matchID,
@@ -14,7 +14,7 @@ export const SelectedMatchDisplay = () => {
     players,
     unlisted,
     updatedAt,
-  } = selectedMatch;
+  } = selectedMatch
   return (
     <ul>
       <li>{unlisted ? "Private match" : "Public match"}</li>
@@ -27,20 +27,20 @@ export const SelectedMatchDisplay = () => {
         <MatchPlayersList players={players} />
       </li>
     </ul>
-  );
-};
+  )
+}
 const MatchPlayersList = (props: { players: MatchPlayerMetadata[] }) => {
-  const { players } = props;
-  const { isAuthenticated } = useAuth();
-  const { handleJoinSelectedMatch } = useBgioLobby();
+  const { players } = props
+  const { isAuthenticated } = useAuth()
+  const { handleJoinSelectedMatch } = useBgioLobby()
   const playersJSX = players.map((playerMetadata) => {
-    const playerID = playerMetadata.id;
-    const isConnected = playerMetadata?.isConnected;
-    const data = playerMetadata?.data;
-    const credentials = playerMetadata?.credentials;
-    const playerName = playerMetadata?.name ?? "";
+    const playerID = playerMetadata.id
+    const isConnected = playerMetadata?.isConnected
+    const data = playerMetadata?.data
+    const credentials = playerMetadata?.credentials
+    const playerName = playerMetadata?.name ?? ""
     // players have to join with a name, so no name means empty slot
-    const isPlayer = Boolean(playerName);
+    const isPlayer = Boolean(playerName)
     return (
       <li key={playerID}>
         {`${playerID}: `}
@@ -49,13 +49,13 @@ const MatchPlayersList = (props: { players: MatchPlayerMetadata[] }) => {
         ) : (
           <button
             disabled={!isAuthenticated}
-            onClick={(e) => handleJoinSelectedMatch(`${playerID}`)}
+            onClick={(e) => handleJoinSelectedMatch(`${playerID}`, "")}
           >
             Join
           </button>
         )}
       </li>
-    );
-  });
-  return <ul>{playersJSX}</ul>;
-};
+    )
+  })
+  return <ul>{playersJSX}</ul>
+}

@@ -22,12 +22,11 @@ export type MatchPlayerMetadata = {
 
 export const NewLobby = () => {
   const {
-    getLobbyGames,
-    getLobbyMatches,
     lobbyMatches,
     lobbyGamesError,
     selectedGame,
     joinedMatch,
+    updateLobbyGames,
     handleLeaveJoinedMatch,
   } = useBgioLobby()
   const joinedMatchID = joinedMatch?.matchID
@@ -40,15 +39,12 @@ export const NewLobby = () => {
   // if (joinedMatch?.matchID) {
   //   return <Redirect to="/play" />;
   // }
-  async function handleRefreshButton(e) {
-    getLobbyMatches(selectedGame)
-  }
   return (
     <>
       {lobbyGamesError ? (
         <p style={{ color: "red" }}>
           {`Error -- Could not retrieve games from server : ${lobbyGamesError}`}
-          <button onClick={getLobbyGames}>Retry</button>
+          <button onClick={updateLobbyGames}>Retry</button>
         </p>
       ) : (
         <>
@@ -69,7 +65,7 @@ export const NewLobby = () => {
           ) : null}
           <section>
             <h3>{`${selectedGame} matches (${numCurrentMatches})`}</h3>
-            <button onClick={handleRefreshButton}>{`Refresh`}</button>
+
             <SelectedGameMatchList />
           </section>
           <hr></hr>

@@ -1,21 +1,21 @@
-import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom"
+import { BrowserRouter, Switch, Route } from "react-router-dom"
 import { Client } from "boardgame.io/react"
 import { Local, SocketIO } from "boardgame.io/multiplayer"
 import { Debug } from "boardgame.io/debug"
 
-import { BgioLobbyProvider } from "bgio-contexts"
+import { Login } from "lobby/Login"
+import { BgioLobbyApiProvider, BgioLobbyProvider } from "bgio-contexts"
 import { AuthProvider, useAuth } from "hooks/useAuth"
 import { NewLobby } from "lobby/NewLobby"
-import { Login } from "lobby/Login"
 import { myGame } from "./game/game"
 import { Board } from "./Board"
 import { PageRoutes } from "ui/pages/PageRoutes"
 import { MultiplayerNav } from "ui/layout"
 
 // ! Three Options:
-// * Client that connects to its origin server `npm run build`
-// * Client that connects to a local server `npm run devstart`
 // * A local game (for game development) `npm run start`
+// * Client that connects to a local server `npm run devstart`
+// * Client that connects to its origin server `npm run build`
 
 const isDeploymentEnv = process.env.NODE_ENV === "production"
 const isDevEnv = process.env.NODE_ENV === "development"
@@ -55,17 +55,37 @@ const MultiplayerGameClient = Client({
   debug: false,
 })
 
-const PlayPage = () => {
-  const { storedCredentials } = useAuth()
-  const { playerID, matchID, playerCredentials } = storedCredentials
-  return (
-    <MultiplayerGameClient
-      matchID={matchID}
-      playerID={playerID}
-      credentials={playerCredentials}
-    />
-  )
+export const App = () => {
+  if (isLocalApp) {
+    return <LocalApp />
+  } else {
+    return (
+      <AuthProvider>
+        <BgioLobbyApiProvider serverAddress={SERVER}>
+          <BgioLobbyProvider>
+            <BrowserRouter>
+              <Switch>
+                <Route exact path="/">
+                  <MultiplayerNav />
+                  <Login />
+                  <NewLobby />
+                </Route>
+                <Route path="/demo">
+                  <MultiplayerNav />
+                  <DemoGameClient matchID="matchID" playerID="0" />
+                </Route>
+                <Route path="/play">
+                  <PlayPage />
+                </Route>
+              </Switch>
+            </BrowserRouter>
+          </BgioLobbyProvider>
+        </BgioLobbyApiProvider>
+      </AuthProvider>
+    )
+  }
 }
+
 const LocalApp = () => {
   return (
     <BrowserRouter>
@@ -79,56 +99,14 @@ const LocalApp = () => {
   )
 }
 
-export const App = () => {
-  if (isLocalApp) {
-    return <LocalApp />
-  } else {
-    return (
-      <AuthProvider>
-        <BgioLobbyProvider serverAddress={SERVER}>
-          <BrowserRouter>
-            <MultiplayerNav />
-            <Switch>
-              <Route exact path="/">
-                <NewLobby />
-              </Route>
-              <Route path="/demo">
-                <DemoGameClient matchID="matchID" playerID="0" />
-              </Route>
-              <Route path="/login">
-                <Login />
-              </Route>
-              <PrivateRoute path="/lobby">
-                <NewLobby />
-              </PrivateRoute>
-              <PrivateRoute path="/play">
-                <PlayPage />
-              </PrivateRoute>
-            </Switch>
-          </BrowserRouter>
-        </BgioLobbyProvider>
-      </AuthProvider>
-    )
-  }
-}
-
-function PrivateRoute({ children, ...rest }) {
-  const { isAuthenticated } = useAuth()
+const PlayPage = () => {
+  const { storedCredentials } = useAuth()
+  const { playerID, matchID, playerCredentials } = storedCredentials
   return (
-    <Route
-      {...rest}
-      render={({ location }) =>
-        isAuthenticated ? (
-          children
-        ) : (
-          <Redirect
-            to={{
-              pathname: "/login",
-              state: { from: location },
-            }}
-          />
-        )
-      }
+    <MultiplayerGameClient
+      matchID={matchID}
+      playerID={playerID}
+      credentials={playerCredentials}
     />
   )
 }
