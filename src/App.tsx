@@ -16,8 +16,6 @@ import { NewLobby } from "lobby/NewLobby"
 import { Login } from "lobby/Login"
 import { myGame } from "./game/game"
 import { Board } from "./Board"
-// import { ListOfHexgridExamples } from "old-rhg/react-hexgrid-examples/ListOfHexgridExamples"
-import { ListOfHexgridExamples } from "./rhg-examples/ListOfHexgridExamples"
 
 // ! Three Options:
 // * Client that connects to its origin server `npm run build`
@@ -53,7 +51,7 @@ export const DemoGameClient = Client({
   ...bgioClientOptions,
   multiplayer: Local(),
   enhancer: reduxDevTools,
-  debug: true,
+  debug: { impl: Debug },
 })
 
 export const MultiplayerGameClient = Client({
@@ -64,10 +62,6 @@ export const MultiplayerGameClient = Client({
 const PlayPage = () => {
   const { storedCredentials } = useAuth()
   const { playerID, matchID, playerCredentials } = storedCredentials
-  //TODO
-  // if (!playerID || !matchID || !playerCredentials) {
-  //   <h2>Sorry, you have not joined a game yet!</h2>;
-  // }
   return (
     <MultiplayerGameClient
       matchID={matchID}
@@ -79,14 +73,7 @@ const PlayPage = () => {
 
 export const App = () => {
   if (isLocalApp) {
-    return (
-      <>
-        <ListOfHexgridExamples />
-        {/* <DemoGameClient matchID="matchID" playerID="0" />
-        <hr></hr>
-        <EXAMPLES /> */}
-      </>
-    )
+    return <DemoGameClient matchID="matchID" playerID="0" />
   } else {
     return (
       <AuthProvider>
