@@ -1,22 +1,13 @@
-import { useBgioLobby } from "bgio-contexts"
+import { useMultiplayerLobby } from "./useMultiplayerLobby"
 
 export function CreateMatchButton() {
-  const {
-    createMatchSuccess,
-    createMatchError,
-    handleCreateMatchButton,
-  } = useBgioLobby()
+  const { createMatchError, handleCreateMatchButton } = useMultiplayerLobby()
   return (
     <div>
       <button onClick={handleCreateMatchButton}>Create new match</button>
       {createMatchError && (
         <span style={{ color: "red" }}>
           Sorry! Failed to create match: {`${createMatchError}`}
-        </span>
-      )}
-      {createMatchSuccess && (
-        <span style={{ color: "green" }}>
-          Last match created: {`${createMatchSuccess}`}
         </span>
       )}
     </div>

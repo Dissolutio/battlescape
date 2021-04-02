@@ -1,73 +1,75 @@
 import React, { useState, useEffect } from "react"
-import { LobbyClient } from "boardgame.io/client"
 import { LobbyAPI } from "boardgame.io"
 
-import { useBgioLobbyApi } from "./useBgioLobbyApi"
+import { useBgioLobbyApi } from "../bgio-contexts/useBgioLobbyApi"
 import { useAuth } from "hooks"
-import { MyGameState, defaultSetupData, MYGAME_NUMPLAYERS } from "game/game"
+import { defaultSetupData, MYGAME_NUMPLAYERS } from "game/game"
 
-type LobbyMatches = {
-  [gameName: string]: LobbyAPI.Match[]
-}
-type LobbyMatchesError = {
-  [gameName: string]: string
-}
-type BgioLobbyCtxValue = {
+type MultiplayerLobbyCtxValue = {
+  // lobby state
   lobbyGames: string[]
-  lobbyMatches: LobbyMatches
-  lobbyMatchesError: LobbyMatchesError
-  lobbyGamesError: string
-  createMatchError: string
-  createMatchSuccess: string
-  getMatchByIDSuccess: string
-  getMatchByIDError: string
+  lobbyMatches: { [gameName: string]: LobbyAPI.Match[] }
+  lobbyMatchesError: {
+    [gameName: string]: string
+  }
   selectedGame: string
   selectedMatch: LobbyAPI.Match
-  joinedMatch: LobbyAPI.Match
+  // requests
   updateLobbyMatchesForSelectedGame: () => Promise<LobbyAPI.MatchList>
   updateLobbyGames: () => Promise<void>
-  //handlers
   handleSelectGameChange: (e) => void
-  handleSelectMatch: (matchID: string) => Promise<void>
   handleCreateMatchButton: () => Promise<void>
-  handleJoinSelectedMatch: (playerID: string, matchID: string) => Promise<void>
+  handleJoinMatch: (params: {
+    playerID: string
+    matchID?: string
+  }) => Promise<void>
   handleLeaveJoinedMatch: () => Promise<void>
+  handleVerifyJoinedMatch: () => Promise<void>
+  // request statuses
+  lobbyGamesError: string
+  createMatchError: string
+  verifyMatchSuccess: string
+  verifyMatchError: string
 }
-type BgioLobbyProviderProps = {
+type MultiplayerLobbyProviderProps = {
   children: React.ReactNode
 }
 
-const BgioLobbyContext = React.createContext<BgioLobbyCtxValue | undefined>(
-  undefined
-)
+const MultiplayerLobbyContext = React.createContext<
+  MultiplayerLobbyCtxValue | undefined
+>(undefined)
 
-export function BgioLobbyProvider({ children }: BgioLobbyProviderProps) {
-  const { updateCredentials, storedCredentials } = useAuth()
+export function MultiplayerLobbyProvider({
+  children,
+}: MultiplayerLobbyProviderProps) {
+  const { updateCredentials, storedCredentials, isAuthenticated } = useAuth()
   const {
-    lobbyClient,
     getLobbyGames,
     getLobbyMatches,
     getMatch,
     createMatch,
     joinMatch,
     leaveMatch,
+    updatePlayer,
   } = useBgioLobbyApi()
+  const joinedMatchID = storedCredentials?.matchID
+
   // STATE
   const [lobbyGames, setLobbyGames] = useState<string[]>([])
   const [lobbyGamesError, setLobbyGamesError] = useState("")
-  const [lobbyMatches, setLobbyMatches] = useState<LobbyMatches>({})
-  const [lobbyMatchesError, setLobbyMatchesError] = useState<LobbyMatchesError>(
-    {}
-  )
-  const [createMatchSuccess, setCreateMatchSuccess] = useState("")
+  const [lobbyMatches, setLobbyMatches] = useState<{
+    [gameName: string]: LobbyAPI.Match[]
+  }>({})
+  const [lobbyMatchesError, setLobbyMatchesError] = useState<{
+    [gameName: string]: string
+  }>({})
+  const [verifyMatchSuccess, setVerifyMatchSuccess] = useState("")
+  const [verifyMatchError, setVerifyMatchError] = useState("")
   const [createMatchError, setCreateMatchError] = useState("")
-  const [getMatchByIDSuccess, setGetMatchByIDSuccess] = useState("")
-  const [getMatchByIDError, setGetMatchByIDError] = useState("")
   const [selectedGame, setSelectedGame] = useState("")
   const [selectedMatch, setSelectedMatch] = useState<
     LobbyAPI.Match | undefined
   >(undefined)
-  const [joinedMatch, setJoinedMatch] = useState<LobbyAPI.Match>(undefined)
 
   // effect -- initial fetch games
   useEffect(() => {
@@ -92,7 +94,15 @@ export function BgioLobbyProvider({ children }: BgioLobbyProviderProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedGame])
 
+  // effect - verify currently joined match once games list is received (and first is auto-selected)
+  React.useEffect(() => {
+    if (Boolean(storedCredentials.matchID)) {
+      handleVerifyJoinedMatch()
+    }
+  }, [storedCredentials])
+
   async function updateLobbyGames() {
+    setLobbyGamesError("")
     try {
       const games = await getLobbyGames()
       if (games) {
@@ -120,28 +130,46 @@ export function BgioLobbyProvider({ children }: BgioLobbyProviderProps) {
       console.log(`🚀 ~ getLobbyMatches ~ error`, error)
     }
   }
+  // handler verify currently joined match
+  async function handleVerifyJoinedMatch() {
+    const {
+      playerName,
+      gameName,
+      matchID,
+      playerID,
+      playerCredentials,
+    } = storedCredentials
+    // refresh our credentials with no changes (ping)
+    return updatePlayer(gameName, matchID, {
+      playerID,
+      credentials: playerCredentials,
+      newName: playerName,
+      // data: {},
+    }).then(
+      (success) => {
+        setVerifyMatchSuccess(`You have a game to play!`)
+        setVerifyMatchError("")
+      },
+      (failure) => {
+        setVerifyMatchSuccess("")
+        setVerifyMatchError(`${failure}`)
+      }
+    )
+  }
   // handler select game
   const handleSelectGameChange = (e) => {
     setSelectedGame(e.target.value)
   }
-  // handler select match
-  async function handleSelectMatch(matchID: string) {
-    // refresh the selected match
-    const refreshedMatch = await getMatch(selectedGame, matchID)
-    // then select the refreshed match (aka update) if success ...
-    if (refreshedMatch?.matchID) {
-      setSelectedMatch(refreshedMatch)
-    }
-    // ... otherwise, selected match does not exist, so we clear and refetch matches
-    // todo: we should apologize
-    else {
-      setSelectedMatch(undefined)
-      updateLobbyMatchesForSelectedGame()
-    }
-  }
-  // handler createMatch
+
+  // handler createMatch- create a match, then select it (which refreshes the match), then join it
   async function handleCreateMatchButton() {
-    // create a match, then select it (which refreshes the match), then join it
+    // requires a username first
+    if (!isAuthenticated) {
+      setCreateMatchError(
+        "You must login with a username before you can create a game"
+      )
+      return
+    }
     try {
       const { matchID } = await createMatch(`${selectedGame}`, {
         setupData: defaultSetupData,
@@ -149,26 +177,29 @@ export function BgioLobbyProvider({ children }: BgioLobbyProviderProps) {
         unlisted: false,
       })
       if (matchID) {
-        setCreateMatchSuccess(matchID)
         setCreateMatchError("")
+        await handleJoinMatch({ playerID: "0", matchID })
         await updateLobbyMatchesForSelectedGame()
-        await handleSelectMatch(matchID)
-        await handleJoinSelectedMatch("0", matchID)
       }
     } catch (error) {
-      setCreateMatchSuccess("")
       setCreateMatchError(error.message)
       console.log(`🚀 ~ createMatch ~ error`, error)
     }
   }
-  // join match, then save credentials and proceed to Room
-  async function handleJoinSelectedMatch(playerID: string, matchID: string) {
+
+  // join match, then save credentials, refresh match and confirm
+  async function handleJoinMatch({
+    playerID,
+    matchID,
+  }: {
+    playerID: string
+    matchID: string
+  }) {
     const playerName = storedCredentials.playerName
-    const joinMatchID = matchID || selectedMatch.matchID
     const gameName = selectedGame
-    const playerCredentials = await joinMatch({
+    const { playerCredentials } = await joinMatch({
       gameName,
-      matchID: joinMatchID,
+      matchID,
       options: {
         playerID,
         playerName,
@@ -182,78 +213,78 @@ export function BgioLobbyProvider({ children }: BgioLobbyProviderProps) {
         playerCredentials: `${playerCredentials}`,
         playerID,
       }
-      //save
+      //save joined match
       updateCredentials(newCredentials)
       // refresh match info
-      const joinedMatch = await getMatch(gameName, matchID)
-      if (joinedMatch) {
-        // update display first
-        setSelectedMatch(joinedMatch)
+      const refreshedMatch = await getMatch(gameName, matchID)
+      if (refreshedMatch) {
         //double check the server has matching player data
-        const serverPlayer = joinedMatch.players.find(
+        const serverPlayer = refreshedMatch.players.find(
           (playerMetadata) => playerMetadata.id.toString() === playerID
         )
         const serverPlayerName = serverPlayer?.name
         const isConfirmedJoin = serverPlayerName === playerName
-        // set joined match to new match info
-        if (isConfirmedJoin) {
-          setJoinedMatch(joinedMatch)
-        }
       }
     } else {
-      console.log(`🚀 handleJoinSelectedMatch ~ FAILED TO JOIN`)
+      console.log(`🚀 handleJoinMatch ~ FAILED TO JOIN`)
     }
   }
+
   // handle leave current match
   async function handleLeaveJoinedMatch() {
     const { gameName, matchID, playerID, playerCredentials } = storedCredentials
-    setJoinedMatch(undefined)
-    const isLeft = await leaveMatch({
-      gameName,
-      matchID,
-      options: { playerID, credentials: playerCredentials },
-    })
     updateCredentials({
       gameName: "",
       matchID: "",
       playerID: "",
       playerCredentials: "",
     })
-    return isLeft
+    setVerifyMatchSuccess("")
+    setVerifyMatchError("")
+    try {
+      await leaveMatch({
+        gameName,
+        matchID,
+        options: { playerID, credentials: playerCredentials },
+      })
+    } catch (error) {
+      console.log(`🚀 ~ handleLeaveJoinedMatch ~ error`, error)
+    }
+    await updateLobbyMatchesForSelectedGame()
   }
 
   return (
-    <BgioLobbyContext.Provider
+    <MultiplayerLobbyContext.Provider
       value={{
         lobbyGames,
-        lobbyGamesError,
         lobbyMatches,
-        lobbyMatchesError,
-        createMatchError,
-        createMatchSuccess,
-        getMatchByIDSuccess,
-        getMatchByIDError,
         selectedGame,
         selectedMatch,
-        joinedMatch,
+        lobbyGamesError,
+        lobbyMatchesError,
+        createMatchError,
+        verifyMatchSuccess,
+        verifyMatchError,
         updateLobbyGames,
         updateLobbyMatchesForSelectedGame,
         handleSelectGameChange,
-        handleSelectMatch,
         handleCreateMatchButton,
-        handleJoinSelectedMatch,
+        handleJoinMatch,
         handleLeaveJoinedMatch,
+        handleVerifyJoinedMatch,
       }}
     >
       {children}
-    </BgioLobbyContext.Provider>
+    </MultiplayerLobbyContext.Provider>
   )
 }
 
-export function useBgioLobby() {
-  const context = React.useContext(BgioLobbyContext)
+export function useMultiplayerLobby() {
+  const context = React.useContext(MultiplayerLobbyContext)
   if (context === undefined) {
-    throw new Error("useBgioLobby must be used within a BgioLobbyProvider")
+    throw new Error(
+      "useMultiplayerLobby must be used within a MultiplayerLobbyProvider"
+    )
   }
   return context
 }

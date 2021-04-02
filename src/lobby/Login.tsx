@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react"
-import { Redirect, useLocation, Link } from "react-router-dom"
 
 import { useAuth } from "hooks"
 
@@ -9,43 +8,22 @@ export const Login = () => {
     setInputText(e.target.value)
   }
   const { isAuthenticated, storedCredentials, signin, signout } = useAuth()
-  //   if we were redirected here, we'll redirect back once authenticated
-  const location = useLocation()
-  const wasRedirected = location?.state?.from?.pathname
-  const [redirect, setRedirect] = useState("")
-  // when we weren't redirected, we're just changing our name then
-  const [success, setSuccess] = useState("")
+  const isNameChanged = inputText !== storedCredentials.playerName
 
   // effect -- auto-fill input on auth change
   useEffect(() => {
-    setInputText(storedCredentials?.playerName ?? "")
+    setInputText(storedCredentials.playerName)
   }, [storedCredentials])
 
   const handleSubmit = (e) => {
     e.preventDefault()
     signin(inputText)
-    if (wasRedirected) {
-      setRedirect(wasRedirected)
-    } else {
-      setSuccess(`Welcome ${inputText}!`)
-    }
   }
 
   const inputHtmlId = `playerName`
-
-  if (redirect) {
-    return (
-      <Redirect
-        to={{
-          pathname: wasRedirected,
-        }}
-      />
-    )
-  }
   return (
-    <div>
+    <>
       <form onSubmit={handleSubmit}>
-        {wasRedirected && <p>You must sign in to go to "{wasRedirected}"</p>}
         <label htmlFor={inputHtmlId}>
           {isAuthenticated ? "Change your " : "Choose a "} player name:
           <input
@@ -56,10 +34,13 @@ export const Login = () => {
           />
         </label>
         <div>
-          <button type="submit">Submit</button>
+          {isNameChanged && (
+            <button type="submit">
+              {isAuthenticated ? "Change Name" : "Submit"}
+            </button>
+          )}
         </div>
       </form>
-      {success && <p>{success} </p>}
       {isAuthenticated && (
         <p>
           <button onClick={signout}>
@@ -67,6 +48,6 @@ export const Login = () => {
           </button>
         </p>
       )}
-    </div>
+    </>
   )
 }

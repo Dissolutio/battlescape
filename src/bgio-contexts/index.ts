@@ -1,4 +1,3 @@
-export * from "./useBgioLobby"
 export * from "./useBgioLobbyApi"
 export * from "./useBgioClientInfo"
 export * from "./useBgioG"

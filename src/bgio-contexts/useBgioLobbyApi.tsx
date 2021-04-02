@@ -2,7 +2,7 @@ import React from "react"
 import { LobbyClient } from "boardgame.io/client"
 import { LobbyAPI } from "boardgame.io"
 
-import { MyGameState } from "game/game"
+import { GameState } from "game/types"
 
 type LeaveMatchParams = {
   gameName: string
@@ -24,9 +24,15 @@ type JoinMatchOptions = {
   data?: any
 }
 type CreateMatchOptions = {
-  setupData: MyGameState
+  setupData: GameState
   numPlayers: number
   unlisted?: boolean
+}
+type UpdatePlayerOptions = {
+  playerID: string
+  credentials: string
+  newName?: string
+  data?: any
 }
 
 type BgioLobbyApiCtxValue = {
@@ -40,6 +46,11 @@ type BgioLobbyApiCtxValue = {
   ) => Promise<LobbyAPI.CreatedMatch>
   joinMatch: (params: JoinMatchParams) => Promise<LobbyAPI.JoinedMatch>
   leaveMatch: (params: LeaveMatchParams) => Promise<void>
+  updatePlayer: (
+    gameName: string,
+    matchID: string,
+    options: UpdatePlayerOptions
+  ) => Promise<void>
 }
 
 const BgioLobbyApiContext = React.createContext<
@@ -82,7 +93,26 @@ export function BgioLobbyApiProvider({
   }
   async function leaveMatch(params: LeaveMatchParams) {
     const { gameName, matchID, options } = params
+    console.log(
+      `🚀 ~ leaveMatch ~ gameName, matchID, options`,
+      gameName,
+      matchID,
+      options
+    )
     return lobbyClient.leaveMatch(gameName, matchID, options)
+  }
+  async function updatePlayer(
+    gameName: string,
+    matchID: string,
+    options: UpdatePlayerOptions
+  ) {
+    const { playerID, credentials, newName, data } = options
+    return lobbyClient.updatePlayer(gameName, matchID, {
+      playerID,
+      credentials,
+      newName,
+      data,
+    })
   }
 
   return (
@@ -95,6 +125,7 @@ export function BgioLobbyApiProvider({
         createMatch,
         joinMatch,
         leaveMatch,
+        updatePlayer,
       }}
     >
       {children}

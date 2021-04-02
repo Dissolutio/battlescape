@@ -1,8 +1,7 @@
-const Server = require("boardgame.io/server").Server;
-const myGame = require("./server/game").myGame;
-const myOtherGame = require("./server/game").myOtherGame;
+const Server = require("boardgame.io/server").Server
+const HexedMeadow = require("./server/game").HexedMeadow
 
-const server = Server({ games: [myGame, myOtherGame] });
-const PORT = process.env.PORT || 8000;
+const server = Server({ games: [HexedMeadow] })
+const PORT = process.env.PORT || 8000
 
-server.run(PORT, () => console.log("dev server running at: PORT"));
+server.run(PORT, () => console.log("dev server running at: PORT"))

@@ -1,4 +1,4 @@
-import { useBgioLobby } from "bgio-contexts"
+import { useAuth } from "hooks"
 import { Link, NavLink } from "react-router-dom"
 
 export const PageNav = () => {
@@ -13,24 +13,18 @@ export const PageNav = () => {
 }
 
 export const MultiplayerNav = () => {
-  const { joinedMatch } = useBgioLobby()
-  const isJoinedInMatch = Boolean(joinedMatch?.matchID)
+  const { storedCredentials } = useAuth()
+  const isJoinedInMatch = Boolean(storedCredentials.matchID)
   return (
     <nav>
       <ul>
         <li>
           <NavLink exact to="/">
-            Home
+            Multiplayer Lobby
           </NavLink>
         </li>
         <li>
           <NavLink to="/demo">Demo</NavLink>
-        </li>
-        <li>
-          <NavLink to="/lobby">Lobby</NavLink>
-        </li>
-        <li>
-          <NavLink to="/login">Login</NavLink>
         </li>
         {isJoinedInMatch ? (
           <li>
@@ -38,16 +32,6 @@ export const MultiplayerNav = () => {
           </li>
         ) : null}
       </ul>
-    </nav>
-  )
-}
-export const IngameNav = () => {
-  return (
-    <nav>
-      <Link to={"/"}>Home</Link>
-      <Link to={"/help"}>Help</Link>
-      <Link to={"/rules"}>Rules</Link>
-      <Link to={"/feedback"}>Feedback</Link>
     </nav>
   )
 }

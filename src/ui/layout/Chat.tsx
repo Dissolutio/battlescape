@@ -1,31 +1,32 @@
-import React from "react";
-import _ from "lodash";
-import { useBgioClientInfo, useBgioChat } from "bgio-contexts";
+import React from "react"
+import _ from "lodash"
+import { useBgioClientInfo, useBgioChat } from "bgio-contexts"
 
 function generateChatID() {
   return Math.random()
     .toString(36)
     .replace(/[^a-z]+/g, "")
-    .substr(0, 5);
+    .substr(0, 5)
 }
 
 export const ChatInput = () => {
-  const [chatInputText, setChatInputText] = React.useState("");
-  const { sendChatMessage } = useBgioChat();
-  const { playerID } = useBgioClientInfo();
+  const [chatInputText, setChatInputText] = React.useState("")
+  const { sendChatMessage } = useBgioChat()
+  const { playerID } = useBgioClientInfo()
   const handleChatInputChange = (e) => {
-    setChatInputText(e.target.value);
-  };
+    setChatInputText(e.target.value)
+  }
   const handleChatSubmit = async (e) => {
-    e.preventDefault(e);
-    sendChatMessage({
+    e.preventDefault(e)
+    const chatResponse = await sendChatMessage({
       sender: playerID,
       id: generateChatID(),
       payload: chatInputText,
-    });
-    setChatInputText("");
-  };
-  const chatInputHtmlId = `chat-text-input`;
+    })
+    console.log(`🚀 ~ handleChatSubmit ~ chatResponse`, chatResponse)
+    setChatInputText("")
+  }
+  const chatInputHtmlId = `chat-text-input`
   return (
     <div>
       <form onSubmit={handleChatSubmit}>
@@ -41,17 +42,17 @@ export const ChatInput = () => {
         <button type="submit">Send</button>
       </form>
     </div>
-  );
-};
+  )
+}
 
 export const ChatList = () => {
-  const chatCtxVal = useBgioChat();
-  const chatMessages = _.uniqBy(chatCtxVal.chatMessages, "id");
+  const chatCtxVal = useBgioChat()
+  const chatMessages = _.uniqBy(chatCtxVal.chatMessages, "id")
   return (
     <ul style={{ listStyleType: "none" }}>
       {chatMessages.map((chat) => {
-        const actualChat = chat.payload;
-        const { id, sender, payload } = actualChat;
+        const actualChat = chat.payload
+        const { id, sender, payload } = actualChat
         return (
           <li key={id}>
             <span
@@ -59,8 +60,8 @@ export const ChatList = () => {
             >{`Player ${sender}: `}</span>
             {payload}
           </li>
-        );
+        )
       })}
     </ul>
-  );
-};
+  )
+}

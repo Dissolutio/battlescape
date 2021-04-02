@@ -1,13 +1,12 @@
-import { BrowserRouter, Switch, Route } from "react-router-dom"
+import { BrowserRouter, Switch, Route, Link } from "react-router-dom"
 import { Client } from "boardgame.io/react"
 import { Local, SocketIO } from "boardgame.io/multiplayer"
 import { Debug } from "boardgame.io/debug"
 
-import { Login } from "lobby/Login"
-import { BgioLobbyApiProvider, BgioLobbyProvider } from "bgio-contexts"
+import { BgioLobbyApiProvider } from "bgio-contexts"
 import { AuthProvider, useAuth } from "hooks/useAuth"
-import { NewLobby } from "lobby/NewLobby"
-import { myGame } from "./game/game"
+import { MultiplayerLobby, MultiplayerLobbyProvider } from "lobby"
+import { HexedMeadow } from "./game/game"
 import { Board } from "./Board"
 import { PageRoutes } from "ui/pages/PageRoutes"
 import { MultiplayerNav } from "ui/layout"
@@ -37,7 +36,7 @@ const reduxDevTools =
   (window as any).__REDUX_DEVTOOLS_EXTENSION__()
 
 const bgioClientOptions = {
-  game: myGame,
+  game: HexedMeadow,
   board: Board,
   numPlayers: 2,
 }
@@ -62,24 +61,24 @@ export const App = () => {
     return (
       <AuthProvider>
         <BgioLobbyApiProvider serverAddress={SERVER}>
-          <BgioLobbyProvider>
+          <MultiplayerLobbyProvider>
             <BrowserRouter>
               <Switch>
                 <Route exact path="/">
                   <MultiplayerNav />
-                  <Login />
-                  <NewLobby />
+                  <MultiplayerLobby />
                 </Route>
                 <Route path="/demo">
                   <MultiplayerNav />
                   <DemoGameClient matchID="matchID" playerID="0" />
                 </Route>
                 <Route path="/play">
+                  <MultiplayerNav />
                   <PlayPage />
                 </Route>
               </Switch>
             </BrowserRouter>
-          </BgioLobbyProvider>
+          </MultiplayerLobbyProvider>
         </BgioLobbyApiProvider>
       </AuthProvider>
     )
@@ -102,6 +101,14 @@ const LocalApp = () => {
 const PlayPage = () => {
   const { storedCredentials } = useAuth()
   const { playerID, matchID, playerCredentials } = storedCredentials
+  if (!playerID || !matchID || !playerCredentials) {
+    return (
+      <p>
+        You are not currently joined in a match.{" "}
+        <Link to="/">Return to Lobby?</Link>
+      </p>
+    )
+  }
   return (
     <MultiplayerGameClient
       matchID={matchID}

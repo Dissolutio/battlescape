@@ -1,20 +1,21 @@
-import { useBgioLobby } from "bgio-contexts"
-import { uniqBy } from "lodash"
 import { LobbyAPI } from "boardgame.io"
+import { uniqBy } from "lodash"
+
+import { useAuth } from "hooks"
+import { useMultiplayerLobby } from "./useMultiplayerLobby"
 
 export function SelectedGameMatchList() {
   const {
     selectedGame,
     lobbyMatches,
     updateLobbyMatchesForSelectedGame,
-  } = useBgioLobby()
+  } = useMultiplayerLobby()
   async function handleRefreshButton(e) {
     updateLobbyMatchesForSelectedGame()
   }
   const selectedGameMatches = lobbyMatches?.[selectedGame] ?? []
   // the BGIO server often returns duplicate matches, unsure why
   const matches = uniqBy(selectedGameMatches, "matchID")
-  const numCurrentMatches = selectedGameMatches?.length ?? 0
   return (
     <>
       <button onClick={handleRefreshButton}>{`Refresh`}</button>
@@ -25,7 +26,7 @@ export function SelectedGameMatchList() {
 }
 
 const MatchesError = () => {
-  const { lobbyMatchesError, selectedGame } = useBgioLobby()
+  const { lobbyMatchesError, selectedGame } = useMultiplayerLobby()
   const isError = lobbyMatchesError?.[selectedGame]
   if (isError) {
     return (
@@ -38,7 +39,7 @@ const MatchesError = () => {
 }
 
 const MatchesList = ({ matches }) => {
-  const { lobbyMatchesError, selectedGame } = useBgioLobby()
+  const { lobbyMatchesError, selectedGame } = useMultiplayerLobby()
   const isError = lobbyMatchesError?.[selectedGame]
   const isMatches = matches.length > 0
   if (isMatches) {
@@ -54,16 +55,79 @@ const MatchesList = ({ matches }) => {
   return isError ? null : <p>No current matches!</p>
 }
 
-const MatchListItem = (props: { match: LobbyAPI.Match }) => {
-  const { handleSelectMatch } = useBgioLobby()
-  const { match } = props
-  const { matchID } = match
+export const MatchListItem = (props: { match?: LobbyAPI.Match }) => {
+  if (!props.match) {
+    return null
+  }
+  const {
+    matchID,
+    createdAt,
+    gameName,
+    players,
+    unlisted,
+    updatedAt,
+  } = props.match
   return (
-    <li
-      style={{ cursor: "pointer" }}
-      onClick={() => handleSelectMatch(matchID)}
-    >
-      Match ID: {matchID}
-    </li>
+    <details>
+      <summary>Match ID: {matchID}</summary>
+      <ul>
+        <li>{unlisted ? "Private match" : "Public match"}</li>
+        <li>Game: {gameName}</li>
+        <li>Match ID: {matchID}</li>
+        <li>Created at: {`${new Date(createdAt).toLocaleTimeString()}`}</li>
+        <li>Last updated: {`${new Date(updatedAt).toLocaleTimeString()}`}</li>
+        <li>
+          PLAYERS:
+          <MatchPlayersList matchID={matchID} players={players} />
+        </li>
+      </ul>
+    </details>
   )
+}
+
+// putting this type here, boardgame.io's LobbyAPI.Match has a PublicPlayerMetadata type that isn't exported for us at this time
+export type MatchPlayerMetadata = {
+  id: number
+  name?: string
+  credentials?: string
+  data?: any
+  isConnected?: boolean
+}
+
+const MatchPlayersList = (props: {
+  players: MatchPlayerMetadata[]
+  matchID: string
+}) => {
+  const { players, matchID } = props
+  const { isAuthenticated } = useAuth()
+  const { handleJoinMatch, verifyMatchSuccess } = useMultiplayerLobby()
+  const playersJSX = players.map((playerMetadata) => {
+    const playerID = playerMetadata.id
+    const isConnected = playerMetadata?.isConnected
+    const data = playerMetadata?.data
+    const credentials = playerMetadata?.credentials
+    const playerName = playerMetadata?.name ?? ""
+    // players have to join with a name, so no name means empty slot
+    const isPlayer = Boolean(playerName)
+    // if user isn't logged in, or is already in a game, then disable join button
+    const joinIsDisabled = !isAuthenticated || Boolean(verifyMatchSuccess)
+    return (
+      <li key={playerID}>
+        {`${playerID}: `}
+        {isPlayer ? (
+          <span style={{ fontWeight: "bold" }}>{playerName}</span>
+        ) : (
+          <button
+            disabled={joinIsDisabled}
+            onClick={(e) =>
+              handleJoinMatch({ playerID: `${playerID}`, matchID })
+            }
+          >
+            Join
+          </button>
+        )}
+      </li>
+    )
+  })
+  return <ul>{playersJSX}</ul>
 }
