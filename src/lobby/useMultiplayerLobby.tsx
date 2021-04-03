@@ -13,7 +13,6 @@ type MultiplayerLobbyCtxValue = {
     [gameName: string]: string
   }
   selectedGame: string
-  selectedMatch: LobbyAPI.Match
   // requests
   updateLobbyMatchesForSelectedGame: () => Promise<LobbyAPI.MatchList>
   updateLobbyGames: () => Promise<void>
@@ -67,9 +66,6 @@ export function MultiplayerLobbyProvider({
   const [verifyMatchError, setVerifyMatchError] = useState("")
   const [createMatchError, setCreateMatchError] = useState("")
   const [selectedGame, setSelectedGame] = useState("")
-  const [selectedMatch, setSelectedMatch] = useState<
-    LobbyAPI.Match | undefined
-  >(undefined)
 
   // effect -- initial fetch games
   useEffect(() => {
@@ -259,7 +255,6 @@ export function MultiplayerLobbyProvider({
         lobbyGames,
         lobbyMatches,
         selectedGame,
-        selectedMatch,
         lobbyGamesError,
         lobbyMatchesError,
         createMatchError,
