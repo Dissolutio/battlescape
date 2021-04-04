@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 
 import { useAuth } from "hooks"
+import { useMultiplayerLobby } from "./useMultiplayerLobby"
 
 export const Login = () => {
   const [inputText, setInputText] = useState("")
@@ -43,11 +44,26 @@ export const Login = () => {
       </form>
       {isAuthenticated && (
         <p>
-          <button onClick={signout}>
-            Sign out {`${storedCredentials?.playerName}`}
-          </button>
+          <LogoutButton />
         </p>
       )}
     </>
+  )
+}
+
+// A little more complicated, ideally we'd want to make sure we tell everybody we left the match
+export const LogoutButton = () => {
+  const { handleLeaveJoinedMatch } = useMultiplayerLobby()
+  const { storedCredentials, signout } = useAuth()
+  const isInJoinedMatch = Boolean(storedCredentials.matchID)
+  const handleSignout = async (e) => {
+    await handleLeaveJoinedMatch()
+    signout()
+  }
+
+  return (
+    <button onClick={handleSignout}>
+      Sign out {`${storedCredentials?.playerName}`}
+    </button>
   )
 }
