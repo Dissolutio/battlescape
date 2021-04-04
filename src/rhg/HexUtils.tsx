@@ -15,7 +15,7 @@ const DIRECTIONS = [
   new Hex(0, 1, -1),
 ]
 function equals(a: Hex, b: Hex) {
-  return a.q == b.q && a.r == b.r && a.s == b.s
+  return a.q === b.q && a.r === b.r && a.s === b.s
 }
 function add(a: Hex, b: Hex) {
   return new Hex(a.q + b.q, a.r + b.r, a.s + b.s)
