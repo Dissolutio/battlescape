@@ -1,7 +1,6 @@
-// Hook (use-auth.js)
-
 import React, { useContext, createContext } from "react"
-import { useLocalStorage } from "./useLocalStorage"
+// import { useLocalStorage } from "./useLocalStorage"
+import { useSessionStorage } from "./useSessionStorage"
 
 const localStorageKey_bgioCredentials = "bgio-player-credentials"
 
@@ -34,7 +33,11 @@ type AuthProviderProps = {
 export function AuthProvider(props: AuthProviderProps) {
   const { children } = props
   // const [storedCredentials, setStoredCredentials] = useState<StoredCredentials | undefined>();
-  const [storedCredentials, setStoredCredentials] = useLocalStorage(
+  // const [storedCredentials, setStoredCredentials] = useLocalStorage(
+  //   localStorageKey_bgioCredentials,
+  //   initialCredentials
+  // )
+  const [storedCredentials, setStoredCredentials] = useSessionStorage(
     localStorageKey_bgioCredentials,
     initialCredentials
   )
