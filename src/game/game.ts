@@ -20,7 +20,6 @@ import { moves } from "./moves"
 import { rollD20Initiative } from "./rollInitiative"
 import { hexagonMapScenario, testScenario } from "./setup"
 
-export const MYGAME_NUMPLAYERS = 2
 export const defaultSetupData = hexagonMapScenario
 
 export const HexedMeadow = {

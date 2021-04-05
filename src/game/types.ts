@@ -1,3 +1,6 @@
+export type SetupDataType = {
+  passAndPlay: boolean
+}
 export type GameState = {
   armyCards: GameArmyCard[]
   gameUnits: GameUnits

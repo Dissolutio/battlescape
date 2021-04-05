@@ -12,7 +12,12 @@ import {
 import { theme } from "theme"
 import { Layout } from "ui/layout"
 
-type MyBoardProps = BoardProps & { chatMessages?: ChatMessage[] }
+//! omitted only while I'm using the same board for different games
+// type MyBoardProps = BoardProps & { chatMessages?: ChatMessage[] }
+import { GameType } from "the-setup-game/theSetupGame"
+type MyBoardProps = BoardProps<GameType> & { chatMessages?: ChatMessage[] }
+// import { GameState } from "game/types"
+// type MyBoardProps = BoardProps<GameState> & { chatMessages?: ChatMessage[] }
 
 export function Board(props: MyBoardProps) {
   const {

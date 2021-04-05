@@ -6,6 +6,9 @@ import {
   PlayersState,
 } from "./types"
 
+export const MAX_PLAYERS = 6
+export const OM_COUNT = 3
+
 export const phaseNames = {
   placement: "placement",
   placeOrderMarkers: "placeOrderMarkers",
@@ -18,7 +21,6 @@ export const stageNames = {
   attacking: "attacking",
 }
 
-export const OM_COUNT = 3
 const orders = ["0", "1", "2", "X"]
 
 export function generateBlankOrderMarkers(): OrderMarkers {

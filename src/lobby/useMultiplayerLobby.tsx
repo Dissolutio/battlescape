@@ -3,7 +3,10 @@ import { LobbyAPI } from "boardgame.io"
 
 import { useBgioLobbyApi } from "../bgio-contexts/useBgioLobbyApi"
 import { useAuth } from "hooks"
-import { defaultSetupData, MYGAME_NUMPLAYERS } from "game/game"
+// import { defaultSetupData } from "game/game"
+// import { MAX_PLAYERS } from "game/constants"
+import { MAX_PLAYERS } from "the-setup-game/constants"
+// import { defaultSetupData, MAX_PLAYERS } from "the-setup-game/game"
 
 type MultiplayerLobbyCtxValue = {
   // lobby state
@@ -30,8 +33,10 @@ type MultiplayerLobbyCtxValue = {
   verifyMatchSuccess: string
   verifyMatchError: string
 }
+// passing this as props from Board so this file needs less edits from game to game
 type MultiplayerLobbyProviderProps = {
   children: React.ReactNode
+  multiplayerSetupData
 }
 
 const MultiplayerLobbyContext = React.createContext<
@@ -40,6 +45,7 @@ const MultiplayerLobbyContext = React.createContext<
 
 export function MultiplayerLobbyProvider({
   children,
+  multiplayerSetupData,
 }: MultiplayerLobbyProviderProps) {
   const { updateCredentials, storedCredentials, isAuthenticated } = useAuth()
   const {
@@ -168,8 +174,8 @@ export function MultiplayerLobbyProvider({
     }
     try {
       const { matchID } = await createMatch(`${selectedGame}`, {
-        setupData: defaultSetupData,
-        numPlayers: MYGAME_NUMPLAYERS,
+        setupData: multiplayerSetupData,
+        numPlayers: MAX_PLAYERS,
         unlisted: false,
       })
       if (matchID) {
