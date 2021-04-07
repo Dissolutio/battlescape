@@ -12,25 +12,6 @@ export const multiplayerSetupData: SetupDataType = { passAndPlay: false }
 export const MAX_PLAYERS = 6
 export const OM_COUNT = 3
 
-const isDeploymentEnv = process.env.NODE_ENV === "production"
-const isDevEnv = process.env.NODE_ENV === "development"
-const isSeparateServer = Boolean(process.env.REACT_APP_WITH_SEPARATE_SERVER)
-const isLocalApp = isDevEnv && !isSeparateServer
-
-// Use appropriate address for server, remember backend `window` is undefined
-let hostname = ""
-let protocol = ""
-let port = ""
-if (window !== undefined) {
-  hostname = window?.location?.hostname ?? ""
-  protocol = window?.location?.protocol ?? ""
-  port = window?.location?.port ?? ""
-}
-
-const deploymentServerAddr = `${protocol}//${hostname}${port ? `:${port}` : ``}`
-const localServerAddr = `http://localhost:8000`
-export const SERVER = isDeploymentEnv ? deploymentServerAddr : localServerAddr
-
 export const phaseNames = {
   placement: "placement",
   placeOrderMarkers: "placeOrderMarkers",

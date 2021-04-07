@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react"
-import { SERVER } from "game/constants"
+import { SERVER } from "App"
 import { PlayerInfo } from "game/types"
 import { FilteredMetadata } from "boardgame.io"
 import { GiPencil } from "react-icons/gi"
