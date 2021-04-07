@@ -1,7 +1,5 @@
 import React from "react"
-import { Hexgrid } from "../../rhg/Hexgrid"
-import { HexgridLayout } from "../../rhg/HexgridLayout"
-import { Point } from "../../rhg/models"
+import { Hexgrid, HexgridLayout, Point } from "../../examples/react17-hexgrid"
 
 type ReactHexgridProps = {
   children?: React.ReactNode

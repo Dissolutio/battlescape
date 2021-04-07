@@ -1,5 +1,5 @@
 import { BoardProps } from "boardgame.io/react"
-import { HexUtils } from "rhg"
+import { HexUtils } from "./react17-hexgrid"
 
 import {
   selectHexForUnit,

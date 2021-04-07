@@ -1,4 +1,4 @@
-import { GridGenerator, Hex } from "rhg"
+import { GridGenerator, Hex } from "./react17-hexgrid"
 import { BoardHexes } from "./types"
 import { generateHexID } from "./constants"
 

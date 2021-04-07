@@ -1,4 +1,3 @@
-import { Hex } from "../rhg"
 import {
   MoveRange,
   OrderMarkers,
@@ -74,7 +73,11 @@ export function generateBlankPlayersOrderMarkers(): PlayerOrderMarkers {
   }
 }
 
-export function generateHexID(hex: Hex) {
+export function generateHexID(hex: {
+  q: number | string
+  r: number | string
+  s: number | string
+}) {
   return `${hex.q},${hex.r},${hex.s}`
 }
 export function generateBlankMoveRange(): MoveRange {

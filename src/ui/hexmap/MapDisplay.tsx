@@ -1,5 +1,5 @@
 import React from "react"
-import { GridGenerator, Hexagon } from "rhg"
+import { GridGenerator, Hexagon } from "../../examples/react17-hexgrid"
 
 import { MapHexStyles } from "./MapHexStyles"
 import { ReactHexgrid } from "./ReactHexgrid"
