@@ -10,7 +10,7 @@ import {
   Hexagon,
   Text,
   Hex,
-} from "./react17-hexgrid"
+} from "react17-hexgrid"
 
 export const PathfindingBoard = () => {
   const initialPath = { start: null, end: null }

@@ -1,4 +1,4 @@
-import { HexUtils } from "./react17-hexgrid"
+import { HexUtils } from "react17-hexgrid"
 
 import {
   BoardHexes,

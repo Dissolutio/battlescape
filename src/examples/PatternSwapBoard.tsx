@@ -11,7 +11,7 @@ import {
   Hexagon,
   Text,
   Hex,
-} from "./react17-hexgrid"
+} from "react17-hexgrid"
 
 const initialHexes = GridGenerator.hexagon(2).map((hex) => {
   // Set additional data for hexagons

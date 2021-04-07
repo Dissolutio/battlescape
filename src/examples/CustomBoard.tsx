@@ -8,7 +8,7 @@ import {
   Hexagon,
   Text,
   Hex,
-} from "./react17-hexgrid"
+} from "react17-hexgrid"
 
 export const CustomBoard = () => {
   const hexagonSize = { x: 10, y: 10 }

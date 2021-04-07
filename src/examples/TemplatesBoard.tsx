@@ -11,7 +11,7 @@ import {
   Hexagon,
   Text,
   Hex,
-} from "./react17-hexgrid"
+} from "react17-hexgrid"
 import { templatesConfigurations } from "./templatesConfigurations"
 
 export const TemplatesBoard = () => {
