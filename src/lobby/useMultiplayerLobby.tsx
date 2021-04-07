@@ -3,10 +3,8 @@ import { LobbyAPI } from "boardgame.io"
 
 import { useBgioLobbyApi } from "../bgio-contexts/useBgioLobbyApi"
 import { useAuth } from "hooks"
-// import { defaultSetupData } from "game/game"
-// import { MAX_PLAYERS } from "game/constants"
-import { MAX_PLAYERS } from "the-setup-game/constants"
-// import { defaultSetupData, MAX_PLAYERS } from "the-setup-game/game"
+import { SetupDataType } from "game/types"
+import { MAX_PLAYERS } from "game/constants"
 
 type MultiplayerLobbyCtxValue = {
   // lobby state
@@ -36,7 +34,7 @@ type MultiplayerLobbyCtxValue = {
 // passing this as props from Board so this file needs less edits from game to game
 type MultiplayerLobbyProviderProps = {
   children: React.ReactNode
-  multiplayerSetupData
+  multiplayerSetupData: SetupDataType
 }
 
 const MultiplayerLobbyContext = React.createContext<

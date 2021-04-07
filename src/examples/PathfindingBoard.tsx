@@ -10,7 +10,7 @@ import {
   Hexagon,
   Text,
   Hex,
-} from ".."
+} from "../rhg"
 
 export const PathfindingBoard = () => {
   const initialPath = { start: null, end: null }

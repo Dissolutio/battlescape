@@ -8,7 +8,7 @@ import {
   Hexagon,
   Text,
   Hex,
-} from ".."
+} from "../rhg"
 
 export const CustomBoard = () => {
   const hexagonSize = { x: 10, y: 10 }

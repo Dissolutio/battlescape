@@ -1,13 +1,15 @@
 export type SetupDataType = {
   passAndPlay: boolean
 }
-export type GameState = {
+export type GType = SetupDataType & {
   armyCards: GameArmyCard[]
   gameUnits: GameUnits
   players: PlayersState
   hexMap: HexMap
   boardHexes: BoardHexes
   startZones: StartZones
+  playerInfos: { [playerID: string]: PlayerInfo }
+  numPlayers: number
   orderMarkers: OrderMarkers
   initiative: string[]
   currentRound: number
@@ -131,4 +133,10 @@ export type MapOptions = {
   withPrePlacedUnits?: boolean
   // flat-top, or pointy-top hexes
   flat?: boolean
+}
+
+export type PlayerInfo = {
+  name: string
+  color: number
+  ready: boolean
 }

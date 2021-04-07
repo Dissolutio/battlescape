@@ -1,6 +1,6 @@
 import styled from "styled-components"
 
-import { GridGenerator, Hexgrid, HexgridLayout, Hexagon } from ".."
+import { GridGenerator, Hexgrid, HexgridLayout, Hexagon } from "../rhg"
 
 export const BasicBoard = () => {
   const hexagons = GridGenerator.parallelogram(-2, 3, -2, 1)

@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { useBgioClientInfo, useBgioCtx, useBgioG } from "bgio-contexts"
+import { useBgioClientInfo, useBgioCtx } from "bgio-contexts"
 import { Controls } from "ui/layout/Controls"
 import { MapDisplay } from "ui/hexmap"
 import GameSetup from "./GameSetup"
@@ -8,7 +8,6 @@ import GameSetup from "./GameSetup"
 
 export const Layout = () => {
   const { ctx } = useBgioCtx()
-  const { G } = useBgioG()
   const bgioClientInfoCtx = useBgioClientInfo()
   const clientPlayerID = bgioClientInfoCtx.playerID
   if (ctx.phase === "setup") {

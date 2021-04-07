@@ -11,7 +11,7 @@ import {
   Hexagon,
   Text,
   Hex,
-} from ".."
+} from "../rhg"
 import { templatesConfigurations } from "./templatesConfigurations"
 
 export const TemplatesBoard = () => {

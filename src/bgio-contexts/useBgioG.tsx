@@ -1,13 +1,9 @@
 import * as React from "react"
-import { GameType } from "the-setup-game/theSetupGame"
-// import { MyGameState } from "the-setup-game/game"
+import { GType } from "game/types"
 
 type BgioGProviderProps = { children: React.ReactNode; G: any }
 
-const BgioGContext = React.createContext<
-  // | { G: MyGameState }
-  { G: GameType } | undefined
->(undefined)
+const BgioGContext = React.createContext<{ G: GType } | undefined>(undefined)
 
 export function BgioGProvider({ G, children }: BgioGProviderProps) {
   return <BgioGContext.Provider value={{ G }}>{children}</BgioGContext.Provider>

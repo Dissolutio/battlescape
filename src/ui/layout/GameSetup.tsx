@@ -1,19 +1,9 @@
 import React, { useState, useEffect, useRef } from "react"
-import {
-  SERVER,
-  NUM_COLORS,
-  PLAYER_NAME_MAX_LEN,
-} from "the-setup-game/constants"
-import { PlayerInfo } from "the-setup-game/constants"
-// import QRCode from "qrcode.react";
-// import InGameIcons from "./InGameIcons";
-// import getSoundPlayer from "../audio";
-// import localStorage from "../utils/localStorage";
-// import { ShowProbsType } from "../Game";
+import { SERVER } from "game/constants"
+import { PlayerInfo } from "game/types"
 import { FilteredMetadata } from "boardgame.io"
 import { GiPencil } from "react-icons/gi"
 import { useBgioClientInfo, useBgioG, useBgioMoves } from "bgio-contexts"
-// import { Pencil } from "./icons";
 
 // We need this to close the popup when we click outside.
 // https://stackoverflow.com/a/42234988
@@ -195,7 +185,7 @@ export const Player = (props: PlayerProps): JSX.Element => {
           className="form-control user-select-all"
           onChange={(e) => setCurrentName(e.target.value)}
           placeholder="Enter your name"
-          maxLength={PLAYER_NAME_MAX_LEN}
+          maxLength={16}
           size={3}
           value={currentName}
           autoFocus={true}
@@ -311,16 +301,6 @@ const SettingOption = (props: SettingOptionProps) => {
   )
 }
 
-// interface GameSetupProps {
-//   playerInfos: { [key: string]: PlayerInfo }
-//   playerID: string | null
-//   moves: any
-//   maxNumPlayers: number
-//   matchID: string
-//   passAndPlay: boolean
-//   matchData?: FilteredMetadata //{ id?: number; name?: string; isConnected?: boolean }[];
-// }
-
 const GameSetup = () => {
   const { G } = useBgioG()
   const { moves } = useBgioMoves()
@@ -416,7 +396,7 @@ const GameSetup = () => {
     ([currentPlayerID, playerInfo], i) => {
       // Find the available colors for that players, i.e. all those which are not
       // taken already.
-      const colorAvailabilityMap = Array(NUM_COLORS).fill(true)
+      const colorAvailabilityMap = Array(6).fill(true)
 
       Object.values(playerInfos).forEach(
         (playerInfo) => (colorAvailabilityMap[playerInfo.color] = false)

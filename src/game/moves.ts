@@ -8,7 +8,7 @@ import {
   selectUnitsForCard,
   selectUnrevealedGameCard,
 } from "./g-selectors"
-import { GameState, BoardHexes, BoardHex, GameUnits, GameUnit } from "./types"
+import { GType, BoardHexes, BoardHex, GameUnits, GameUnit } from "./types"
 import { stageNames } from "./constants"
 
 export const moves = {
@@ -23,14 +23,14 @@ export const moves = {
 }
 
 //phase:___RoundOfPlay
-function endCurrentMoveStage(G: GameState, ctx: BoardProps["ctx"]) {
+function endCurrentMoveStage(G: GType, ctx: BoardProps["ctx"]) {
   ctx.events.setStage(stageNames.attacking)
 }
-function endCurrentPlayerTurn(G: GameState, ctx: BoardProps["ctx"]) {
+function endCurrentPlayerTurn(G: GType, ctx: BoardProps["ctx"]) {
   ctx.events.endTurn()
 }
 function moveAction(
-  G: GameState,
+  G: GType,
   ctx: BoardProps["ctx"],
   unit: GameUnit,
   endHex: BoardHex
@@ -80,7 +80,7 @@ function moveAction(
   }
 }
 function attackAction(
-  G: GameState,
+  G: GType,
   ctx: BoardProps["ctx"],
   unit: GameUnit,
   defenderHex: BoardHex
@@ -164,30 +164,26 @@ function attackAction(
 }
 //phase:___Placement
 function placeUnitOnHex(
-  G: GameState,
+  G: GType,
   ctx: BoardProps["ctx"],
   hexId: string,
   unit: GameUnit
 ) {
   G.boardHexes[hexId].occupyingUnitID = unit?.unitID ?? ""
 }
-function confirmPlacementReady(
-  G: GameState,
-  ctx: BoardProps["ctx"],
-  { playerID }
-) {
+function confirmPlacementReady(G: GType, ctx: BoardProps["ctx"], { playerID }) {
   G.placementReady[playerID] = true
 }
 //phase:___PlaceOrderMarkers
 function placeOrderMarker(
-  G: GameState,
+  G: GType,
   ctx: BoardProps["ctx"],
   { playerID, orderMarker, gameCardID }
 ) {
   G.players[playerID].orderMarkers[orderMarker] = gameCardID
 }
 function confirmOrderMarkersReady(
-  G: GameState,
+  G: GType,
   ctx: BoardProps["ctx"],
   { playerID }
 ) {

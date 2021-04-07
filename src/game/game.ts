@@ -15,7 +15,7 @@ import {
   generateBlankPlayersOrderMarkers,
 } from "./constants"
 
-import { GameState, OrderMarker, GameUnit } from "./types"
+import { GType, OrderMarker, GameUnit, SetupDataType } from "./types"
 import { moves } from "./moves"
 import { rollD20Initiative } from "./rollInitiative"
 import { hexagonMapScenario, testScenario } from "./setup"
@@ -24,10 +24,34 @@ export const defaultSetupData = hexagonMapScenario
 
 export const HexedMeadow = {
   name: "HexedMeadow",
-  setup: (_ctx) => {
+  setup: (ctx, setupData: SetupDataType) => {
+    const passAndPlay = setupData?.passAndPlay ?? true
+    // Set playerInfos
+    const playerInfos = {}
+    // For pass-and-play games we set default player names.
+    if (passAndPlay) {
+      for (let i = 0; i < ctx.numPlayers; ++i) {
+        playerInfos[i.toString()] = {
+          name: `Player ${i + 1}`,
+          color: i,
+          ready: false,
+        }
+      }
+    }
+    // Set scores
+    let scores = {}
+    for (let i = 0; i < ctx.numPlayers; ++i) {
+      scores[i] = 0
+    }
     // Setup returns G - the initial bgio game state
-    return hexagonMapScenario
-    // return testScenario
+    return {
+      ...hexagonMapScenario,
+      passAndPlay,
+      scores,
+      playerInfos,
+      numPlayers: ctx.numPlayers,
+    }
+    // return {...testScenario, passAndPlay: setupData.passAndPlay}
   },
   moves,
   seed: "random_string",
@@ -37,11 +61,11 @@ export const HexedMeadow = {
     [phaseNames.placement]: {
       start: true,
       //onBegin
-      onBegin: (G: GameState, ctx: BoardProps["ctx"]) => {
+      onBegin: (G: GType, ctx: BoardProps["ctx"]) => {
         ctx.events.setActivePlayers({ all: stageNames.placingUnits })
       },
       //endIf
-      endIf: (G: GameState) => {
+      endIf: (G: GType) => {
         return G.placementReady["0"] && G.placementReady["1"]
       },
       next: phaseNames.placeOrderMarkers,
@@ -49,7 +73,7 @@ export const HexedMeadow = {
     //PHASE-ORDER MARKERS
     [phaseNames.placeOrderMarkers]: {
       //onBegin
-      onBegin: (G: GameState, ctx: BoardProps["ctx"]) => {
+      onBegin: (G: GType, ctx: BoardProps["ctx"]) => {
         //🛠 reset state in future rounds
         if (G.currentRound > 0) {
           G.orderMarkers = generateBlankOrderMarkers()
@@ -62,7 +86,7 @@ export const HexedMeadow = {
         ctx.events.setActivePlayers({ all: stageNames.placeOrderMarkers })
       },
       //endIf - -all players are ready
-      endIf: (G: GameState) => {
+      endIf: (G: GType) => {
         return G.orderMarkersReady["0"] && G.orderMarkersReady["1"]
       },
       next: phaseNames.roundOfPlay,
@@ -70,7 +94,7 @@ export const HexedMeadow = {
     //PHASE-ROUND OF PLAY - after last turn, end RoundOfPlay phase, go to PlaceOrderMarkers phase ⤵
     [phaseNames.roundOfPlay]: {
       //onBegin
-      onBegin: (G: GameState, ctx: BoardProps["ctx"]) => {
+      onBegin: (G: GType, ctx: BoardProps["ctx"]) => {
         //🛠 Setup Unrevealed Order Markers
         G.orderMarkers = Object.keys(G.players).reduce(
           (orderMarkers, playerID) => {
@@ -89,7 +113,7 @@ export const HexedMeadow = {
         G.currentOrderMarker = 0
       },
       //onEnd
-      onEnd: (G: GameState, ctx: BoardProps["ctx"]) => {
+      onEnd: (G: GType, ctx: BoardProps["ctx"]) => {
         // clear secret order marker state
         G.players["0"].orderMarkers = generateBlankPlayersOrderMarkers()
         G.players["1"].orderMarkers = generateBlankPlayersOrderMarkers()
@@ -103,7 +127,7 @@ export const HexedMeadow = {
       turn: {
         order: TurnOrder.CUSTOM_FROM("initiative"),
         //onBegin
-        onBegin: (G: GameState, ctx: BoardProps["ctx"]) => {
+        onBegin: (G: GType, ctx: BoardProps["ctx"]) => {
           // Reveal order marker
           const revealedGameCardID =
             G.players[ctx.currentPlayer].orderMarkers[
@@ -163,7 +187,7 @@ export const HexedMeadow = {
           G.unitsAttacked = []
         },
         //onEnd
-        onEnd: (G: GameState, ctx: BoardProps["ctx"]) => {
+        onEnd: (G: GType, ctx: BoardProps["ctx"]) => {
           //🛠 reset unit move points and ranges
           Object.keys(G.gameUnits).forEach((uid) => {
             G.gameUnits[uid].movePoints = 0

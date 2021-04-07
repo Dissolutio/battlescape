@@ -11,7 +11,7 @@ import {
   Hexagon,
   Text,
   Hex,
-} from ".."
+} from "../rhg"
 
 const initialHexes = GridGenerator.hexagon(2).map((hex) => {
   // Set additional data for hexagons

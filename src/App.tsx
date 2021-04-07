@@ -3,18 +3,14 @@ import { Client } from "boardgame.io/react"
 import { Local, SocketIO } from "boardgame.io/multiplayer"
 import { Debug } from "boardgame.io/debug"
 
-import { BgioLobbyApiProvider } from "bgio-contexts"
+import { HexedMeadow } from "./game/game"
+import { multiplayerSetupData } from "./game/constants"
 import { AuthProvider, useAuth } from "hooks/useAuth"
+import { BgioLobbyApiProvider } from "bgio-contexts"
 import { MultiplayerLobby, MultiplayerLobbyProvider } from "lobby"
-
-// import { HexedMeadow } from "./game/game"
-import { theSetupGame } from "the-setup-game/theSetupGame"
-// import { myGame, myOtherGame } from "./the-setup-game/game"
-
 import { Board } from "./Board"
 import { PageRoutes } from "ui/pages/PageRoutes"
 import { MultiplayerNav } from "ui/layout"
-import { multiplayerSetupData } from "the-setup-game/constants"
 
 // ! Three Options:
 // * A local game (for game development) `npm run start`
@@ -41,7 +37,7 @@ const reduxDevTools =
   (window as any).__REDUX_DEVTOOLS_EXTENSION__()
 
 const bgioClientOptions = {
-  game: theSetupGame,
+  game: HexedMeadow,
   board: Board,
   numPlayers: 2,
 }

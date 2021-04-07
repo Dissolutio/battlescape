@@ -2,8 +2,7 @@ import React from "react"
 import { LobbyClient } from "boardgame.io/client"
 import { LobbyAPI } from "boardgame.io"
 
-import { SetupDataType } from "the-setup-game/constants"
-// import { SetupDataType } from "game/types"
+import { SetupDataType } from "game/types"
 
 type LeaveMatchParams = {
   gameName: string

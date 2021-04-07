@@ -8,6 +8,8 @@ Maybe instead of names (think about mature content and evil-doers!) players can 
 
 And armies, huh?
 
+_NOTE_ While working on GameSetup, I wonder in `useBgioG.tsx` if there isn't advantages to spreading the properties into the provided context value, instead of nested under G. 🤔
+
 ## Different Games Interface -- how to switch games in this or similar repos
 
 The `SetupDataType` is what gets used to create a match. The `setup` function in the actual game file receives that data as props.
