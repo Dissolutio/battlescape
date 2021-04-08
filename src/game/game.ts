@@ -19,7 +19,7 @@ import {
 import { GType, OrderMarker, GameUnit, SetupDataType } from "./types"
 import { moves } from "./moves"
 import { rollD20Initiative } from "./rollInitiative"
-import { hexagonMapScenario, testScenario } from "./setup"
+import { hexagonMapScenario } from "./setup"
 
 export const defaultSetupData = hexagonMapScenario
 
@@ -34,7 +34,6 @@ export const HexedMeadow = {
     // Todo Here -- set playerID based state with proper playerCount
     return {
       ...hexagonMapScenario,
-      // ...testScenario,
       passAndPlay,
       numPlayers,
     }
