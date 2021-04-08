@@ -13,6 +13,7 @@ import {
   Hex,
 } from "react17-hexgrid"
 import { templatesConfigurations } from "./templatesConfigurations"
+import { generateHexID } from "game/constants"
 
 export const TemplatesBoard = () => {
   const [generatorShape, setGeneratorShape] = React.useState("hexagon")
@@ -31,11 +32,13 @@ export const TemplatesBoard = () => {
       <div>
         <strong>Template: </strong>
         <select onChange={handleChange}>
-          {Object.keys(templatesConfigurations).map((shapeName) => (
-            <option key={shapeName} value={shapeName}>
-              {shapeName}
-            </option>
-          ))}
+          {Object.keys(templatesConfigurations).map((shapeName) => {
+            return (
+              <option key={shapeName} value={shapeName}>
+                {shapeName}
+              </option>
+            )
+          })}
         </select>
       </div>
       <hr />
@@ -46,11 +49,14 @@ export const TemplatesBoard = () => {
           spacing={layout.spacing}
           origin={origin}
         >
-          {hexagons.map((hex, i) => (
-            <Hexagon key={hex.id} hex={hex}>
-              <Text>{HexUtils.getID(hex)}</Text>
-            </Hexagon>
-          ))}
+          {hexagons.map((hex, i) => {
+            const hexID = generateHexID(hex)
+            return (
+              <Hexagon key={hexID} hex={hex}>
+                <Text>{HexUtils.getID(hex)}</Text>
+              </Hexagon>
+            )
+          })}
         </HexgridLayout>
       </Hexgrid>
     </StyledTemplatesHexes>
