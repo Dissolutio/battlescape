@@ -84,15 +84,16 @@ export const MultiplayerLobby = () => {
               <p>You are joined in a match:</p>
               <MatchListItem match={joinedMatch} />
               <p>
-                <button>
-                  <Link to="/play">GO TO YOUR MATCH</Link>
-                </button>
+                <Link to="/play">GO TO JOINED MATCH</Link>
               </p>
-              <div>
-                <button onClick={handleLeaveJoinedMatch}>
+              <p>
+                <button
+                  style={{ color: "red" }}
+                  onClick={handleLeaveJoinedMatch}
+                >
                   Leave Joined Game
                 </button>
-              </div>
+              </p>
             </>
           ) : (
             <>
