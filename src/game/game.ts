@@ -13,6 +13,7 @@ import {
   generateBlankOrderMarkers,
   generateBlankMoveRange,
   generateBlankPlayersOrderMarkers,
+  MAX_PLAYERS,
 } from "./constants"
 
 import { GType, OrderMarker, GameUnit, SetupDataType } from "./types"
@@ -24,42 +25,31 @@ export const defaultSetupData = hexagonMapScenario
 
 export const HexedMeadow = {
   name: "HexedMeadow",
-  setup: (ctx, setupData: SetupDataType) => {
+  setup: (ctx, setupData: SetupDataType): GType => {
+    // local match needs default passAndPlay to be true
     const passAndPlay = setupData?.passAndPlay ?? true
-    // Set playerInfos
-    const playerInfos = {}
-    // For pass-and-play games we set default player names.
-    if (passAndPlay) {
-      for (let i = 0; i < ctx.numPlayers; ++i) {
-        playerInfos[i.toString()] = {
-          name: `Player ${i + 1}`,
-          color: i,
-          ready: false,
-        }
-      }
-    }
-    // Set scores
-    let scores = {}
-    for (let i = 0; i < ctx.numPlayers; ++i) {
-      scores[i] = 0
-    }
-    // Setup returns G - the initial bgio game state
+    // local match: use player count already chosen
+    // online match: max out lobby, whittle down later in setup phase
+    const numPlayers = passAndPlay ? ctx.numPlayers : MAX_PLAYERS
+    // Todo Here -- set playerID based state with proper playerCount
     return {
       ...hexagonMapScenario,
+      // ...testScenario,
       passAndPlay,
-      scores,
-      playerInfos,
-      numPlayers: ctx.numPlayers,
+      numPlayers,
     }
-    // return {...testScenario, passAndPlay: setupData.passAndPlay}
   },
   moves,
   seed: "random_string",
   playerView: PlayerView.STRIP_SECRETS,
   phases: {
+    //PHASE-SETUP
+    [phaseNames.setup]: {
+      start: true,
+      next: phaseNames.placement,
+    },
     //PHASE-PLACEMENT
     [phaseNames.placement]: {
-      start: true,
       //onBegin
       onBegin: (G: GType, ctx: BoardProps["ctx"]) => {
         ctx.events.setActivePlayers({ all: stageNames.placingUnits })

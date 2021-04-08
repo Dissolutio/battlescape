@@ -10,9 +10,12 @@ export const passAndPlaySetupData: SetupDataType = { passAndPlay: true }
 export const multiplayerSetupData: SetupDataType = { passAndPlay: false }
 
 export const MAX_PLAYERS = 6
+// this matchID will be a flag for our UI
+export const LOCAL_GAME_MATCH_ID = "matchID"
 export const OM_COUNT = 3
 
 export const phaseNames = {
+  setup: "setup",
   placement: "placement",
   placeOrderMarkers: "placeOrderMarkers",
   roundOfPlay: "roundOfPlay",

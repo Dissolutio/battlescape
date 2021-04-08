@@ -1,36 +1,41 @@
 export type SetupDataType = {
   passAndPlay: boolean
 }
-export type GType = SetupDataType & {
-  armyCards: GameArmyCard[]
-  gameUnits: GameUnits
-  players: PlayersState
-  hexMap: HexMap
-  boardHexes: BoardHexes
-  startZones: StartZones
+export type GType_Base = {
   playerInfos: { [playerID: string]: PlayerInfo }
-  numPlayers: number
-  orderMarkers: OrderMarkers
-  initiative: string[]
-  currentRound: number
-  currentOrderMarker: number
   placementReady: PlayerStateToggle
   orderMarkersReady: PlayerStateToggle
   roundOfPlayStartReady: PlayerStateToggle
+  currentRound: number
+  currentOrderMarker: number
+  orderMarkers: OrderMarkers
+  initiative: string[]
   unitsMoved: string[]
   unitsAttacked: string[]
+  players: PlayersState
 }
+export type GType_Map = {
+  boardHexes: BoardHexes
+  startZones: StartZones
+  withPrePlacedUnits: boolean
+  hexMap: HexMap
+}
+export type GType_Armies = {
+  armyCards: GameArmyCard[]
+  gameUnits: GameUnits
+}
+export type GType = SetupDataType &
+  GType_Base &
+  GType_Map &
+  GType_Armies & {
+    numPlayers: number
+  }
 // for secret state
 // PlayersState keys are playerIDS, players only see their slice of it at G.players
 export type PlayersState = {
   [playerID: string]: {
     orderMarkers: PlayerOrderMarkers
   }
-}
-export type GameMap = {
-  boardHexes: BoardHexes
-  startZones: StartZones
-  hexMap: HexMap
 }
 export type HexMap = {
   mapShape: string
@@ -107,36 +112,14 @@ export type OrderMarkers = {
   [playerID: string]: OrderMarker[]
 }
 
-export type DevGameOptions = BaseGameOptions &
-  MapOptions & {
+export type GType_BaseOpts = Partial<GType_Base> | undefined
+
+export type G_SetupOpts = GType_BaseOpts &
+  Partial<GType_Map> & {
     withPrePlacedUnits?: boolean
   }
 
-export type BaseGameOptions =
-  | {
-      placementReady?: PlayerStateToggle
-      orderMarkersReady?: PlayerStateToggle
-      roundOfPlayStartReady?: PlayerStateToggle
-      currentRound?: number
-      currentOrderMarker?: number
-      orderMarkers?: OrderMarkers
-      initiative?: string[]
-      unitsMoved?: string[]
-      unitsAttacked?: string[]
-      players?: PlayersState
-    }
-  | undefined
-
-export type MapOptions = {
-  gameUnits?: GameUnits | undefined
-  mapSize?: number
-  withPrePlacedUnits?: boolean
-  // flat-top, or pointy-top hexes
-  flat?: boolean
-}
-
 export type PlayerInfo = {
-  name: string
-  color: number
-  ready: boolean
+  chosenName: string
+  readyToStart: boolean
 }

@@ -25,7 +25,6 @@ const BgioClientInfoContext = React.createContext<
 export function BgioClientInfoProvider(props: BgioClientInfoProviderProps) {
   const {
     children,
-    playerID,
     log,
     matchID,
     matchData,
@@ -33,12 +32,13 @@ export function BgioClientInfoProvider(props: BgioClientInfoProviderProps) {
     isMultiplayer,
     isConnected,
     credentials,
-  } = props;
+  } = props
   const belongsToPlayer = (thing: any): boolean => thing?.playerID === playerID;
+  const playerID = props.playerID || ""
   return (
     <BgioClientInfoContext.Provider
       value={{
-        playerID: playerID || "observer",
+        playerID,
         belongsToPlayer,
         log,
         matchID,
