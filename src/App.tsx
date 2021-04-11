@@ -4,37 +4,19 @@ import { Local, SocketIO } from "boardgame.io/multiplayer"
 import { Debug } from "boardgame.io/debug"
 
 import { HexedMeadow } from "./game/game"
-import { LOCAL_GAME_MATCH_ID, MAX_PLAYERS } from "./game/constants"
+import { MAX_PLAYERS } from "./game/constants"
 import { AuthProvider, useAuth } from "hooks/useAuth"
 import { BgioLobbyApiProvider } from "bgio-contexts"
 import { MultiplayerLobby, MultiplayerLobbyProvider } from "lobby"
 import { Board } from "./Board"
-import { PageRoutes } from "ui/pages/PageRoutes"
+// import { PageRoutes } from "ui/pages/PageRoutes"
 import { MultiplayerNav } from "ui/layout"
 
 // ! 3 OPTIONS:
 //  A local game (for game development): `npm run start`
 //  Client that connects to a local server: `npm run devstart` + run local server: `npm run devserver`
 //  Client (served from `build/`) that connects to production server: `npm run server`
-function determineServerAddress() {
-  const isDeploymentEnv = process.env.NODE_ENV === "production"
-  const isDevEnv = process.env.NODE_ENV === "development"
-  const isSeparateServer = Boolean(process.env.REACT_APP_WITH_SEPARATE_SERVER)
-  const isLocalApp = isDevEnv && !isSeparateServer
-  // use appropriate address for server
-  const hostname = window?.location?.hostname ?? ""
-  const protocol = window?.location?.protocol ?? ""
-  const port = window?.location?.port ?? ""
-  const deploymentServerAddr = `${protocol}//${hostname}${
-    port ? `:${port}` : ``
-  }`
-  const localServerAddr = `http://localhost:8000`
-  if (isLocalApp) {
-    return ""
-  } else {
-    return isDeploymentEnv ? deploymentServerAddr : localServerAddr
-  }
-}
+
 export const SERVER = determineServerAddress()
 const isLocalApp = SERVER === ""
 
@@ -57,6 +39,10 @@ const DemoGameClient = Client({
   debug: { impl: Debug },
 })
 
+const DemoMatch = () => {
+  return <DemoGameClient matchID="matchID" playerID="0" />
+}
+
 const MultiplayerGameClient = Client({
   ...bgioClientOptions,
   multiplayer: SocketIO({ server: SERVER }),
@@ -65,9 +51,10 @@ const MultiplayerGameClient = Client({
 
 export const App = () => {
   if (isLocalApp) {
-    return <LocalApp />
-  } else {
-    return (
+    return <DemoMatch />
+  }
+  return (
+    <BrowserRouter>
       <AuthProvider>
         <BgioLobbyApiProvider serverAddress={SERVER}>
           <MultiplayerLobbyProvider>
@@ -75,42 +62,31 @@ export const App = () => {
           </MultiplayerLobbyProvider>
         </BgioLobbyApiProvider>
       </AuthProvider>
-    )
-  }
-}
-
-const LocalApp = () => {
-  return (
-    <BrowserRouter>
-      <Switch>
-        <Route exact path="/">
-          <DemoGameClient matchID={LOCAL_GAME_MATCH_ID} playerID="0" />
-        </Route>
-        <PageRoutes />
-      </Switch>
     </BrowserRouter>
   )
 }
 
 const OnlineMultiplayerApp = () => {
   return (
-    <BrowserRouter>
-      <Switch>
-        <Route exact path="/">
-          <MultiplayerNav />
-          <MultiplayerLobby />
-        </Route>
-        <Route path="/demo">
-          <MultiplayerNav />
-          <DemoGameClient matchID="matchID" playerID="0" />
-        </Route>
-        {/* Nav play-link not shown when user is not joined in a match */}
-        <Route path="/play">
-          <MultiplayerNav />
-          <PlayJoinedMatchPage />
-        </Route>
-      </Switch>
-    </BrowserRouter>
+    <Switch>
+      <Route exact path="/">
+        <MultiplayerNav />
+        <MultiplayerLobby />
+      </Route>
+      <Route path="/demo">
+        <MultiplayerNav />
+        <DemoMatch />
+      </Route>
+      <Route path="/local">
+        <MultiplayerNav />
+        <PassAndPlayLobby />
+      </Route>
+      {/* Nav play-link not shown when user is not joined in a match */}
+      <Route path="/play">
+        <MultiplayerNav />
+        <PlayJoinedMatchPage />
+      </Route>
+    </Switch>
   )
 }
 
@@ -132,4 +108,77 @@ const PlayJoinedMatchPage = () => {
       credentials={playerCredentials}
     />
   )
+}
+
+const PassAndPlayLobby = () => {
+  return (
+    <Switch>
+      <Route exact path="/local">
+        <>
+          <h2>Play locally</h2>
+          <p className="text-muted small">
+            You will pass the device between players after each turn.
+          </p>
+          <p>
+            Number of players:
+            <span style={{ display: "inline-block" }}>
+              {Array(MAX_PLAYERS - 1)
+                .fill(null)
+                .map((_, i) => (
+                  <Link
+                    className="btn btn-primary btn-sm"
+                    to={`/local/${i + 2}`}
+                    key={i}
+                  >
+                    {i + 2}
+                  </Link>
+                ))}
+            </span>
+          </p>
+        </>
+      </Route>
+      <Route
+        path="/local/:numPlayers"
+        render={(props) => {
+          const numPlayers = parseInt(props.match.params.numPlayers)
+          return <PassAndPlayMatch numPlayers={numPlayers} />
+        }}
+      />
+    </Switch>
+  )
+}
+
+const PassAndPlayMatch = (props) => {
+  const numPlayers = props.numPlayers
+  // We use playerID=0 but we will let all the players play for everyone,
+  // because we are assuming players are passing the device around
+  const GameClient = Client({
+    game: HexedMeadow,
+    numPlayers,
+    board: Board,
+    multiplayer: Local(),
+    debug: true,
+    // enhancer: applyMiddleware(logger),
+  })
+  return <GameClient playerID="0" />
+}
+
+function determineServerAddress() {
+  const isDeploymentEnv = process.env.NODE_ENV === "production"
+  const isDevEnv = process.env.NODE_ENV === "development"
+  const isSeparateServer = Boolean(process.env.REACT_APP_WITH_SEPARATE_SERVER)
+  const isLocalApp = isDevEnv && !isSeparateServer
+  // use appropriate address for server
+  const hostname = window?.location?.hostname ?? ""
+  const protocol = window?.location?.protocol ?? ""
+  const port = window?.location?.port ?? ""
+  const deploymentServerAddr = `${protocol}//${hostname}${
+    port ? `:${port}` : ``
+  }`
+  const localServerAddr = `http://localhost:8000`
+  if (isLocalApp) {
+    return ""
+  } else {
+    return isDeploymentEnv ? deploymentServerAddr : localServerAddr
+  }
 }
