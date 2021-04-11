@@ -46,6 +46,16 @@ export const HexedMeadow = {
     [phaseNames.setup]: {
       start: true,
       next: phaseNames.placement,
+      turn: {
+        onBegin: (G, ctx) => {
+          ctx.events.setActivePlayers({ all: "setup" })
+        },
+        stages: {
+          setup: {
+            moves: { updatePlayerInfo: moves.updatePlayerInfo },
+          },
+        },
+      },
     },
     //PHASE-PLACEMENT
     [phaseNames.placement]: {

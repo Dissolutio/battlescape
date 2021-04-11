@@ -12,6 +12,7 @@ import { GType, BoardHexes, BoardHex, GameUnits, GameUnit } from "./types"
 import { stageNames } from "./constants"
 
 export const moves = {
+  updatePlayerInfo,
   endCurrentMoveStage,
   endCurrentPlayerTurn,
   moveAction,
@@ -20,6 +21,21 @@ export const moves = {
   confirmPlacementReady,
   placeOrderMarker,
   confirmOrderMarkersReady,
+}
+
+//phase: Setup
+function updatePlayerInfo(
+  G: GType,
+  ctx: BoardProps["ctx"],
+  playerID: string,
+  playerName: string,
+  readyToStart: boolean
+) {
+  G.playerInfos[playerID] = {
+    ...G.playerInfos[playerID],
+    playerName,
+    readyToStart,
+  }
 }
 
 //phase:___RoundOfPlay

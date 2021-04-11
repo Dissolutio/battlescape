@@ -1,17 +1,24 @@
 import styled from "styled-components"
-import { useBgioClientInfo, useBgioCtx } from "bgio-contexts"
-import { Controls } from "ui/layout/Controls"
+import { useBgioClientInfo, useBgioCtx, useBgioG } from "bgio-contexts"
+import {
+  Controls,
+  MatchSetupControls,
+  PassAndPlayMatchSetupControls,
+} from "ui/controls"
 import { MapDisplay } from "ui/hexmap"
-import GameSetup from "./GameSetup"
 
 // ? perhaps this could be moved into theme.js, but the playerID will still be dynamic....
 
 export const Layout = () => {
   const { ctx } = useBgioCtx()
+  const { G } = useBgioG()
   const bgioClientInfoCtx = useBgioClientInfo()
   const clientPlayerID = bgioClientInfoCtx.playerID
   if (ctx.phase === "setup") {
-    return <GameSetup />
+    if (G.passAndPlay) {
+      return <PassAndPlayMatchSetupControls />
+    }
+    return <MatchSetupControls />
   }
   return (
     <LayoutContainer playerID={clientPlayerID}>

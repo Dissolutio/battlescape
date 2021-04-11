@@ -120,6 +120,6 @@ export type G_SetupOpts = GType_BaseOpts &
   }
 
 export type PlayerInfo = {
-  chosenName: string
+  playerName: string
   readyToStart: boolean
 }

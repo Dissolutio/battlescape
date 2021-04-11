@@ -2,7 +2,7 @@ import React from "react"
 import { SERVER } from "App"
 import { useBgioClientInfo, useBgioG, useBgioMoves } from "bgio-contexts"
 
-const GameSetup = () => {
+export const PassAndPlayMatchSetupControls = () => {
   const { G } = useBgioG()
   const { moves } = useBgioMoves()
   const clientInfo = useBgioClientInfo()
@@ -14,12 +14,9 @@ const GameSetup = () => {
     if (!playerID) {
       return
     }
-    // If it's the first time we join that game, we tell the game. It's going to assign
-    // us a default name and whatever else
+    // Default Player Info on first time joining game
     if (!playerInfos.hasOwnProperty(playerID)) {
-      // Use the name/color from localStorage if there is one.
-      const playerName = `Player${playerID}`
-      // set the name somehow
+      moves.updatePlayerInfo(playerID, `Local Player-${playerID}`, true)
     }
   }, [playerInfos, moves, playerID])
 
@@ -76,19 +73,12 @@ const GameSetup = () => {
   )
 
   return (
-    <div className="gameSetupWrap">
+    <>
       {inviteHeader}
-      <div className="container gameSetupContentWrapWrap">
-        <div className="gameSetupContentWrap">
-          <h1>Lobby</h1>
-          <div className="sectionName">Players</div>
-          {freeSpot}
-          <div className="sectionName">Options</div>
-          {startButton}
-        </div>
-      </div>
-    </div>
+      <h1>Pass and Play Lobby</h1>
+      <p>Players</p>
+      <p>Options</p>
+      {startButton}
+    </>
   )
 }
-
-export default GameSetup
