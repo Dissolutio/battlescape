@@ -7,6 +7,7 @@ export const MatchSetupControls = () => {
   const { moves } = useBgioMoves()
   const clientInfo = useBgioClientInfo()
   const { matchID, matchData, playerID } = clientInfo
+  console.log(`🚀 ~ MatchSetupControls ~ matchData`, matchData)
   const { playerInfos, numPlayers: maxNumPlayers, passAndPlay } = G
 
   // effect -- join game, set playerInfo
