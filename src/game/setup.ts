@@ -1,6 +1,5 @@
 import { hexedMeadowCards } from "./cards"
 import {
-  ArmyCard,
   GType_BaseOpts,
   G_SetupOpts,
   GameArmyCard,

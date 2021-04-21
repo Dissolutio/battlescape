@@ -1,15 +1,13 @@
-import { hexedMeadowCards } from "./cards"
-import { ArmyCard, GameArmyCard, GameUnits, GType_Armies } from "./types"
+import { MS1Cards } from "assets/heroscape/setWaves"
+import { GameArmyCard, GameUnits, GType_Armies, ICoreHeroscapeCard } from "./types"
 
-const hexedMeadowCardsArr: ArmyCard[] = Object.values(hexedMeadowCards)
-const armyCards: GameArmyCard[] = hexedMeadowCardsArr.map(
-  (card: GameArmyCard) => {
-    const isCardABee = card.race === "bee"
-    const isCardAButterfly = card.race === "butterfly"
-    const playerID = isCardABee ? "0" : isCardAButterfly ? "1" : ""
+const heroscapeCardsArr = MS1Cards
+const armyCards: GameArmyCard[] = heroscapeCardsArr.map(
+  (card: ICoreHeroscapeCard, index: number) => {
+    const playerID = Boolean(index % 2) ? "0" : "1"
     // id factory
     function makeGameCardID() {
-      return `p${playerID}_${card.armyCardID}`
+      return `p${playerID}_${card.cardID}`
     }
     const gameCard: GameArmyCard = {
       ...card,
@@ -41,7 +39,7 @@ export function armyCardsToGameUnits(cards: GameArmyCard[]): GameUnits {
       const unitID = makeUnitID(card.playerID)
       const newGameUnit = {
         unitID,
-        armyCardID: card.armyCardID,
+        armyCardID: card.cardID,
         playerID: card.playerID,
         gameCardID: card.gameCardID,
         movePoints: 0,

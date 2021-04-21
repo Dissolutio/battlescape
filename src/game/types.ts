@@ -53,26 +53,77 @@ export type BoardHex = {
   altitude: number
 }
 export type BoardHexes = {
-  [key: string]: BoardHex
+  [hexID: string]: BoardHex
 }
 export type StartZones = {
-  [key: string]: string[]
+  [playerID: string]: string[]
 }
-export type ArmyCard = {
+export interface ICoreHeroscapeCard {
   name: string
-  armyCardID: string
+  cardID: string
+  image: string
+  portraitPattern: string
+  general:
+    | 'jandar'
+    | 'utgar'
+    | 'ullar'
+    | 'vydar'
+    | 'einar'
+    | 'aquilla'
+    | 'valkrill'
   race: string
-  life: number
-  move: number
-  range: number
-  attack: number
-  defense: number
-  points: number
+  type:
+    | 'unique squad'
+    | 'unique hero'
+    | 'common squad'
+    | 'common hero'
+    | 'uncommon hero'
+  cardClass: string
+  personality: string
+  size: string
+  height: number
+  life: string
+  move: string
+  range: string
+  attack: string
+  defense: string
+  points: string
   figures: number
-  hexes: number
+  hexes: 1 | 2 | 6
+  setWave:
+    | `Master Set: Rise of the Valkyrie`
+    | `Wave 1: Malliddon's Prophecy`
+    | `Wave 2: Utgar's Rage`
+    | `Wave 3: Jandar's Oath`
+    | `Wave 4: Zanafor's Discovery`
+    | `Giant Wave 1: Orm's Return`
+    | `Giant Wave 2: Raknar's Vision`
+    | `Giant Wave 3: Aquilla's Alliance`
+    | `Master Set: Swarm of the Marro`
+    | `Master Set: Battle for the Underdark`
+    | `Wave 5: Thora's Vengeance`
+    | `Wave 6: Dawn of Darkness`
+    | `Wave 7: Fields of Valor`
+    | `Wave 8: Defenders of Kinsland`
+    | `Wave 9: Blackmoon Siege`
+    | `Wave 10: Valkrill's Gambit`
+    | `Wave 11: Champions of the Forgotten Realms`
+    | `Wave 12: Warriors of Eberron`
+    | `Wave 13: Moltenclaw's Invasion`
+    | `Terrain Set 1: Road to the Forgotten Forest`
+    | `Terrain Set 2: Volcarren Wasteland`
+    | `Terrain Set 3: Thaelenk Tundra`
+    | `Terrain Set 4: Ticalla Jungle`
+    | `Special Release`
+    | `Special Release: Crest of the Valkyrie`
+  abilities?: CardAbility[]
+}
+export type CardAbility = {
+  name: string
+  desc: string
 }
 
-export type GameArmyCard = ArmyCard & {
+export type GameArmyCard = ICoreHeroscapeCard & {
   playerID: string
   gameCardID: string
   cardQuantity: number
@@ -82,7 +133,7 @@ export type GameUnit = {
   unitID: string
   playerID: string
   gameCardID: string
-  armyCardID: string
+  cardID: string
   movePoints: number
   moveRange: MoveRange
 }

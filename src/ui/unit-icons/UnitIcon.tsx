@@ -1,18 +1,9 @@
 import React from 'react'
-import {
-  GiBee,
-  GiWaspSting,
-  GiCrown,
-  GiButterfly,
-  GiFairyWings,
-  GiWingedEmblem,
-} from 'react-icons/gi'
+import { GiAlienBug, GiAlienStare, GiAngelOutfit, GiArcher, GiCaptainHatProfile, GiDinosaurRex, GiGlock, GiLeeEnfield, GiMissileMech, GiNinjaArmor, GiSpikedDragonHead, GiSpy, GiVikingHead, GiVikingHelmet, GiVikingShield, GiVintageRobot } from 'react-icons/gi'
 
-export const playerIconColors = {
-  0: 'var(--bee-yellow)',
-  1: 'var(--butterfly-purple)',
-}
-type UnitIconTypes = {
+import { playerColors } from 'theme'
+
+type UnitIconProps = {
   armyCardID: string
   iconPlayerID?: string
   hexSize?: number
@@ -21,7 +12,7 @@ type UnitIconTypes = {
     y: string
   }
 }
-export const UnitIcon: React.FC<UnitIconTypes> = ({
+export const UnitIcon: React.FC<UnitIconProps> = ({
   armyCardID,
   hexSize,
   iconProps,
@@ -39,24 +30,44 @@ export const UnitIcon: React.FC<UnitIconTypes> = ({
     x: iconProps?.x ?? `${iconXShift}px`,
     y: iconProps?.x ?? `${iconYShift}px`,
     style: {
-      fill: `${playerIconColors?.[iconPlayerID] ?? 'var(--white)'}`,
+      fill: `${playerColors?.[iconPlayerID] ?? 'var(--white)'}`,
       fontSize: iconProps?.x ?? `${iconSize}px`,
     },
   }
 
   switch (armyCardID) {
-    case 'hm101':
-      return <GiBee {...gameIconProps} />
-    case 'hm102':
-      return <GiWaspSting {...gameIconProps} />
-    case 'hm103':
-      return <GiCrown {...gameIconProps} />
-    case 'hm201':
-      return <GiButterfly {...gameIconProps} />
-    case 'hm202':
-      return <GiFairyWings {...gameIconProps} />
-    case 'hm203':
-      return <GiWingedEmblem {...gameIconProps} />
+    case 'hs1000':
+      return <GiAlienBug {...gameIconProps} />
+    case 'hs1001':
+      return <GiMissileMech {...gameIconProps} />
+    case 'hs1002':
+      return <GiNinjaArmor {...gameIconProps} />
+    case 'hs1003':
+      return <GiCaptainHatProfile {...gameIconProps} />
+    case 'hs1004':
+      return <GiArcher {...gameIconProps} />
+    case 'hs1005':
+      return <GiGlock {...gameIconProps} />
+    case 'hs1006':
+      return <GiVikingHelmet {...gameIconProps} />
+    case 'hs1007':
+      return <GiSpy {...gameIconProps} />
+    case 'hs1008':
+      return <GiVintageRobot {...gameIconProps} />
+    case 'hs1009':
+      return <GiLeeEnfield {...gameIconProps} />
+    case 'hs1010':
+      return <GiVikingHead {...gameIconProps} />
+    case 'hs1011':
+      return <GiVikingShield {...gameIconProps} />
+    case 'hs1012':
+      return <GiAngelOutfit {...gameIconProps} />
+    case 'hs1013':
+      return <GiSpikedDragonHead {...gameIconProps} />
+    case 'hs1014':
+      return <GiAlienStare {...gameIconProps} />
+    case 'hs1015':
+      return <GiDinosaurRex {...gameIconProps} />
     default:
       return null
   }
@@ -65,7 +76,7 @@ export const UnitIcon: React.FC<UnitIconTypes> = ({
 export const CardUnitIcon = ({ unit }) => {
   return (
     <UnitIcon
-      armyCardID={unit.armyCardID}
+      armyCardID={unit.cardID}
       iconPlayerID={unit.playerID}
       iconProps={{
         x: '50',
