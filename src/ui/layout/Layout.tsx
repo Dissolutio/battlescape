@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { useBgioClientInfo, useBgioCtx, useBgioG } from "bgio-contexts"
+import { useBgioCtx, useBgioG } from "bgio-contexts"
 import {
   Controls,
   MatchSetupControls,
@@ -7,23 +7,11 @@ import {
 } from "ui/controls"
 import { MapDisplay } from "ui/hexmap"
 
-// ? perhaps this could be moved into theme.js, but the playerID will still be dynamic....
-
 export const Layout = () => {
-  const { ctx } = useBgioCtx()
-  const { G } = useBgioG()
-  const bgioClientInfoCtx = useBgioClientInfo()
-  const clientPlayerID = bgioClientInfoCtx.playerID
-  if (ctx.phase === "setup") {
-    if (G.passAndPlay) {
-      return <PassAndPlayMatchSetupControls />
-    }
-    return <MatchSetupControls />
-  }
   return (
-    <LayoutContainer playerID={clientPlayerID}>
+    <LayoutContainer>
       <LayoutMiddle>
-        <MapDisplay />
+        <MiddleDisplay />
       </LayoutMiddle>
       <LayoutBottom>
         <Controls />
@@ -31,10 +19,20 @@ export const Layout = () => {
     </LayoutContainer>
   )
 }
-type LayoutContainerProps = {
-  playerID: string
+const MiddleDisplay = () => {
+  const { ctx } = useBgioCtx()
+  const { G } = useBgioG()
+  const { isSetupPhase } = ctx
+  if (isSetupPhase && G.passAndPlay) {
+    return <PassAndPlayMatchSetupControls />
+  }
+  if (isSetupPhase && !G.passAndPlay) {
+    return <MatchSetupControls />
+  }
+  return <MapDisplay />
 }
-const LayoutContainer = styled.div<LayoutContainerProps>`
+
+const LayoutContainer = styled.div`
   //🛠 SET CSS VARS
   --player-color: ${(props) => props.theme.playerColor};
   /* --navbar-height: 46px; */

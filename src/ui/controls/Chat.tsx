@@ -23,7 +23,6 @@ export const ChatInput = () => {
       id: generateChatID(),
       payload: chatInputText,
     })
-    console.log(`🚀 ~ handleChatSubmit ~ chatResponse`, chatResponse)
     setChatInputText("")
   }
   const chatInputHtmlId = `chat-text-input`
