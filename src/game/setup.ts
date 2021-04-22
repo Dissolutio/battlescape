@@ -13,6 +13,7 @@ import {
 } from "./constants"
 import { makeHexagonShapedMap } from "./mapGen"
 import { initialArmies } from "./armyGen"
+import giantsTableMap from '../assets/giantsTable.json'
 
 const prePlacedPlayersState: PlayersState = {
   "0": {
@@ -48,23 +49,43 @@ function generateGType_Base(devOptions?: GType_BaseOpts) {
     unitsAttacked: [],
     players: generateBlankPlayersState(),
   }
-
   return {
     ...defaultDevOptions,
     ...devOptions,
   }
 }
 
+// !! GIANTS TABLE SCENARIO
+export const giantsTableScenario = makeGiantsTableScenario()
+
+function makeGiantsTableScenario(devOptions?: G_SetupOpts): GType {
+  // Use initial cards / units
+  const { gameUnits, armyCards } = initialArmies
+  const boardHexes = giantsTableMap.boardHexes 
+  // MAKE MAP
+  return {
+    ...generateGType_Base(devOptions),
+    gameUnits,
+    armyCards,
+    hexMap: giantsTableMap.hexMap,
+    boardHexes,
+    // local match needs default passAndPlay to be true
+    passAndPlay: true,
+    numPlayers: MAX_PLAYERS,
+  }
+}
+
+
+
 //!! HEXAGON MAP SCENARIO
 export const hexagonMapScenario = makeHexagonMapScenario()
+
 function makeHexagonMapScenario(devOptions?: G_SetupOpts): GType {
   // Use initial cards / units
   const { gameUnits, armyCards } = initialArmies
   // MAKE MAP
   const hexagonMap = makeHexagonShapedMap({
-    gameUnits,
     mapSize: 3,
-    withPrePlacedUnits: true,
   })
   return {
     ...generateGType_Base(devOptions),
@@ -72,7 +93,6 @@ function makeHexagonMapScenario(devOptions?: G_SetupOpts): GType {
     armyCards,
     hexMap: hexagonMap.hexMap,
     boardHexes: hexagonMap.boardHexes,
-    startZones: hexagonMap.startZones,
     // local match needs default passAndPlay to be true
     passAndPlay: true,
     numPlayers: MAX_PLAYERS,

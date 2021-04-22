@@ -16,8 +16,6 @@ export type GType_Base = {
 }
 export type GType_Map = {
   boardHexes: BoardHexes
-  startZones: StartZones
-  withPrePlacedUnits: boolean
   hexMap: HexMap
 }
 export type GType_Armies = {
@@ -38,12 +36,15 @@ export type PlayersState = {
   }
 }
 export type HexMap = {
-  mapShape: string
-  mapSize: number
-  hexGridLayout: string
-  hexHeight: number
-  hexWidth: number
-}
+  mapShape: string;
+  mapSize: number;
+  mapLength: number;
+  mapWidth: number;
+  flat: boolean;
+  hexHeight: number;
+  hexWidth: number;
+  hexSize: number;
+};
 export type BoardHex = {
   id: string
   q: number
@@ -51,12 +52,18 @@ export type BoardHex = {
   s: number
   occupyingUnitID: string
   altitude: number
+  startzonePlayerIDs: string[]
+  terrain: HexTerrain | string;
+}
+export enum HexTerrain {
+  void = "void",
+  water = "water",
+  grass = "grass",
+  sand = "sand",
+  rock = "rock",
 }
 export type BoardHexes = {
   [hexID: string]: BoardHex
-}
-export type StartZones = {
-  [playerID: string]: string[]
 }
 export interface ICoreHeroscapeCard {
   name: string
@@ -80,14 +87,14 @@ export interface ICoreHeroscapeCard {
     | 'uncommon hero'
   cardClass: string
   personality: string
-  size: string
+  size: 'small' | 'medium' | 'large' | 'huge'
   height: number
-  life: string
-  move: string
-  range: string
-  attack: string
-  defense: string
-  points: string
+  life: number
+  move: number
+  range: number
+  attack: number
+  defense: number
+  points: number
   figures: number
   hexes: 1 | 2 | 6
   setWave:

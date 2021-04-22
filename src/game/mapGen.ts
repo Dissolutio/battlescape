@@ -1,98 +1,77 @@
-import { BoardHexes, GameUnits, GType_Map, HexMap, StartZones } from "./types"
-import { generateHexagon } from "./hexGen"
+import { BoardHexes, GType_Map } from "./types"
+import { generateHexagon, generateRectangle } from "./hexGen"
 
 type MapOptions = {
-  gameUnits?: GameUnits
-  mapSize?: number
-  withPrePlacedUnits?: boolean
-  // flat-top or pointy-top hexes
-  flat?: boolean
-}
-export type GameMap = {
-  boardHexes: BoardHexes
-  startZones: StartZones
-  hexMap: HexMap
-  withPrePlacedUnits: boolean
-}
+  mapSize?: number;
+  mapWidth?: number;
+  mapLength?: number;
+  flat?: boolean;
+};
+// All Maps follow these hex dimensions:
+const flatDimensions = {
+  flat: true,
+  hexHeight: Math.round(Math.sqrt(3) * 100) / 100,
+  hexWidth: 2,
+};
+const pointyDimensions = {
+  flat: false,
+  hexHeight: 2,
+  hexWidth: Math.round(Math.sqrt(3) * 100) / 100,
+};
+
+//!! HEXAGON SHAPED MAP
 export function makeHexagonShapedMap(mapOptions?: MapOptions): GType_Map {
-  const { mapSize = 3, gameUnits, flat = false } = mapOptions
-  let withPrePlacedUnits = mapOptions?.withPrePlacedUnits ?? false
-  const isGameUnits = gameUnits && Object.keys(gameUnits)?.length
-  // If no units, then we cannot pre-place them!
-  if (!isGameUnits) {
-    withPrePlacedUnits = false
-  }
-  const flatDimensions = {
-    hexGridLayout: "flat",
-    hexHeight: Math.round(Math.sqrt(3) * 100) / 100,
-    hexWidth: 2,
-  }
-  const pointyDimensions = {
-    hexGridLayout: "pointy",
-    hexHeight: 2,
-    hexWidth: Math.sqrt(3),
-  }
-  const mapDimensions = flat ? flatDimensions : pointyDimensions
+  const mapSize = mapOptions?.mapSize ?? 1;
+  const flat = mapOptions?.flat ?? false;
+  const mapWidth = 1 + mapSize * 2;
+  const mapLength = mapWidth;
+  const hexDimensions = flat ? flatDimensions : pointyDimensions;
+  const hexSize =
+    mapSize <= 3 ? 15 : mapSize <= 5 ? 20 : mapSize <= 10 ? 25 : 25;
   const hexMap = {
-    ...mapDimensions,
+    ...hexDimensions,
+    hexSize,
     mapShape: "hexagon",
     mapSize,
-  }
-  const startZones: StartZones = startZonesNoUnits(
-    generateHexagon(mapSize),
-    mapSize
-  )
-  const devStartZones: StartZones = startZonesNoUnits(
-    generateHexagon(mapSize),
-    mapSize
-  )
-  const boardHexes: BoardHexes = generateHexagon(mapSize)
-  let devBoardHexes: BoardHexes = startZonesWithUnits(
-    generateHexagon(mapSize),
-    devStartZones,
-    gameUnits
-  )
+    mapLength,
+    mapWidth,
+  };
+  const boardHexes: BoardHexes = generateHexagon(mapSize);
+  
   return {
-    boardHexes: withPrePlacedUnits ? devBoardHexes : boardHexes,
-    startZones: withPrePlacedUnits ? devStartZones : startZones,
+    boardHexes,
     hexMap,
-    withPrePlacedUnits,
-  }
+  };
 }
-function startZonesNoUnits(
-  boardHexes: BoardHexes,
-  mapSize: number
-): StartZones {
-  const boardHexesArr = Object.values(boardHexes)
-  const P0StartZone = boardHexesArr
-    .filter((hex) => hex.s >= Math.max(mapSize - 1, 1))
-    .map((hex) => hex.id)
-  const P1StartZone = boardHexesArr
-    .filter((hex) => hex.s <= -1 * Math.max(mapSize - 1, 1))
-    .map((hex) => hex.id)
+
+//!! RECTANGLE SHAPED MAP
+export function makeRectangleScenario(mapOptions?: MapOptions): GType_Map {
+  const mapLength = mapOptions?.mapLength ?? 1;
+  const mapWidth = mapOptions?.mapWidth ?? 1;
+  const mapSize = Math.max(mapLength, mapWidth);
+  const flat = mapOptions?.flat ?? false;
+  const hexDimensions = flat ? flatDimensions : pointyDimensions;
+  const hexSize =
+    mapSize >= 20
+      ? 40
+      : mapSize <= 3
+      ? 15
+      : mapSize <= 5
+      ? 20
+      : mapSize <= 10
+      ? 25
+      : 30;
+  const hexMap = {
+    ...hexDimensions,
+    hexSize,
+    mapShape: "orientedRectangle",
+    mapSize: Math.max(mapLength, mapWidth),
+    mapLength,
+    mapWidth,
+  };
+  const boardHexes: BoardHexes = generateRectangle(mapLength, mapWidth);
   return {
-    "0": P0StartZone,
-    "1": P1StartZone,
-  }
-}
-// ! this function mutates input 'zones'
-function startZonesWithUnits(
-  hexes: BoardHexes,
-  zones: StartZones,
-  gameUnits: GameUnits
-): BoardHexes {
-  const gameUnitsArr = Object.values(gameUnits)
-  gameUnitsArr.forEach((unit) => {
-    const { playerID } = unit
-    let randomHexID: string
-    if (playerID === "0") {
-      randomHexID = zones[unit.playerID].pop()
-    }
-    if (playerID === "1") {
-      randomHexID = zones[unit.playerID].pop()
-    }
-    // update boardHex
-    hexes[randomHexID].occupyingUnitID = unit.unitID
-  })
-  return hexes
+    boardHexes,
+    hexMap,
+  };
 }
