@@ -13,6 +13,7 @@ import {
 import { theme } from "theme"
 import { Layout } from "ui/layout"
 import { GType } from "game/types"
+import { BattlescapeUI } from "BattlescapeUI"
 
 type MyBoardProps = BoardProps<GType> & { chatMessages?: ChatMessage[] }
 
@@ -62,7 +63,7 @@ export function Board(props: MyBoardProps) {
                   chatMessages={chatMessages}
                   sendChatMessage={sendChatMessage}
                 >
-                  <Layout />
+                  <BattlescapeUI />
                 </BgioChatProvider>
               </BgioEventsProvider>
             </BgioMovesProvider>

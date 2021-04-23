@@ -34,7 +34,7 @@ export const ReactHexgrid = ({
         className={className}
         size={{ x: hexSize, y: hexSize }}
         flat={flat}
-        origin={origin}
+        // origin={origin}
         spacing={spacing}
       >
         {children}

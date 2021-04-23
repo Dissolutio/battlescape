@@ -14,6 +14,10 @@ type BgioCtxValue = {
   ctx: BoardProps["ctx"] & {
     isMyTurn: boolean
     isSetupPhase: boolean
+    isPlacementPhase: boolean
+    isOrderMarkerPhase: boolean
+    isRoundOfPlayPhase: boolean
+    isAttackingStage: boolean
     isGameover: boolean
   }
 }
@@ -23,8 +27,8 @@ export function BgioCtxProvider({ ctx, children }: BgioCtxProviderProps) {
   const { playerID } = useBgioClientInfo()
   const isMyTurn: boolean = ctx.currentPlayer === playerID
   const isSetupPhase: boolean = ctx.phase === phaseNames.setup
-  const isOrderMarkerPhase: boolean = ctx.phase === phaseNames.placeOrderMarkers
   const isPlacementPhase: boolean = ctx.phase === phaseNames.placement
+  const isOrderMarkerPhase: boolean = ctx.phase === phaseNames.placeOrderMarkers
   const isRoundOfPlayPhase: boolean = ctx.phase === phaseNames.roundOfPlay
   const isAttackingStage: boolean =
     isRoundOfPlayPhase && ctx.activePlayers?.[playerID] === stageNames.attacking
@@ -35,8 +39,12 @@ export function BgioCtxProvider({ ctx, children }: BgioCtxProviderProps) {
         ctx: {
           ...ctx,
           isMyTurn,
-          isGameover,
           isSetupPhase,
+          isPlacementPhase,
+          isOrderMarkerPhase,
+          isRoundOfPlayPhase,
+          isAttackingStage,
+          isGameover,
         },
       }}
     >
