@@ -12,6 +12,7 @@ import { Board } from "./Board"
 import { MultiplayerNav } from "ui/layout"
 import { FeedbackPage, HelpPage, PageLayout, RulesPage } from "ui/pages"
 import { ROUTES } from "routes"
+import "App.css"
 
 // ! 3 OPTIONS:
 //  A local game (for game development): `npm run start`

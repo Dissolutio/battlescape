@@ -1,0 +1,79 @@
+@import url("https://cdn.jsdelivr.net/npm/water.css@2/out/dark.min.css");
+
+/* many custom colors are not yet used */
+
+html {
+  /* THEME */
+  --black: #222222;
+  --white: #f7edf0;
+  --player-color: #f7edf0; /* gets reset in Layout styled component*/
+  --sub-white: #b4b4b4;
+  --gunmetal: #22333b;
+  --gunmetal-transparent: hsla(199, 27%, 18%, 0.2);
+  --gray: #5d576b;
+  /* PLAYER COLORS */
+  --bee-yellow: #e0bb00;
+  --butterfly-purple: #fc65b8;
+  --wasp-red: #e4572e;
+  --beetle-blue: #058ed9;
+  --hummingbird-green: #75dbcd;
+  --orange: #e8aa14;
+  /* TERRAIN */
+  --green: #95c623;
+  --forest-green: #37480d;
+  --wood-brown: #573319;
+  --water-blue: #044389;
+  /* UTILITY */
+  --neon-green: hsla(74, 64%, 59%, 0.5);
+  --neon-orange: rgba(224, 150, 40, 0.5);
+  --neon-red: rgba(226, 83, 40, 0.5);
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  box-sizing: border-box;
+  max-width: 1200px;
+  padding: 0;
+  margin: 0 auto;
+  /* min-height: 100vh; */
+  /* min-height: -webkit-fill-available; */
+  /* max-width: -webkit-fill-available; */
+  background-color: var(--black);
+  /* color: var(--white); */
+  /* font-weight: 600; */
+}
+
+/* Style simple navbar */
+nav ul {
+  list-style-type: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+nav ul li a {
+  padding: 14px 16px;
+  text-decoration: none;
+}
+a.active {
+  text-decoration: underline;
+}
+
+/* This gets the debug panel looking normal again, the water.css styles were messing with the button sizes, some colors */
+/* 40px overrides the 20px that the panel currently has */
+.debug-panel strong {
+  color: black !important;
+}
+.debug-panel button {
+  color: black !important;
+}
+.debug-panel button.current {
+  color: white !important;
+}
+.debug-panel nav {
+  height: 40px !important;
+}
+.debug-panel button {
+  height: 40px !important;
+}
