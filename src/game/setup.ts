@@ -13,7 +13,7 @@ import {
 } from "./constants"
 import { makeHexagonShapedMap } from "./mapGen"
 import { initialArmies } from "./armyGen"
-import giantsTableMap from '../assets/giantsTable.json'
+import giantsTableMap from "../assets/giantsTable.json"
 
 const prePlacedPlayersState: PlayersState = {
   "0": {
@@ -61,7 +61,7 @@ export const giantsTableScenario = makeGiantsTableScenario()
 function makeGiantsTableScenario(devOptions?: G_SetupOpts): GType {
   // Use initial cards / units
   const { gameUnits, armyCards } = initialArmies
-  const boardHexes = giantsTableMap.boardHexes 
+  const boardHexes = giantsTableMap.boardHexes
   // MAKE MAP
   return {
     ...generateGType_Base(devOptions),
@@ -74,8 +74,6 @@ function makeGiantsTableScenario(devOptions?: G_SetupOpts): GType {
     numPlayers: MAX_PLAYERS,
   }
 }
-
-
 
 //!! HEXAGON MAP SCENARIO
 export const hexagonMapScenario = makeHexagonMapScenario()
