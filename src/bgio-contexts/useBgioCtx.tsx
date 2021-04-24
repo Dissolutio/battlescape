@@ -17,6 +17,7 @@ type BgioCtxValue = {
     isPlacementPhase: boolean
     isOrderMarkerPhase: boolean
     isRoundOfPlayPhase: boolean
+    isMovementStage: boolean
     isAttackingStage: boolean
     isGameover: boolean
   }
@@ -30,6 +31,8 @@ export function BgioCtxProvider({ ctx, children }: BgioCtxProviderProps) {
   const isPlacementPhase: boolean = ctx.phase === phaseNames.placement
   const isOrderMarkerPhase: boolean = ctx.phase === phaseNames.placeOrderMarkers
   const isRoundOfPlayPhase: boolean = ctx.phase === phaseNames.roundOfPlay
+  const isMovementStage: boolean =
+    isRoundOfPlayPhase && ctx.activePlayers?.[playerID] === stageNames.moving
   const isAttackingStage: boolean =
     isRoundOfPlayPhase && ctx.activePlayers?.[playerID] === stageNames.attacking
   const isGameover: boolean = Boolean(ctx.gameover)
@@ -43,6 +46,7 @@ export function BgioCtxProvider({ ctx, children }: BgioCtxProviderProps) {
           isPlacementPhase,
           isOrderMarkerPhase,
           isRoundOfPlayPhase,
+          isMovementStage,
           isAttackingStage,
           isGameover,
         },

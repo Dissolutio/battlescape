@@ -3,14 +3,19 @@ import React, {
   SyntheticEvent,
   useContext,
   useEffect,
-} from 'react'
-import { HexUtils } from 'react17-hexgrid'
+} from "react"
+import { HexUtils } from "react17-hexgrid"
 
-import { BoardHex, GameArmyCard, GameUnit } from 'game/types'
-import { selectHexForUnit, selectRevealedGameCard } from 'game/g-selectors'
-import { generateBlankMoveRange } from 'game/constants'
-import { useBgioClientInfo, useBgioMoves, useBgioG, useBgioCtx } from 'bgio-contexts'
-import { useUIContext } from 'game-contexts'
+import { BoardHex, GameArmyCard, GameUnit } from "game/types"
+import { selectHexForUnit, selectRevealedGameCard } from "game/g-selectors"
+import { generateBlankMoveRange } from "game/constants"
+import {
+  useBgioClientInfo,
+  useBgioMoves,
+  useBgioG,
+  useBgioCtx,
+} from "bgio-contexts"
+import { useUIContext } from "game-contexts"
 
 const PlayContext = createContext<Partial<PlayContextValue>>({})
 
@@ -53,22 +58,22 @@ export const PlayContextProvider = ({ children }) => {
   const { moveAction, attackAction } = moves
 
   const currentTurnGameCardID =
-    G.players?.[playerID]?.orderMarkers?.[G.currentOrderMarker] ?? ''
-  //🛠 EFFECTS
+    G.players?.[playerID]?.orderMarkers?.[G.currentOrderMarker] ?? ""
+  // EFFECTS
   useEffect(() => {
     // auto select card on turn begin
     if (isMyTurn) {
       // auto select card AND deselect units on attack begin
       if (isAttackingStage) {
         setSelectedGameCardID(currentTurnGameCardID)
-        setSelectedUnitID('')
+        setSelectedUnitID("")
       }
       setSelectedGameCardID(currentTurnGameCardID)
     }
     //  auto deselect card/units on end turn
     if (!isMyTurn) {
-      setSelectedGameCardID('')
-      setSelectedUnitID('')
+      setSelectedGameCardID("")
+      setSelectedUnitID("")
     }
   }, [
     isMyTurn,
@@ -77,7 +82,7 @@ export const PlayContextProvider = ({ children }) => {
     setSelectedGameCardID,
     setSelectedUnitID,
   ])
-  //🛠 COMPUTED
+  // COMPUTED
   const selectedUnit = gameUnits?.[selectedUnitID]
   const revealedGameCard = selectRevealedGameCard(
     orderMarkers,
@@ -94,11 +99,11 @@ export const PlayContextProvider = ({ children }) => {
   const selectedGameCardUnits = Object.values(gameUnits).filter(
     (unit: GameUnit) => unit.gameCardID === selectedGameCardID
   )
-  //🛠 HANDLERS
+  // HANDLERS
   function onSelectCard__turn(gameCardID: string) {
     // deselect if already selected
     if (gameCardID === selectedGameCardID) {
-      setSelectedGameCardID('')
+      setSelectedGameCardID("")
       return
     }
     setSelectedGameCardID(gameCardID)
@@ -116,7 +121,7 @@ export const PlayContextProvider = ({ children }) => {
       selectedGameCardID === currentTurnGameCardID
     const isUnitSelected = unitOnHex?.unitID === selectedUnitID
 
-    //🛠 MOVE STAGE
+    // MOVE STAGE
     if (isMyTurn && !isAttackingStage) {
       const moveRange = selectedUnit?.moveRange ?? generateBlankMoveRange()
       const { safe, engage, disengage } = moveRange
@@ -132,10 +137,10 @@ export const PlayContextProvider = ({ children }) => {
       }
       // deselect unit
       if (isUnitSelected) {
-        setSelectedUnitID('')
+        setSelectedUnitID("")
       }
     }
-    //🛠 ATTACK STAGE
+    // ATTACK STAGE
     if (isMyTurn && isAttackingStage) {
       const isEndHexEnemyOccupied =
         isEndHexOccupied && endHexUnitPlayerID !== playerID
@@ -146,7 +151,7 @@ export const PlayContextProvider = ({ children }) => {
       }
       // deselect unit
       if (isUnitSelected) {
-        setSelectedUnitID('')
+        setSelectedUnitID("")
       }
       // attack with selected unit
       if (selectedUnitID && isEndHexEnemyOccupied) {

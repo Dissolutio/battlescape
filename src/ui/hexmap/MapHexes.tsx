@@ -1,21 +1,17 @@
-import React, { SyntheticEvent } from 'react'
-import { Hexagon, HexUtils, Text } from 'react17-hexgrid'
+import React, { SyntheticEvent } from "react"
+import { Hexagon, HexUtils, Text } from "react17-hexgrid"
 
 import {
   useUIContext,
   useMapContext,
   usePlacementContext,
   usePlayContext,
-} from 'game-contexts'
-import {
-  useBgioClientInfo,
-  useBgioG,
-  useBgioCtx,
-} from 'bgio-contexts'
-import { UnitIcon } from 'ui/unit-icons/UnitIcon'
-import { generateBlankMoveRange } from 'game/constants'
-import { selectHexForUnit, selectGameCardByID } from 'game/g-selectors'
-import { BoardHex } from 'game/types'
+} from "game-contexts"
+import { useBgioClientInfo, useBgioG, useBgioCtx } from "bgio-contexts"
+import { UnitIcon } from "ui/unit-icons/UnitIcon"
+import { generateBlankMoveRange } from "game/constants"
+import { selectHexForUnit, selectGameCardByID } from "game/g-selectors"
+import { BoardHex } from "game/types"
 
 type MapHexesProps = {
   hexSize: number
@@ -24,13 +20,14 @@ type MapHexesProps = {
 export const MapHexes = ({ hexSize }: MapHexesProps) => {
   const { playerID } = useBgioClientInfo()
   const { G } = useBgioG()
-  const { boardHexes, armyCards,  gameUnits } = G
+  const { boardHexes, armyCards, gameUnits } = G
   const { ctx } = useBgioCtx()
   const {
     isMyTurn,
     isPlacementPhase,
     isRoundOfPlayPhase,
     isAttackingStage,
+    isMovementStage,
   } = ctx
   const { myStartZone, onClickBoardHex_placement } = usePlacementContext()
   const {
@@ -42,12 +39,12 @@ export const MapHexes = ({ hexSize }: MapHexesProps) => {
   } = usePlayContext()
   const { selectedUnitID } = useUIContext()
   const { selectedMapHex } = useMapContext()
-  
-  //🛠 computed
+
+  // computed
   const selectedUnitMoveRange =
     selectedUnit?.moveRange ?? generateBlankMoveRange()
 
-  //🛠 handlers
+  // handlers
   const onClickBoardHex = (event: SyntheticEvent, sourceHex: BoardHex) => {
     if (isPlacementPhase) {
       onClickBoardHex_placement(event, sourceHex)
@@ -56,105 +53,108 @@ export const MapHexes = ({ hexSize }: MapHexesProps) => {
       onClickBoardHex__turn(event, sourceHex)
     }
   }
+  const isMyStartZoneHex = (hex: BoardHex) => {
+    return Boolean(myStartZone.includes(hex.id))
+  }
+  const isSelectedHex = (hex: BoardHex) => {
+    return hex.id === selectedMapHex
+  }
+  const isSelectedCard = (hex: BoardHex) => {
+    const unitIDs = selectedGameCardUnits.map((u) => u.unitID)
+    return unitIDs.includes(hex.occupyingUnitID)
+  }
+  const isSelectedUnitHex = (hex: BoardHex) => {
+    return hex.occupyingUnitID && hex.occupyingUnitID === selectedUnitID
+  }
+  // const activeEnemyUnitIDs = revealedGameCardUnits.map((u) => u.unitID)
 
-  //🛠 classnames
+  // classnames
   function calcClassNames(hex: BoardHex) {
-    const isMyStartZoneHex = (hex: BoardHex) => {
-      return Boolean(myStartZone.includes(hex.id))
-    }
-    const isSelectedHex = (hex: BoardHex) => {
-      return hex.id === selectedMapHex
-    }
-    const isSelectedCard = (hex: BoardHex) => {
-      const unitIDs = selectedGameCardUnits.map((u) => u.unitID)
-      return unitIDs.includes(hex.occupyingUnitID)
-    }
-    const isSelectedUnitHex = (hex: BoardHex) => {
-      return hex.occupyingUnitID && hex.occupyingUnitID === selectedUnitID
-    }
-    // const activeEnemyUnitIDs = revealedGameCardUnits.map((u) => u.unitID)
-    // const isOpponentsActiveUnitHex = (hex: BoardHex) => {
-    //   return activeEnemyUnitIDs.includes(hex.occupyingUnitID)
-    // }
-    // assign
-    let classNames = ''
-    //phase: Placement
+    let classNames = ""
+    // paint Terrain
+    classNames = classNames.concat(` maphex__terrain--${hex.terrain} `)
+    // phase: Placement
     if (isPlacementPhase) {
-      // Highlight Player Startzones -- if toggled on
-      ["0", "1", "2", "3", "4", "5"].forEach((playerID) => {
+      // highlight player start zones
+      ;["0", "1", "2", "3", "4", "5"].forEach((playerID) => {
         if (hex?.startzonePlayerIDs?.includes(playerID)) {
           classNames = classNames.concat(
             ` maphex__startzone--player${playerID} `
-          );
+          )
         }
-      });
-      //🛠 highlight placeable hexes
+      })
+      // highlight placeable hexes
       if (selectedUnitID && isMyStartZoneHex(hex) && !hex.occupyingUnitID) {
-        classNames = classNames.concat(' maphex__start-zone--placement ')
+        classNames = classNames.concat(" maphex__start-zone--placement ")
       }
-      //🛠 highlight active hex
+      // highlight active hex
       if (isSelectedHex(hex)) {
-        classNames = classNames.concat(' maphex__selected--active ')
+        classNames = classNames.concat(" maphex__selected--active ")
       }
     }
-    //phase: ROP
+
+    // phase: Round of Play
     if (isRoundOfPlayPhase) {
-      //🛠 Highlight selected card units
-      // TODO Color selectable units based on if they have moved, have not moved, or have finished moving
+      // highlight selected card units
       const isSelectableUnit = isSelectedCard(hex) && !isSelectedUnitHex(hex)
       if (isSelectableUnit) {
         classNames = classNames.concat(
-          ' maphex__selected-card-unit--selectable '
+          " maphex__selected-card-unit--selectable "
         )
       }
-      //🛠 Highlight selected unit
+      // Highlight selected unit
       if (selectedUnitID && isSelectedUnitHex(hex)) {
-        classNames = classNames.concat(' maphex__selected-card-unit--active ')
+        classNames = classNames.concat(" maphex__selected-card-unit--active ")
       }
-      // NOT MY TURN
-      //🛠 Highlight opponents active units on their turn
+
+      // const isOpponentsActiveUnitHex = (hex: BoardHex) => {
+      //   return activeEnemyUnitIDs.includes(hex.occupyingUnitID)
+      // }
+      // Phase - Round of Play , not my turn
+      // Highlight opponents active units on their turn
       // if (!isMyTurn && isOpponentsActiveUnitHex(hex)) {
       //   classNames = classNames.concat(' maphex__opponents-active-unit ')
       // }
-      //phase: ROP-attack
+
+      // Attack Stage
       if (isAttackingStage) {
-        //🛠 Highlight targetable enemy units
+        // highlight targetable enemy units -- selected unit + hex is enemy occupied and in range
         const endHexUnitID = hex.occupyingUnitID
         const isEndHexOccupied = Boolean(endHexUnitID)
         const endHexUnit = { ...gameUnits[endHexUnitID] }
         const endHexUnitPlayerID = endHexUnit.playerID
         const isEndHexEnemyOccupied =
           isEndHexOccupied && endHexUnitPlayerID !== playerID
-        // If unit selected, hex is enemy occupied...
         if (selectedUnitID && isEndHexEnemyOccupied) {
           const startHex = selectHexForUnit(selectedUnitID, boardHexes)
           const isInRange =
             HexUtils.distance(startHex, hex) <= selectedGameCard.range
-          // ... and is in range
+          // ...
           if (isInRange) {
-            classNames = classNames.concat(' maphex__targetable-enemy ')
+            classNames = classNames.concat(" maphex__targetable-enemy ")
           }
         }
       }
 
-      // phase: ROP-move
       // todo: make movement its own stage
+      // TODO Color selectable units based on if they have moved, have not moved, or have finished moving
+      // phase: ROP-move
       if (!isAttackingStage) {
         const { safe, engage, disengage } = selectedUnitMoveRange
         const isInSafeMoveRange = safe.includes(hex.id)
         const isInEngageMoveRange = engage.includes(hex.id)
         const isInDisengageMoveRange = disengage.includes(hex.id)
-        //🛠 Paint safe moves
+        // Paint safe moves
         if (isInSafeMoveRange) {
-          classNames = classNames.concat(' maphex__move-safe ')
+          classNames = classNames.concat(" maphex__move-safe ")
         }
-        //🛠 Paint engage moves
+        // Paint engage moves
         if (isInEngageMoveRange) {
-          classNames = classNames.concat(' maphex__move-engage ')
+          classNames = classNames.concat(" maphex__move-engage ")
         }
-        //🛠 Paint disengage moves
+        // Paint disengage moves
         if (isInDisengageMoveRange) {
-          classNames = classNames.concat(' maphex__move-disengage ')
+          classNames = classNames.concat(" maphex__move-disengage ")
         }
       }
     }
@@ -167,7 +167,7 @@ export const MapHexes = ({ hexSize }: MapHexesProps) => {
       const isShowableUnit =
         !isPlacementPhase || gameUnit?.playerID === playerID
       const gameUnitCard = selectGameCardByID(armyCards, gameUnit?.gameCardID)
-      const unitName = gameUnitCard?.name ?? ''
+      const unitName = gameUnitCard?.name ?? ""
       return (
         <Hexagon
           key={i}
@@ -186,8 +186,8 @@ export const MapHexes = ({ hexSize }: MapHexesProps) => {
             {isPlacementPhase && <HexIDText hexSize={hexSize} text={hex.id} />}
             {!isPlacementPhase && unitName && (
               <HexIDText hexSize={hexSize} text={unitName} />
-              )}
-              <HexIDText hexSize={hexSize} text={hex.altitude} />
+            )}
+            <HexIDText hexSize={hexSize} text={hex.altitude} />
           </g>
         </Hexagon>
       )

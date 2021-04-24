@@ -15,8 +15,8 @@ export const Layout = ({ children }) => {
         {children[2]}
       </LayoutBottom>
     </LayoutContainer>
-  );
-};
+  )
+}
 // const MiddleDisplay = () => {
 //   const { ctx } = useBgioCtx()
 //   const { G } = useBgioG()
@@ -31,12 +31,12 @@ export const Layout = ({ children }) => {
 // }
 
 const LayoutContainer = styled.div`
-  //🛠 SET CSS VARS
+  // SET CSS VARS
   --player-color: ${(props) => props.theme.playerColor};
   /* --navbar-height: 46px; */
   /* --navbar-logo-height: 32px; */
 
-  position: relative;
+  /* position: relative; */
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -49,7 +49,7 @@ const LayoutContainer = styled.div`
 const LayoutMiddle = styled.div`
   width: 100%;
   height: 70vh;
-  position: relative;
+  /* position: relative; */
   overflow: auto;
 `
 const LayoutBottom = styled.div`

@@ -3,14 +3,15 @@ import { Client } from "boardgame.io/react"
 import { Local, SocketIO } from "boardgame.io/multiplayer"
 import { Debug } from "boardgame.io/debug"
 
-import { HexedMeadow } from "./game/game"
+import { Battlescape } from "./game/game"
 import { MAX_PLAYERS } from "./game/constants"
 import { AuthProvider, useAuth } from "hooks/useAuth"
 import { BgioLobbyApiProvider } from "bgio-contexts"
 import { MultiplayerLobby, MultiplayerLobbyProvider } from "lobby"
 import { Board } from "./Board"
-// import { PageRoutes } from "ui/pages/PageRoutes"
 import { MultiplayerNav } from "ui/layout"
+import { FeedbackPage, HelpPage, PageLayout, RulesPage } from "ui/pages"
+import { ROUTES } from "routes"
 
 // ! 3 OPTIONS:
 //  A local game (for game development): `npm run start`
@@ -27,7 +28,7 @@ const reduxDevTools =
   (window as any).__REDUX_DEVTOOLS_EXTENSION__()
 
 const bgioClientOptions = {
-  game: HexedMeadow,
+  game: Battlescape,
   board: Board,
   numPlayers: MAX_PLAYERS,
 }
@@ -36,12 +37,9 @@ const DemoGameClient = Client({
   ...bgioClientOptions,
   multiplayer: Local(),
   enhancer: reduxDevTools,
-  debug: { impl: Debug },
+  // debug: { impl: Debug },
+  debug: false,
 })
-
-const DemoMatch = () => {
-  return <DemoGameClient matchID="matchID" playerID="0" />
-}
 
 const MultiplayerGameClient = Client({
   ...bgioClientOptions,
@@ -51,7 +49,30 @@ const MultiplayerGameClient = Client({
 
 export const App = () => {
   if (isLocalApp) {
-    return <DemoMatch />
+    return (
+      <BrowserRouter>
+        <Switch>
+          <Route exact path={ROUTES.root}>
+            <DemoGameClient matchID="matchID" playerID="0" />
+          </Route>
+          <Route exact path={ROUTES.help}>
+            <PageLayout>
+              <HelpPage />
+            </PageLayout>
+          </Route>
+          <Route exact path={ROUTES.feedback}>
+            <PageLayout>
+              <FeedbackPage />
+            </PageLayout>
+          </Route>
+          <Route exact path={ROUTES.rules}>
+            <PageLayout>
+              <RulesPage />
+            </PageLayout>
+          </Route>
+        </Switch>
+      </BrowserRouter>
+    )
   }
   return (
     <BrowserRouter>
@@ -69,20 +90,24 @@ export const App = () => {
 const OnlineMultiplayerApp = () => {
   return (
     <Switch>
-      <Route exact path="/">
+      <Route exact path={ROUTES.root}>
         <MultiplayerNav />
         <MultiplayerLobby />
       </Route>
-      <Route path="/demo">
+      {/* <Route exact path={`${ROUTES.onlineLobby}`}>
         <MultiplayerNav />
-        <DemoMatch />
+        <MultiplayerLobby />
+      </Route> */}
+      <Route path={ROUTES.playDemo}>
+        <MultiplayerNav />
+        <DemoGameClient matchID="matchID" playerID="0" />
       </Route>
-      <Route path="/local">
+      <Route path={ROUTES.playLocal}>
         <MultiplayerNav />
         <PassAndPlayLobby />
       </Route>
       {/* Nav play-link not shown when user is not joined in a match */}
-      <Route path="/play">
+      <Route path={ROUTES.playOnline}>
         <MultiplayerNav />
         <PlayJoinedMatchPage />
       </Route>
@@ -153,7 +178,7 @@ const PassAndPlayMatch = (props) => {
   // We use playerID=0 but we will let all the players play for everyone,
   // because we are assuming players are passing the device around
   const GameClient = Client({
-    game: HexedMeadow,
+    game: Battlescape,
     numPlayers,
     board: Board,
     multiplayer: Local(),

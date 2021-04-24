@@ -89,7 +89,7 @@ function moveAction(
     const moveRange = calcUnitMoveRange(unit, newBoardHexes, newGameUnits)
     newGameUnits[unitID].moveRange = moveRange
   })
-  //🛠 Make the move
+  // Make the move
   if (isInSafeMoveRange) {
     G.boardHexes = { ...newBoardHexes }
     G.gameUnits = { ...newGameUnits }
@@ -144,7 +144,7 @@ function attackAction(
     return
   }
 
-  //🛠 ALLOW
+  // ALLOW
   const attack = unitGameCard.attack
   const defenderGameUnit = G.gameUnits[defenderHex.occupyingUnitID]
   const defenderGameCard = selectGameCardByID(

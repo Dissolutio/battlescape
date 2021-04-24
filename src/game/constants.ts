@@ -24,6 +24,7 @@ export const phaseNames = {
 export const stageNames = {
   placeOrderMarkers: "placeOrderMarkers",
   placingUnits: "placingUnits",
+  moving: "moving",
   attacking: "attacking",
 }
 

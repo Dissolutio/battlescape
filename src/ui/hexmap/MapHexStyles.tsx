@@ -7,7 +7,7 @@ export const MapHexStyles = styled.div<MapHexStylesProps>`
   height: 100%;
   position: relative;
   overflow: scroll;
-  //🛠 Style Map Scrollbars
+  // Style Map Scrollbars
   scrollbar-width: thin;
   scrollbar-color: var(--player-color) var(--black);
   &::-webkit-scrollbar {
@@ -27,19 +27,19 @@ export const MapHexStyles = styled.div<MapHexStylesProps>`
   &::-webkit-scrollbar-corner {
     background: var(--black);
   }
-  //🛠 Style Hex Text
+  // Style Hex Text
   .maphex_altitude-text {
     fill: var(--sub-white);
     font-size: ${(props) => `${props.hexSize / 75}rem`};
   }
-  //🛠 All Hex Styles
+  // All Hex Styles
   // highlight all hexes
   svg g polygon {
     stroke: var(--white);
     stroke-width: 0.1;
   }
   // paint all hexes
-  .hexagon-group {
+  /* .hexagon-group {
     fill: var(--white);
     g polygon {
       @media (hover: hover) {
@@ -49,9 +49,34 @@ export const MapHexStyles = styled.div<MapHexStylesProps>`
         }
       }
     }
+  } */
+
+  // Terrain
+  .maphex__terrain--void {
+    stroke: var(--white);
+    stroke-width: 0.1;
+    border: 1px solid red;
+    fill: var(--white);
+    fill-opacity: 0.02;
   }
-  //
-  //🛠 Selected Map Hex
+  .maphex__terrain--water {
+    fill: var(--water);
+    fill-opacity: 0.4;
+  }
+  .maphex__terrain--grass {
+    fill: var(--green);
+    fill-opacity: 0.4;
+  }
+  .maphex__terrain--sand {
+    fill: var(--sand);
+    fill-opacity: 0.4;
+  }
+  .maphex__terrain--rock {
+    fill: var(--rock);
+    fill-opacity: 0.4;
+  }
+
+  // Selected Map Hex
   .maphex__selected--active > g polygon {
     stroke: var(--white);
     stroke-width: 0.6;

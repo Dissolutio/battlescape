@@ -23,15 +23,14 @@ import { hexagonMapScenario } from "./setup"
 
 export const defaultSetupData = hexagonMapScenario
 
-export const HexedMeadow = {
-  name: "HexedMeadow",
+export const Battlescape = {
+  name: "Battlescape",
   setup: (ctx, setupData: SetupDataType): GType => {
     // local match needs default passAndPlay to be true
     const passAndPlay = setupData?.passAndPlay ?? true
     // local match: use player count already chosen
     // online match: max out lobby, whittle down later in setup phase
     const numPlayers = passAndPlay ? ctx.numPlayers : MAX_PLAYERS
-    // Todo Here -- set playerID based state with proper playerCount
     return {
       ...hexagonMapScenario,
       passAndPlay,
@@ -73,7 +72,7 @@ export const HexedMeadow = {
     [phaseNames.placeOrderMarkers]: {
       //onBegin
       onBegin: (G: GType, ctx: BoardProps["ctx"]) => {
-        //🛠 reset state in future rounds
+        // reset state in future rounds
         if (G.currentRound > 0) {
           G.orderMarkers = generateBlankOrderMarkers()
           G.orderMarkersReady = {
@@ -81,7 +80,7 @@ export const HexedMeadow = {
             "1": false,
           }
         }
-        //🛠 set player stages
+        // set player stages
         ctx.events.setActivePlayers({ all: stageNames.placeOrderMarkers })
       },
       //endIf - -all players are ready
@@ -94,7 +93,7 @@ export const HexedMeadow = {
     [phaseNames.roundOfPlay]: {
       //onBegin
       onBegin: (G: GType, ctx: BoardProps["ctx"]) => {
-        //🛠 Setup Unrevealed Order Markers
+        // Setup Unrevealed Order Markers
         G.orderMarkers = Object.keys(G.players).reduce(
           (orderMarkers, playerID) => {
             return {
@@ -106,7 +105,7 @@ export const HexedMeadow = {
           },
           {}
         )
-        //🛠 Roll Initiative
+        // Roll Initiative
         const initiativeRoll = rollD20Initiative(["0", "1"])
         G.initiative = initiativeRoll
         G.currentOrderMarker = 0
@@ -116,7 +115,7 @@ export const HexedMeadow = {
         // clear secret order marker state
         G.players["0"].orderMarkers = generateBlankPlayersOrderMarkers()
         G.players["1"].orderMarkers = generateBlankPlayersOrderMarkers()
-        //🛠 Setup for Next Round
+        // Setup for Next Round
         G.orderMarkersReady = { "0": false, "1": false }
         G.roundOfPlayStartReady = { "0": false, "1": false }
         G.currentOrderMarker = 0
@@ -156,7 +155,7 @@ export const HexedMeadow = {
           const movePoints = unrevealedGameCard.move
           let newGameUnits = { ...G.gameUnits }
 
-          //🛠 loop thru this turns units
+          // loop thru this turns units
           currentTurnUnits.length &&
             currentTurnUnits.forEach((unit: GameUnit) => {
               const { unitID } = unit
@@ -178,27 +177,27 @@ export const HexedMeadow = {
               }
               newGameUnits[unitID] = unitWithMoveRange
             })
-          //🛠 end loop
+          // end loop
 
-          //🛠 update G
+          // update G
           G.gameUnits = newGameUnits
           G.unitsMoved = []
           G.unitsAttacked = []
         },
         //onEnd
         onEnd: (G: GType, ctx: BoardProps["ctx"]) => {
-          //🛠 reset unit move points and ranges
+          // reset unit move points and ranges
           Object.keys(G.gameUnits).forEach((uid) => {
             G.gameUnits[uid].movePoints = 0
             G.gameUnits[uid].moveRange = { ...generateBlankMoveRange() }
           })
-          //🛠 handle turns & order markers
+          // handle turns & order markers
           const isLastTurn = ctx.playOrderPos === ctx.numPlayers - 1
           const isLastOrderMarker = G.currentOrderMarker >= OM_COUNT - 1
           if (isLastTurn && !isLastOrderMarker) {
             G.currentOrderMarker++
           }
-          //🛠 END RoundOfPlay phase after last turn
+          // END RoundOfPlay phase after last turn
           if (isLastTurn && isLastOrderMarker) {
             ctx.events.setPhase(phaseNames.placeOrderMarkers)
           }

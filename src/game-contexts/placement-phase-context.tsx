@@ -3,12 +3,18 @@ import React, {
   SyntheticEvent,
   useContext,
   useState,
-} from 'react'
-import { useBgioClientInfo, useBgioMoves, useBgioG,  } from 'bgio-contexts'
-import {useUIContext  } from './ui-context'
-import {useMapContext  } from './map-context'
+} from "react"
+import { useBgioClientInfo, useBgioMoves, useBgioG } from "bgio-contexts"
+import { useUIContext } from "./ui-context"
+import { useMapContext } from "./map-context"
 
-import { BoardHex, ICoreHeroscapeCard, GameUnit, PlayerOrderMarkers, GameArmyCard } from 'game/types'
+import {
+  BoardHex,
+  ICoreHeroscapeCard,
+  GameUnit,
+  PlayerOrderMarkers,
+  GameArmyCard,
+} from "game/types"
 
 const PlacementContext = createContext<Partial<PlacementContextValue>>({})
 
@@ -32,10 +38,16 @@ type PlacementContextValue = {
 }
 const PlacementContextProvider: React.FC = (props) => {
   const { playerID } = useBgioClientInfo()
-  const { G} = useBgioG()
-  const myCards: GameArmyCard[] = G.armyCards.filter(c => c.playerID === playerID)
-  const myStartZone: string[] = Object.values(G.boardHexes).filter((bh: BoardHex) => (bh.startzonePlayerIDs.includes(playerID))).map(bh => bh.id)
-  const myUnits: GameUnit[] = Object.values(G.gameUnits).filter(u => u.playerID === playerID)
+  const { G } = useBgioG()
+  const myCards: GameArmyCard[] = G.armyCards.filter(
+    (c) => c.playerID === playerID
+  )
+  const myStartZone: string[] = Object.values(G.boardHexes)
+    .filter((bh: BoardHex) => bh.startzonePlayerIDs.includes(playerID))
+    .map((bh) => bh.id)
+  const myUnits: GameUnit[] = Object.values(G.gameUnits).filter(
+    (u) => u.playerID === playerID
+  )
   const myOrderMarkers: PlayerOrderMarkers = G.players?.[playerID]?.orderMarkers
 
   const { moves } = useBgioMoves()
@@ -44,7 +56,7 @@ const PlacementContextProvider: React.FC = (props) => {
 
   const { boardHexes, gameUnits } = G
   const { placeUnitOnHex } = moves
-  //🛠 STATE
+  // STATE
   const [placementUnits, setPlacementUnits] = useState((): PlacementUnit[] => {
     const myUnitIdsAlreadyOnMap = Object.values(boardHexes)
       .map((bH: BoardHex) => bH.occupyingUnitID)
@@ -71,14 +83,14 @@ const PlacementContextProvider: React.FC = (props) => {
     })
     setPlacementUnits(newState)
   }
-  //🛠 HANDLERS
+  // HANDLERS
   function onClickPlacementUnit(unitID: string) {
     // either deselect unit, or select unit and deselect active hex
     if (unitID === selectedUnitID) {
-      setSelectedUnitID('')
+      setSelectedUnitID("")
     } else {
       setSelectedUnitID(unitID)
-      setSelectedMapHex('')
+      setSelectedMapHex("")
     }
   }
   function onClickBoardHex_placement(
@@ -98,13 +110,13 @@ const PlacementContextProvider: React.FC = (props) => {
     if (selectedUnitID && isInStartZone) {
       placeUnitOnHex(hexID, activeUnit)
       removeUnitFromAvailable(activeUnit)
-      setSelectedUnitID('')
+      setSelectedUnitID("")
       return
     }
     // have unit, clicked hex outside start zone, error
     if (selectedUnitID && !isInStartZone) {
       console.error(
-        'Invalid hex selected. You must place units inside your start zone.'
+        "Invalid hex selected. You must place units inside your start zone."
       )
       return
     }
@@ -116,7 +128,7 @@ const PlacementContextProvider: React.FC = (props) => {
         placementUnits,
         onClickPlacementUnit,
         onClickBoardHex_placement,
-        myStartZone
+        myStartZone,
       }}
     >
       {props.children}
