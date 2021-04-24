@@ -15,7 +15,7 @@ export const Layout = ({ children }) => {
 const LayoutContainer = styled.div`
   // SET CSS VARS
   --player-color: ${(props) => props.theme.playerColor};
-  // Perspective makes this elements the parent for position sticky children
+  // Perspective makes this element the parent for position sticky children
   // see: https://developer.mozilla.org/en-US/docs/Web/CSS/position#fixed
   perspective: 1000px;
   display: flex;

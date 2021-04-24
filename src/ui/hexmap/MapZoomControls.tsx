@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "styled-components";
+import React from "react"
+import styled from "styled-components"
 // import Button from "react-bootstrap/esm/Button";
-import { ImZoomIn, ImZoomOut } from "react-icons/im";
+import { ImZoomIn, ImZoomOut } from "react-icons/im"
 
 export const MapZoomControls = ({ handleClickZoomIn, handleClickZoomOut }) => {
   return (
@@ -23,12 +23,12 @@ export const MapZoomControls = ({ handleClickZoomIn, handleClickZoomOut }) => {
         <ImZoomIn color="var(--player-color)" />
       </button>
     </StyledMapZoomControls>
-  );
-};
+  )
+}
 export const StyledMapZoomControls = styled.span`
-  position: absolute;
-  top: 0%;
-  left: 0%;
+  position: fixed;
+  top: 2vmax;
+  left: 0;
   padding-top: 36px;
   padding-left: 36px;
   @media screen and (max-width: 1100px) {
@@ -48,4 +48,4 @@ export const StyledMapZoomControls = styled.span`
       height: 18px;
     }
   }
-`;
+`
